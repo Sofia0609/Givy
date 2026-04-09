@@ -29,6 +29,26 @@ body {
   gap: 30px;
 }
 
+.sidebar-left nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar-left a {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.user-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center; 
+    padding: 30px;
+}
+
 /* VIDEO */
 .video-section {
     width: 60%;
@@ -64,6 +84,28 @@ body {
   cursor: pointer;
 }
 
+.active {
+  background: #d1c4e9;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 15px;
+}
+
+.info-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.name-nav {
+    font-weight: 400;
+}
+
+
 
 .logo img {
     width: 55px;
@@ -82,6 +124,25 @@ body {
     justify-content: center;
     align-items: center;    
     
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+.video-section {
+  width: 60%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
