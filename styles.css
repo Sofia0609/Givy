@@ -361,7 +361,7 @@ body {
     position: fixed;
     bottom: 70px;
     left: 12px;
-    right: 70px; /* deja espacio para los botones */
+    right: 70px;
     background: rgba(60, 55, 100, 0.65);
     border-radius: 12px;
     padding: 12px 16px;
