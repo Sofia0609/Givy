@@ -3,11 +3,44 @@ const likeCounter = document.getElementById("like_Counter");
 const swapButton = document.getElementById("swap_button");
 const commentsButton = document.getElementById("comments_button");
 const commentsCounter = document.getElementById("comments_Counter");
-const shareButton = document.getElementById("share_button");
+const shareButton = document.getElementById("share_button"); 
+const commentsContainer = document.getElementById("Comments");
 
 let likeCount = 0;
 
-//Funciones Boton de Like
+//Show comment Function
+
+async function rendercomments (){
+commentsContainer.innerHTML = "";
+await fetch('comments.json')
+    .then(res => res.json())
+    .then(comments => {
+      console.log(comments);
+      
+      comments.forEach(comment => {
+
+      const commentSection = document.createElement("div");
+      commentSection.classList.add("CommentSection")
+      commentsContainer.appendChild(commentSection);
+
+      const commentAvatar = document.createElement("img");
+      commentAvatar.classList.add("profile_Picture_Comments")
+      commentAvatar.src = comment.avatar;
+      commentSection.appendChild(commentAvatar);
+
+      const commentName = document.createElement("h4");
+      commentName.textContent = comment.name;
+      commentSection.appendChild(commentName);
+
+      const commentText = document.createElement(("p"));
+      commentText.textContent = comment.comment;
+      commentSection.appendChild(commentText);
+    });
+  });
+
+}
+
+//Like button function
 
 likeButton.addEventListener("click", () => {
 
@@ -24,7 +57,7 @@ likeButton.addEventListener("click", () => {
 });
 
 
-//Funciones Boton de Comentarios
+//Comment Button function
 
 commentsButton.addEventListener("click", () => {
 
@@ -34,7 +67,7 @@ commentsButton.addEventListener("click", () => {
 
 });
 
-//Funciones Boton de Compartir
+//Share button function
 
 
 shareButton.addEventListener("click", () => {
@@ -43,7 +76,7 @@ shareButton.addEventListener("click", () => {
 
 });
 
-//Funciones Boton de Swap
+//Swap button function
 
 swapButton.addEventListener("click", () => {
 
