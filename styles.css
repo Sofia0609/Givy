@@ -248,8 +248,11 @@ body {
   display: none;
 }
 
+/* CSS for JS */
 
-
+.Liked{
+    background: #9873FF !important;
+}
 
 
 /* ── RESPONSIVE MOBILE ── */
