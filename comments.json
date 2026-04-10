@@ -1,0 +1,55 @@
+[
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Sofia Velez",
+        "comment": "Muy buen video!, Hagamos un intercambio<3",
+        "respuestas": [
+            {
+                "avatar": "./icons.avatar.png",
+                "name": "Juan",
+                "comment": "Si yo tambien quiero!"
+            }
+        ]
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Maria Rodriguez",
+        "comment": "Dios mio, llevaba meses buscando este tutorial. Gracias de verdad!!",
+        "respuestas": []
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Carlos Andrade",
+        "comment": "Alguien sabe en que parte explica la edicion? no la encuentro",
+        "respuestas": [
+            {
+                "avatar": "./icons/avatar.png",
+                "name": "Laura Gomez",
+                "comment": "Min 14:32 ahi lo explica todo!"
+            }
+        ]
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Valentina Torres",
+        "comment": "El mejor canal de toda la plataforma, sin duda alguna 🔥",
+        "respuestas": []
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Andres Peña",
+        "comment": "Llevo viendo este video 3 veces y siempre aprendo algo nuevo jajaja",
+        "respuestas": [
+            {
+                "avatar": "./icons/avatar.png",
+                "name": "Diana Castillo",
+                "comment": "Igual yo!! es demasiado bueno"
+            },
+            {
+                "avatar": "./icons/avatar.png",
+                "name": "Andres Peña",
+                "comment": "Verdad?? ojalá suban mas contenido asi"
+            }
+        ]
+    }
+]

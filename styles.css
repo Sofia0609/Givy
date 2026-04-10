@@ -1,0 +1,388 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: poppins, sans-serif;
+  font-weight: 600;
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,   
+   
+    #dfdbff 70%,
+    #8e84d7 100%  
+  );
+}
+
+
+.layout {
+  display: flex;
+  
+  height: 100vh;
+}
+
+.sidebar-left {
+  background: #E9E7F4;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.sidebar-left nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar-left a {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.sidebar-left .active {
+  background: #d1c4e9;
+}
+
+/* PANEL USUARIO */
+.user-panel {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  
+    padding: 30px;
+}
+
+.user-panel h2 {
+  margin-bottom: 15px;
+}
+
+.user-panel p {
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.tag {
+    width: 50%;
+    height: Auto;
+  border: 1px solid #7e57c2;
+  color: #7e57c2;
+  padding: 8px;
+  border-radius: 20px;
+  background: transparent;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.tags button {
+  margin: 5px;
+  padding: 8px 12px;
+  border-radius: 15px;
+  border: 1px solid #292D32;
+  
+}
+
+/* VIDEO */
+.video-section {
+  width: 50%;
+  max-width: 600px;
+  min-width: 280px;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-section video {
+  height: 90%;
+  border-radius: 10px;
+}
+
+
+.sidebar-right {
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 30px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 50px;
+}
+
+.sidebar-right button {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(38, 37, 61, 0.54);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;;
+}
+
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #7986cb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  border: 3px solid #2D2A6E;
+  
+}
+
+.button-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.active {
+  background: #d1c4e9;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 15px;
+}
+
+.info-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.name-nav {
+    font-weight: 400;
+}
+
+
+
+.logo img {
+    width: 55px;
+    height: 62px;
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;    
+    gap: 15px;
+}
+
+.searching {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;    
+    
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+.video-section {
+  width: 60%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.video-feed {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+
+  scroll-snap-type: y mandatory;
+}
+
+
+.video-item {
+  height: 100%;
+  width: 100%;
+  scroll-snap-align: start;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.video-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.video-feed::-webkit-scrollbar {
+  display: none;
+}
+
+/* CSS for JS */
+
+.Liked{
+    background: #9873FF !important;
+}
+
+
+/* ── RESPONSIVE MOBILE ── */
+@media (max-width: 768px) {
+
+  /* Ocultar todo menos el video */
+  .sidebar-left {
+    display: none;
+  }
+
+  .user-panel {
+    display: none;
+  }
+
+  /* Video ocupa toda la pantalla */
+  .layout {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .video-section {
+    width: 100% !important;
+    height: 100vh;
+  }
+
+  /* Botones flotantes a la derecha como en la referencia */
+  .sidebar-right {
+    position: fixed;
+    right: 12px;
+    bottom: 100px;
+    padding: 0;
+    gap: 16px;
+    z-index: 10;
+    background: transparent;
+  }
+
+  .sidebar-right button {
+    width: 48px;
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 13px;
+  }
+
+  /* Barra de navegación abajo */
+  .sidebar-left-mobile {
+    display: flex;
+  }
+}
+
+
+/* Barra bottom nav - solo mobile */
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255,255,255,0.95);
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0;
+    z-index: 20;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* Info del usuario ARRIBA del video */
+  .video-user-top {
+    display: flex;
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.9);
+    border-radius: 20px;
+    padding: 6px 16px;
+    align-items: center;
+    gap: 10px;
+    z-index: 20;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  /* Info del usuario ABAJO del video */
+  .video-user-bottom {
+    display: block;
+    position: fixed;
+    bottom: 70px;
+    left: 12px;
+    right: 70px;
+    background: rgba(60, 55, 100, 0.65);
+    border-radius: 12px;
+    padding: 12px 16px;
+    z-index: 20;
+    color: white;
+  }
+
+  .video-user-bottom h3 {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .video-user-bottom p {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+}
+
+/* Ocultar esos elementos en PC */
+.video-user-top,
+.video-user-bottom {
+  display: none;
+}
