@@ -23,18 +23,22 @@ await fetch('comments.json')
       commentSection.classList.add("CommentSection")
       commentsContainer.appendChild(commentSection);
 
-      const commentAvatar = document.createElement("img");
-      commentAvatar.classList.add("profile_Picture_Comments")
-      commentAvatar.src = comment.avatar;
+      const commentAvatar = document.createElement("div");
+      commentAvatar.classList.add("profile_Picture_Comments");
+      commentAvatar.textContent = comment.name.charAt(0);
       commentSection.appendChild(commentAvatar);
+
+      const userInformation = document.createElement("div");
+      userInformation.classList.add("user-info");
+      commentSection.appendChild(userInformation);
 
       const commentName = document.createElement("h4");
       commentName.textContent = comment.name;
-      commentSection.appendChild(commentName);
+      userInformation.appendChild(commentName);
 
       const commentText = document.createElement(("p"));
       commentText.textContent = comment.comment;
-      commentSection.appendChild(commentText);
+      userInformation.appendChild(commentText);
     });
   });
 
@@ -61,9 +65,30 @@ likeButton.addEventListener("click", () => {
 
 commentsButton.addEventListener("click", () => {
 
-  
-  rendercomments()
+  if(!commentsContainer.classList.contains("hide")){
+    
+    rendercomments()
 
+    const inputSection = document.createElement("div");
+    inputSection.classList.add("input_section");
+
+    const commentInput = document.createElement("input");
+    commentInput.type = "text";
+    commentInput.placeholder = "Agregar comentario...";
+    commentInput.classList.add("comment_input_box");
+    inputSection.appendChild(commentInput);
+
+    const submitButton = document.createElement("button");
+    submitButton.textContent = "Enviar";
+    inputSection.appendChild(submitButton);
+
+    commentsContainer.appendChild(inputSection);
+
+    commentsContainer.classList.add("hide");
+
+  }else{
+    commentsContainer.classList.remove("hide");
+  }
 
 });
 
