@@ -3,7 +3,7 @@
         "avatar": "./icons/avatar.png",
         "name": "Sofia Velez",
         "comment": "Great video!, Let's do an exchange <3",
-        "respuestas": [
+        "responses": [
             {
                 "avatar": "./icons.avatar.png",
                 "name": "Juan",
@@ -15,13 +15,13 @@
         "avatar": "./icons/avatar.png",
         "name": "Maria Rodriguez",
         "comment": "My God, I've been looking for this tutorial for months. Thank you so much!!",
-        "respuestas": []
+        "responses": []
     },
     {
         "avatar": "./icons/avatar.png",
         "name": "Carlos Andrade",
         "comment": "Does anyone know in which part the editing is explained? I can't find it",
-        "respuestas": [
+        "responses": [
             {
                 "avatar": "./icons/avatar.png",
                 "name": "Laura Gomez",
@@ -33,13 +33,13 @@
         "avatar": "./icons/avatar.png",
         "name": "Valentina Torres",
         "comment": "The best channel on the entire platform, without a doubt 🔥",
-        "respuestas": []
+        "responses": []
     },
     {
         "avatar": "./icons/avatar.png",
         "name": "Andres Peña",
         "comment": "I've watched this video 3 times and I always learn something new hahaha",
-        "respuestas": [
+        "responses": [
             {
                 "avatar": "./icons/avatar.png",
                 "name": "Diana Castillo",

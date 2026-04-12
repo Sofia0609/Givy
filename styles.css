@@ -327,6 +327,17 @@ input{
 }
 
 
+.submit_button {
+  width: 20%;
+  padding: 8px;
+  border-radius: 15px;
+  border: none;
+  background: #9873FF;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 /* ── RESPONSIVE MOBILE ── */
 @media (max-width: 768px) {
 

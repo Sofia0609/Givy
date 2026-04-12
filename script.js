@@ -11,6 +11,7 @@ let likeCount = 0;
 //Show comment Function
 
 async function rendercomments (){
+
 commentsContainer.innerHTML = "";
 await fetch('comments.json')
     .then(res => res.json())
@@ -41,6 +42,7 @@ await fetch('comments.json')
       userInformation.appendChild(commentText);
     });
   });
+
 
 }
 
@@ -79,10 +81,20 @@ commentsButton.addEventListener("click", () => {
     inputSection.appendChild(commentInput);
 
     const submitButton = document.createElement("button");
-    submitButton.textContent = "Enviar";
+    submitButton.textContent = "Submit";
     inputSection.appendChild(submitButton);
+    submitButton.classList.add("submit_button");
 
     commentsContainer.appendChild(inputSection);
+
+    submitButton.addEventListener("click", () => {
+
+      const newComment = submitComment(commentInput);
+        if (newComment) {
+          const inputSection = commentsContainer.querySelector(".input_section");
+          commentsContainer.insertBefore(newComment, inputSection);
+        }
+    });
 
     commentsContainer.classList.add("hide");
 
@@ -90,14 +102,50 @@ commentsButton.addEventListener("click", () => {
     commentsContainer.classList.remove("hide");
   }
 
+
 });
+
+function submitComment(commentInput){
+
+  if (commentInput.value.trim() == "") {
+    return;
+  } 
+
+  const text =  commentInput.value.trim();
+
+
+      const commentSection = document.createElement("div");
+      commentSection.classList.add("CommentSection")
+      commentsContainer.appendChild(commentSection);
+
+      const commentAvatar = document.createElement("div");
+      commentAvatar.classList.add("profile_Picture_Comments");
+      commentAvatar.textContent = "Tu";
+      commentSection.appendChild(commentAvatar);
+
+      const userInformation = document.createElement("div");
+      userInformation.classList.add("user-info");
+      commentSection.appendChild(userInformation);
+
+      const commentName = document.createElement("h4");
+      commentName.textContent = "Tu";
+      userInformation.appendChild(commentName);
+
+      const commentText = document.createElement(("p"));
+      commentText.textContent = text
+      userInformation.appendChild(commentText);
+
+      commentInput.value = "";
+
+      return commentSection;
+  }
 
 //Share button function
 
 
 shareButton.addEventListener("click", () => {
 
-
+    
 
 });
 
