@@ -7,6 +7,8 @@ const shareButton = document.getElementById("share_button");
 const commentsContainer = document.getElementById("Comments");
 
 let likeCount = 0;
+let commentCount = 0;
+let newComments = [];
 
 //Show comment Function
 
@@ -17,6 +19,30 @@ await fetch('comments.json')
     .then(res => res.json())
     .then(comments => {
       console.log(comments);
+
+        newComments.forEach(newComment => {
+          const commentSection = document.createElement("div");
+          commentSection.classList.add("CommentSection");
+
+          const commentAvatar = document.createElement("div");
+          commentAvatar.classList.add("profile_Picture_Comments");
+          commentAvatar.textContent = "T";
+          commentSection.appendChild(commentAvatar);
+
+          const userInformation = document.createElement("div");
+          userInformation.classList.add("user-info");
+          commentSection.appendChild(userInformation);
+
+          const commentName = document.createElement("h4");
+          commentName.textContent = newComment.nombre;
+          userInformation.appendChild(commentName);
+
+          const commentText = document.createElement("p");
+          commentText.textContent = newComment.texto;
+          userInformation.appendChild(commentText);
+
+          commentsContainer.appendChild(commentSection);
+      });
       
       comments.forEach(comment => {
 
@@ -41,6 +67,7 @@ await fetch('comments.json')
       commentText.textContent = comment.comment;
       userInformation.appendChild(commentText);
     });
+
   });
 
 
@@ -136,6 +163,7 @@ function submitComment(commentInput){
       userInformation.appendChild(commentText);
 
       commentInput.value = "";
+      newComments.push({ nombre: "Tú", texto: text });
 
       return commentSection;
   }
