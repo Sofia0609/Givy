@@ -7,6 +7,13 @@ feedItems.forEach(feedItem => {
   const likeCounter = feedItem.querySelector(".like_counter");
   const commentsButton = feedItem.querySelector(".comments_button");
   const commentsContainer = feedItem.querySelector(".comments_container");
+  const swapModal = document.getElementById("swap-modal");
+  const videoElement = feedItem.querySelector("video");
+
+  videoElement.addEventListener("click", () => {
+    commentsContainer.classList.add("hide");
+    commentsContainer.innerHTML = "";
+  });
 
   let likeCount = 0;
   let newComments = []; 
@@ -152,7 +159,7 @@ function submitComment(commentInput, commentsContainer, newComments) {
 }
 
 //Swap button function
-const swapModal = document.getElementById("swap-modal");
+
 
 feedItems.forEach(feedItem => {
   feedItem.querySelector(".swap_button").addEventListener("click", () => {

@@ -414,13 +414,19 @@ input {
   }
 
   .sidebar-right {
-    position: fixed;
+    position: absolute;
     right: 12px;
     bottom: 100px;
     padding: 0;
     gap: 16px;
-    z-index: 10;
+    z-index: 9;
     background: transparent;
+  }
+
+  .comments_container {
+    max-height: 50%;
+    bottom: 50px;
+    z-index: 200;
   }
 
   .sidebar-right button {
