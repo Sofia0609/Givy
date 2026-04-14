@@ -1,172 +1,166 @@
-const likeButton = document.getElementById("like_button");
-const likeCounter = document.getElementById("like_Counter");
-const swapButton = document.getElementById("swap_button");
-const commentsButton = document.getElementById("comments_button");
-const commentsCounter = document.getElementById("comments_Counter");
-const shareButton = document.getElementById("share_button"); 
-const commentsContainer = document.getElementById("Comments");
-
-let likeCount = 0;
-let commentCount = 0;
 let newComments = [];
 
-//Show comment Function
+const feedItems = document.querySelectorAll(".feed-item");
 
-async function rendercomments (){
+feedItems.forEach(feedItem => {
 
-commentsContainer.innerHTML = "";
-await fetch('comments.json')
-    .then(res => res.json())
-    .then(comments => {
-      console.log(comments);
+  const commentsFile = feedItem.dataset.comments;
+  const likeButton = feedItem.querySelector(".like_button");
+  const likeCounter = feedItem.querySelector(".like_counter");
+  const commentsButton = feedItem.querySelector(".comments_button");
+  const commentsContainer = feedItem.querySelector(".comments_container");
 
-        newComments.forEach(newComment => {
-          const commentSection = document.createElement("div");
-          commentSection.classList.add("CommentSection");
+  let likeCount = 0;
 
-          const commentAvatar = document.createElement("div");
-          commentAvatar.classList.add("profile_Picture_Comments");
-          commentAvatar.textContent = "T";
-          commentSection.appendChild(commentAvatar);
-
-          const userInformation = document.createElement("div");
-          userInformation.classList.add("user-info");
-          commentSection.appendChild(userInformation);
-
-          const commentName = document.createElement("h4");
-          commentName.textContent = newComment.nombre;
-          userInformation.appendChild(commentName);
-
-          const commentText = document.createElement("p");
-          commentText.textContent = newComment.texto;
-          userInformation.appendChild(commentText);
-
-          commentsContainer.appendChild(commentSection);
-      });
-      
-      comments.forEach(comment => {
-
-      const commentSection = document.createElement("div");
-      commentSection.classList.add("CommentSection")
-      commentsContainer.appendChild(commentSection);
-
-      const commentAvatar = document.createElement("div");
-      commentAvatar.classList.add("profile_Picture_Comments");
-      commentAvatar.textContent = comment.name.charAt(0);
-      commentSection.appendChild(commentAvatar);
-
-      const userInformation = document.createElement("div");
-      userInformation.classList.add("user-info");
-      commentSection.appendChild(userInformation);
-
-      const commentName = document.createElement("h4");
-      commentName.textContent = comment.name;
-      userInformation.appendChild(commentName);
-
-      const commentText = document.createElement(("p"));
-      commentText.textContent = comment.comment;
-      userInformation.appendChild(commentText);
-    });
-
+  // Like button function
+  likeButton.addEventListener("click", () => {
+    if (likeButton.classList.contains("Liked")) {
+      likeCount -= 1;
+      likeCounter.textContent = likeCount;
+      likeButton.classList.remove("Liked");
+    } else {
+      likeCount += 1;
+      likeCounter.textContent = likeCount;
+      likeButton.classList.add("Liked");
+    }
   });
 
+  // Comment button function
+  commentsButton.addEventListener("click", () => {
 
-}
+    if (!commentsContainer.classList.contains("hide")) {
 
-//Like button function
+      rendercomments(commentsContainer, commentsFile);
 
-likeButton.addEventListener("click", () => {
+      const inputSection = document.createElement("div");
+      inputSection.classList.add("input_section");
 
-  if(likeButton.classList.contains("Liked")){
-    likeCount -= 1
-    likeCounter.textContent = likeCount;
-    likeButton.classList.remove("Liked")
-  }else{
-    likeCount += 1
-    likeCounter.textContent = likeCount;
-    likeButton.classList.add("Liked")
-  }
-  
-});
+      const commentInput = document.createElement("input");
+      commentInput.type = "text";
+      commentInput.placeholder = "Agregar comentario...";
+      commentInput.classList.add("comment_input_box");
+      inputSection.appendChild(commentInput);
 
+      const submitButton = document.createElement("button");
+      submitButton.textContent = "Enviar";
+      inputSection.appendChild(submitButton);
+      submitButton.classList.add("submit_button");
 
-//Comment Button function
+      commentsContainer.appendChild(inputSection);
 
-commentsButton.addEventListener("click", () => {
-
-  if(!commentsContainer.classList.contains("hide")){
-    
-    rendercomments()
-
-    const inputSection = document.createElement("div");
-    inputSection.classList.add("input_section");
-
-    const commentInput = document.createElement("input");
-    commentInput.type = "text";
-    commentInput.placeholder = "Agregar comentario...";
-    commentInput.classList.add("comment_input_box");
-    inputSection.appendChild(commentInput);
-
-    const submitButton = document.createElement("button");
-    submitButton.textContent = "Submit";
-    inputSection.appendChild(submitButton);
-    submitButton.classList.add("submit_button");
-
-    commentsContainer.appendChild(inputSection);
-
-    submitButton.addEventListener("click", () => {
-
-      const newComment = submitComment(commentInput);
+      submitButton.addEventListener("click", () => {
+        const newComment = submitComment(commentInput, commentsContainer);
         if (newComment) {
           const inputSection = commentsContainer.querySelector(".input_section");
           commentsContainer.insertBefore(newComment, inputSection);
         }
-    });
+      });
 
-    commentsContainer.classList.add("hide");
+      commentsContainer.classList.add("hide");
 
-  }else{
-    commentsContainer.classList.remove("hide");
-  }
+    } else {
+      commentsContainer.classList.remove("hide");
+    }
 
+  });
 
 });
 
-function submitComment(commentInput){
+// Show comment Function
+async function rendercomments(commentsContainer, commentsFile) {
+
+  commentsContainer.innerHTML = "";
+  await fetch(commentsFile)
+    .then(res => res.json())
+    .then(comments => {
+      console.log(comments);
+
+      newComments.forEach(newComment => {
+        const commentSection = document.createElement("div");
+        commentSection.classList.add("CommentSection");
+
+        const commentAvatar = document.createElement("div");
+        commentAvatar.classList.add("profile_Picture_Comments");
+        commentAvatar.textContent = "T";
+        commentSection.appendChild(commentAvatar);
+
+        const userInformation = document.createElement("div");
+        userInformation.classList.add("user-info");
+        commentSection.appendChild(userInformation);
+
+        const commentName = document.createElement("h4");
+        commentName.textContent = newComment.nombre;
+        userInformation.appendChild(commentName);
+
+        const commentText = document.createElement("p");
+        commentText.textContent = newComment.texto;
+        userInformation.appendChild(commentText);
+
+        commentsContainer.appendChild(commentSection);
+      });
+
+      comments.forEach(comment => {
+
+        const commentSection = document.createElement("div");
+        commentSection.classList.add("CommentSection");
+        commentsContainer.appendChild(commentSection);
+
+        const commentAvatar = document.createElement("div");
+        commentAvatar.classList.add("profile_Picture_Comments");
+        commentAvatar.textContent = comment.name.charAt(0);
+        commentSection.appendChild(commentAvatar);
+
+        const userInformation = document.createElement("div");
+        userInformation.classList.add("user-info");
+        commentSection.appendChild(userInformation);
+
+        const commentName = document.createElement("h4");
+        commentName.textContent = comment.name;
+        userInformation.appendChild(commentName);
+
+        const commentText = document.createElement("p");
+        commentText.textContent = comment.comment;
+        userInformation.appendChild(commentText);
+      });
+    });
+}
+
+// Submit comment function
+function submitComment(commentInput, commentsContainer) {
 
   if (commentInput.value.trim() == "") {
     return;
-  } 
-
-  const text =  commentInput.value.trim();
-
-
-      const commentSection = document.createElement("div");
-      commentSection.classList.add("CommentSection")
-      commentsContainer.appendChild(commentSection);
-
-      const commentAvatar = document.createElement("div");
-      commentAvatar.classList.add("profile_Picture_Comments");
-      commentAvatar.textContent = "Tu";
-      commentSection.appendChild(commentAvatar);
-
-      const userInformation = document.createElement("div");
-      userInformation.classList.add("user-info");
-      commentSection.appendChild(userInformation);
-
-      const commentName = document.createElement("h4");
-      commentName.textContent = "Tu";
-      userInformation.appendChild(commentName);
-
-      const commentText = document.createElement(("p"));
-      commentText.textContent = text
-      userInformation.appendChild(commentText);
-
-      commentInput.value = "";
-      newComments.push({ nombre: "Tú", texto: text });
-
-      return commentSection;
   }
+
+  const text = commentInput.value.trim();
+
+  const commentSection = document.createElement("div");
+  commentSection.classList.add("CommentSection");
+
+  const commentAvatar = document.createElement("div");
+  commentAvatar.classList.add("profile_Picture_Comments");
+  commentAvatar.textContent = "Tu";
+  commentSection.appendChild(commentAvatar);
+
+  const userInformation = document.createElement("div");
+  userInformation.classList.add("user-info");
+  commentSection.appendChild(userInformation);
+
+  const commentName = document.createElement("h4");
+  commentName.textContent = "Tu";
+  userInformation.appendChild(commentName);
+
+  const commentText = document.createElement("p");
+  commentText.textContent = text;
+  userInformation.appendChild(commentText);
+
+  commentInput.value = "";
+  newComments.push({ nombre: "Tú", texto: text });
+
+  return commentSection;
+}
+
+
 
 //Share button function
 
