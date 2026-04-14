@@ -1,0 +1,61 @@
+[
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Marco Antonio",
+        "comment": "The way you centered that clay was so satisfying to watch!",
+        "responses": [
+            {
+                "avatar": "./icons/avatar.png",
+                "name": "Clara Ruiz",
+                "comment": "Totally! It looks much easier than it actually is."
+            }
+        ]
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Lucía Méndez",
+        "comment": "What type of clay are you using for this vase? The texture looks incredible.",
+        "responses": []
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Kevin Smith",
+        "comment": "I keep struggling with the walls collapsing when I go higher. Any advice?",
+        "responses": [
+            {
+                "avatar": "./icons/avatar.png",
+                "name": "Pottery Master",
+                "comment": "Try to keep your hands more steady and use less water as you go up!"
+            }
+        ]
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Beatriz Soler",
+        "comment": "The glazing process in this video is pure art. I love the blue tones.",
+        "responses": []
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Mateo Rossi",
+        "comment": "I just started my first pottery class today because of your channel!",
+        "responses": [
+            {
+                "avatar": "./icons/avatar.png",
+                "name": "Beatriz Soler",
+                "comment": "That's awesome! It's a very relaxing hobby."
+            },
+            {
+                "avatar": "./icons/avatar.png",
+                "name": "Mateo Rossi",
+                "comment": "It really is! A bit messy but worth it haha."
+            }
+        ]
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Sandra V.",
+        "comment": "Can't wait to see how these pieces look after the final firing!",
+        "responses": []
+    }
+]
