@@ -2,53 +2,53 @@
     {
         "avatar": "./icons/avatar.png",
         "name": "Sofia Velez",
-        "comment": "Muy buen video!, Hagamos un intercambio<3",
-        "respuestas": [
+        "comment": "Great video!, Let's do an exchange <3",
+        "responses": [
             {
                 "avatar": "./icons.avatar.png",
                 "name": "Juan",
-                "comment": "Si yo tambien quiero!"
+                "comment": "Yes, I want to too!"
             }
         ]
     },
     {
         "avatar": "./icons/avatar.png",
         "name": "Maria Rodriguez",
-        "comment": "Dios mio, llevaba meses buscando este tutorial. Gracias de verdad!!",
-        "respuestas": []
+        "comment": "My God, I've been looking for this tutorial for months. Thank you so much!!",
+        "responses": []
     },
     {
         "avatar": "./icons/avatar.png",
         "name": "Carlos Andrade",
-        "comment": "Alguien sabe en que parte explica la edicion? no la encuentro",
-        "respuestas": [
+        "comment": "Does anyone know in which part the editing is explained? I can't find it",
+        "responses": [
             {
                 "avatar": "./icons/avatar.png",
                 "name": "Laura Gomez",
-                "comment": "Min 14:32 ahi lo explica todo!"
+                "comment": "Min 14:32 he explains it all there!"
             }
         ]
     },
     {
         "avatar": "./icons/avatar.png",
         "name": "Valentina Torres",
-        "comment": "El mejor canal de toda la plataforma, sin duda alguna 🔥",
-        "respuestas": []
+        "comment": "The best channel on the entire platform, without a doubt 🔥",
+        "responses": []
     },
     {
         "avatar": "./icons/avatar.png",
         "name": "Andres Peña",
-        "comment": "Llevo viendo este video 3 veces y siempre aprendo algo nuevo jajaja",
-        "respuestas": [
+        "comment": "I've watched this video 3 times and I always learn something new hahaha",
+        "responses": [
             {
                 "avatar": "./icons/avatar.png",
                 "name": "Diana Castillo",
-                "comment": "Igual yo!! es demasiado bueno"
+                "comment": "Me too!! it's so good"
             },
             {
                 "avatar": "./icons/avatar.png",
                 "name": "Andres Peña",
-                "comment": "Verdad?? ojalá suban mas contenido asi"
+                "comment": "Right?? I hope they upload more content like this"
             }
         ]
     }

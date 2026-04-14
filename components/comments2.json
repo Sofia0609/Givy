@@ -1,0 +1,37 @@
+[
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Ricardo Silva",
+        "comment": "This tutorial is amazing! I finally understood how to position my hands for the scales.",
+        "responses": [
+            {
+                "avatar": "./icons/avatar.png",
+                "name": "Elena M.",
+                "comment": "Same here! The close-up shot of the keys makes a huge difference."
+            }
+        ]
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Julian Moore",
+        "comment": "Could you please upload the sheet music for this arrangement? It sounds beautiful!",
+        "responses": []
+    },
+    {
+        "avatar": "./icons/avatar.png",
+        "name": "Sofia Castro",
+        "comment": "I've been practicing this piece for a week and I'm almost there. Thanks for the tips!",
+        "responses": [
+            {
+                "avatar": "./icons/avatar.png",
+                "name": "Piano Academy",
+                "comment": "Keep it up, Sofia! Consistency is key 🎹"
+            },
+            {
+                "avatar": "./icons/avatar.png",
+                "name": "Sofia Castro",
+                "comment": "Thank you! I will keep practicing every day."
+            }
+        ]
+    }
+]
