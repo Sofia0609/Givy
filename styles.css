@@ -7,28 +7,50 @@
 }
 
 body {
-  background: linear-gradient(
-    135deg,
-    #ffffff 0%,   
-   
-    #dfdbff 70%,
-    #8e84d7 100%  
-  );
+  background: linear-gradient(135deg,
+      #ffffff 0%,
+
+      #dfdbff 70%,
+      #8e84d7 100%);
 }
 
+.feed {
+  margin-left: 160px;
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+
+.feed-item {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: row;
+}
+
+.feed::-webkit-scrollbar {
+  display: none;
+}
 
 .layout {
   display: flex;
-  
+
   height: 100vh;
 }
 
 .sidebar-left {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 200px;
   background: #E9E7F4;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 30px;
+  z-index: 100;
 }
 
 .sidebar-left nav {
@@ -43,19 +65,23 @@ body {
   border-radius: 8px;
 }
 
+
 .sidebar-left .active {
   background: #d1c4e9;
+  width: 100%;
+  border-radius: 8px;
 }
 
 /* PANEL USUARIO */
 .user-panel {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-  
-    padding: 30px;
+  margin: 5%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+
+  padding: 30px;
 }
 
 .user-panel h2 {
@@ -68,8 +94,8 @@ body {
 }
 
 .tag {
-    width: 50%;
-    height: Auto;
+  width: 50%;
+  height: Auto;
   border: 1px solid #7e57c2;
   color: #7e57c2;
   padding: 8px;
@@ -84,7 +110,7 @@ body {
   padding: 8px 12px;
   border-radius: 15px;
   border: 1px solid #292D32;
-  
+
 }
 
 /* VIDEO */
@@ -104,9 +130,8 @@ body {
   border-radius: 10px;
 }
 
-
 .sidebar-right {
-  
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -129,7 +154,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;;
+  padding: 8px;
+  ;
 }
 
 
@@ -144,7 +170,7 @@ body {
   color: white;
   font-weight: bold;
   border: 3px solid #2D2A6E;
-  
+
 }
 
 .button-nav {
@@ -161,51 +187,51 @@ body {
 }
 
 .user-info {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 15px;
 }
 
 .info-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .name-nav {
-    font-weight: 400;
+  font-weight: 400;
 }
 
 
 
 .logo img {
-    width: 55px;
-    height: 62px;
+  width: 55px;
+  height: 62px;
 }
 
 .logo {
-    display: flex;
-    flex-direction: column;    
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .searching {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;    
-    
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
 }
 
 .tags {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-    margin-bottom: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 50px;
 }
 
 .video-section {
@@ -222,27 +248,19 @@ body {
   position: relative;
   height: 100%;
   width: 100%;
-  overflow-y: scroll;
-
-  scroll-snap-type: y mandatory;
-}
-
-
-.video-item {
-  height: 100%;
-  width: 100%;
-  scroll-snap-align: start;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
 }
 
 
 .video-item video {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
+  scroll-snap-align: start;
+  object-fit: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .video-feed::-webkit-scrollbar {
@@ -251,41 +269,41 @@ body {
 
 /* CSS for JS */
 
-.Liked{
-    background: #9873FF !important;
+.Liked {
+  background: #9873FF !important;
 }
 
-.CommentSection{
-    padding: 15px;
-    background-color: white;
-    color: #292D32;
-    display: flex;
-    flex-direction: row;
+.CommentSection {
+  padding: 15px;
+  background-color: white;
+  color: #292D32;
+  display: flex;
+  flex-direction: row;
 }
 
-.user-info{
-    margin-left: 10px;
-    margin-right: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    gap: 5px;
+.user-info {
+  margin-left: 10px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 5px;
 }
 
-.hide{
+.hide {
   display: none !important;
 }
 
-.profile_Picture_Comments{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #7986cb;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; /* make the photo mantain their size */
+.profile_Picture_Comments {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #7986cb;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* make the photo mantain their size */
 }
 
 .comments_container {
@@ -297,9 +315,9 @@ body {
   bottom: 0px;
   left: 0;
   right: 0;
-  z-index: 10;  /*for make the coments be over the video */
+  z-index: 10; /*for make the coments be over the video */
   max-height: 50%;
-  overflow-y: auto;  /*scroll*/
+  overflow-y: auto; /*scroll*/
   padding: 10px;
   border-radius: 10px;
 }
@@ -307,7 +325,7 @@ body {
 .input_section {
   background-color: white;
   position: sticky;
-  bottom: 0; 
+  bottom: 0;
   left: 0;
   right: 0;
   z-index: 11;
@@ -319,7 +337,7 @@ body {
   order: 999;
 }
 
-input{
+input {
   width: 95%;
   padding: 8px;
   border-radius: 15px;
@@ -341,7 +359,6 @@ input{
 /* ── RESPONSIVE MOBILE ── */
 @media (max-width: 768px) {
 
-  /* Ocultar todo menos el video */
   .sidebar-left {
     display: none;
   }
@@ -350,7 +367,6 @@ input{
     display: none;
   }
 
-  /* Video ocupa toda la pantalla */
   .layout {
     height: 100vh;
     overflow: hidden;
@@ -359,9 +375,35 @@ input{
   .video-section {
     width: 100% !important;
     height: 100vh;
+    max-width: 100% !important;
   }
 
-  /* Botones flotantes a la derecha como en la referencia */
+  .video-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .video-feed {
+    height: 100vh;
+    width: 100%;
+  }
+
+  .video-item {
+    height: 100vh;
+    width: 100%;
+  }
+
+  .feed {
+    margin-left: 0 !important;
+    height: 100vh;
+  }
+
+  .feed-item {
+    height: 100vh;
+    width: 100%;
+  }
+
   .sidebar-right {
     position: fixed;
     right: 12px;
@@ -384,7 +426,6 @@ input{
     font-size: 13px;
   }
 
-  /* Barra de navegación abajo */
   .sidebar-left-mobile {
     display: flex;
   }
@@ -403,7 +444,7 @@ input{
     bottom: 0;
     left: 0;
     width: 100%;
-    background: rgba(255,255,255,0.95);
+    background: rgba(255, 255, 255, 0.95);
     justify-content: space-around;
     align-items: center;
     padding: 12px 0;
@@ -421,14 +462,13 @@ input{
 
 @media (max-width: 768px) {
 
-  /* Info del usuario ARRIBA del video */
   .video-user-top {
     display: flex;
     position: fixed;
     top: 16px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255,255,255,0.9);
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 20px;
     padding: 6px 16px;
     align-items: center;
@@ -438,7 +478,6 @@ input{
     white-space: nowrap;
   }
 
-  /* Info del usuario ABAJO del video */
   .video-user-bottom {
     display: block;
     position: fixed;
