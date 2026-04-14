@@ -63,6 +63,8 @@ body {
   cursor: pointer;
   padding: 8px;
   border-radius: 8px;
+  text-decoration: none;
+  color: black;
 }
 
 
@@ -468,10 +470,12 @@ input {
   }
 
   .bottom-nav a {
+    color: #292D32;
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
+    text-decoration: none;
   }
 }
 
