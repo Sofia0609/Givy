@@ -150,3 +150,25 @@ function submitComment(commentInput, commentsContainer, newComments) {
 
   return commentSection;
 }
+
+//Swap button function
+const swapModal = document.getElementById("swap-modal");
+
+feedItems.forEach(feedItem => {
+  feedItem.querySelector(".swap_button").addEventListener("click", () => {
+    console.log("sdoa");
+    
+    swapModal.classList.remove("hide");
+    swapModal.classList.add("animation")
+
+  setTimeout(() => {
+    swapModal.classList.remove("animation");
+    swapModal.classList.add("hide");  
+  }, 1000);
+  });
+});
+
+swapModal.querySelector(".swap-modal-close").addEventListener("click", () => {
+  swapModal.classList.add("hide");
+  swapModal.classList.remove("animation");
+});
