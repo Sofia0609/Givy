@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import '../styles/navBar.css'
-import NavBar from '../components/navBar'
+import NavBar from '../../components/navBar/navBar'
 
 
-function Create() {
+function Profile() {
 
   return (
     <>
@@ -12,4 +12,4 @@ function Create() {
   )
 }
 
-export default Create
+export default Profile

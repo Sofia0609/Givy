@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import '../styles/navBar.css'
-import NavBar from '../components/navBar'
+import NavBar from '../../components/navBar/navBar'
 
 
-function Search() {
+function Create() {
 
   return (
     <>
@@ -12,4 +12,4 @@ function Search() {
   )
 }
 
-export default Search
+export default Create

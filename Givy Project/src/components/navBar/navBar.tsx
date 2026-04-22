@@ -1,9 +1,5 @@
 import ChipNavBar from "./chipNavBar";
-
-
-interface NavBar{
-    
-}
+import './navBar.css'
 
 function NavBar({}){
 

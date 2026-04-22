@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import '..src/styles/navBar.css'
-import NavBar from '../components/navBar'
+import NavBar from '../../components/navBar/navBar'
 
 
 function Notifications() {
