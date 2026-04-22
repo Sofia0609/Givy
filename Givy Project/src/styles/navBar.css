@@ -17,13 +17,13 @@ body {
     align-items: left;
     gap: 3vh;
     justify-content: space-between;
-    padding: 0px 0px 0px 50px;
+    padding: 0px 0px 0px 5vh;
 }
 
 .chip{
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 3vh;
     cursor: pointer;
     font-weight: 600;
 }
@@ -31,7 +31,7 @@ body {
 .presentation{
     display: flex;
     flex-direction: column;
-    padding: 45px;
+    padding: 5vh;
     gap: 20px;
     font-weight: 600;
 }
