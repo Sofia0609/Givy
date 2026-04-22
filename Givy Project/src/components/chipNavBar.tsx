@@ -6,7 +6,7 @@ interface ChipNavBar{
 function ChipNavBar({icon, chip}: ChipNavBar){
 
     return(
-        <li>
+        <li className="chip">
             <img src={icon} alt="" />
             <span> {chip} </span>
         </li>
