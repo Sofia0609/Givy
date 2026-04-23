@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: poppins, sans-serif;
+    text-decoration: none;
 }
 
 #navBarContainer{
@@ -26,6 +27,11 @@ body {
     gap: 3vh;
     cursor: pointer;
     font-weight: 600;
+}
+
+a{
+    text-decoration: none;
+    color: black;
 }
 
 .presentation{
