@@ -3,18 +3,17 @@ import './section.css'
 interface Section{
     img : string
     title: string
+    gradient: string
 }
 
-function Section({img, title}:Section){
+function Section({img, title, gradient}:Section){
 
     return(
-        <>
-            <div>
+        <>  
+        <div className='sectionContainer' style={{ background: gradient }}>
                 <img src={img} alt="" />
-            </div>
-            <div>
-                <h1>  {title} </h1>
-            </div>
+                <h2>  {title} </h2>
+         </div>
         </>
     )
 }
