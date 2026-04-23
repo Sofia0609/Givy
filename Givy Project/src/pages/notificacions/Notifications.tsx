@@ -1,14 +1,21 @@
 import { useState } from 'react'
+import './notifications.css'
 import NavBar from '../../components/navBar/navBar'
 import Banner from '../../components/notifications/banner/banner'
+import Header from '../../components/header/header'
 
 
 function Notifications() {
 
   return (
     <><div className='notificationsLayout'>
-      <NavBar></NavBar>
-      <Banner title="In this sections you can see your Interactions Posibles Swaps, and Matches!"></Banner>
+      <div>
+          <NavBar></NavBar>
+      </div>
+      <div className='notificationsContent'>
+          <Header title="Notification Center"></Header>
+          <Banner title="In this sections you can see your Interactions Posibles Swaps, and Matches!"></Banner>
+      </div>
     </div>
     </>
   )
