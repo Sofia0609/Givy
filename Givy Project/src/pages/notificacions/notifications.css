@@ -1,0 +1,4 @@
+.notificationsLayout{
+    display: flex;
+    flex-direction: column;
+}
