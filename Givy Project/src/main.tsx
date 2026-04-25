@@ -2,9 +2,43 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import Feed from './pages/feed/Feed'
+import Notifications from './pages/notificacions/Notifications'
+import Search from './pages/search/Search'
+import Profile from './pages/profile/Profile'
+import Create from './pages/create/Create'
+import {  createBrowserRouter, Navigate, RouterProvider } from 'react-router'
+
+
+let routes = createBrowserRouter([
+  {
+    path: "/",
+    element: <Navigate to="/feed" />  
+  },
+  {
+  path: "/Feed",
+  element: <Feed></Feed>
+  },
+    {
+    path: "/Search",
+    element: <Search></Search>
+  },
+  {
+    path: "/Notifications",
+    element: <Notifications></Notifications>
+  },
+  {
+    path: "/Profile",
+    element: <Profile></Profile>
+  },
+  {
+    path: "/Create",
+    element: <Create></Create>
+  }
+
+])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Feed></Feed>
+    <RouterProvider router={routes}></RouterProvider>
   </StrictMode>,
 )
