@@ -19,7 +19,8 @@ function Search() {
             <div className="history">
                 <HistoryItem text="How to play Piano" onDelete={() => {}} />
                 <HistoryItem text="How to speak English like a Native" onDelete={() => {}} />
-                <HistoryItem text="Singing Teniques" onDelete={() => {}} />
+                <HistoryItem text="Singing 
+                " onDelete={() => {}} />
             </div>
 
             <h3>Recommended</h3>
