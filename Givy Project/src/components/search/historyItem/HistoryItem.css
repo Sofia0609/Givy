@@ -1,0 +1,19 @@
+.historyItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    font-style: italic;
+    color: #333;
+}
+
+.historyItem span {
+    flex: 1;
+}
+
+.historyItem button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #999;
+}

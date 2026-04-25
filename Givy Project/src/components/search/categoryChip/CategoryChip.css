@@ -1,0 +1,9 @@
+.categoryChip {
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 6px 16px;
+    background-color: white;
+    font-family: poppins, sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+}
