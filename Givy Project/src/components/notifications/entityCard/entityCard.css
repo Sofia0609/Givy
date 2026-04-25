@@ -1,0 +1,17 @@
+.entityCardContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 500px;
+    gap: 10px;
+    padding: 15px;
+    background-color: var(--color-purple-light);
+    border-radius: 20px;
+    margin: 5px;
+}
+
+.photo{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}

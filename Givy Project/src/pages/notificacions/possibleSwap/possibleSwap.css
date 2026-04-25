@@ -1,0 +1,21 @@
+.swapLayout {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+}
+
+.swapContent {
+    margin-left: 250px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.swapDecision{
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin-left: 4%;
+    margin-top: 2%;
+    margin-bottom: 20px;
+}
