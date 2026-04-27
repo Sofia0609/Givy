@@ -4,8 +4,8 @@ import './entityCard.css'
 interface EntityCard{
     photo: string,
     name: string
-    content: string
-    content2 : string
+    content?: string
+    content2? : string
     desicionButtons?: boolean
     beginButton?: boolean
 }
@@ -20,7 +20,8 @@ function EntityCard({name,photo, content, content2, desicionButtons, beginButton
                     <div className='entityCardLeft'>
                         <h3 className='nameEntityCard'>  {name} </h3>
                         <div className='tags'>
-                            <Tag content={content} gradient="var(--color-purple-light-buttons)" ></Tag>
+                            {content && <Tag content={content} gradient="var(--color-purple-light-buttons)" ></Tag>}
+                            <img src="./src/assets/tag_swap_icon.svg" alt="" />
                             <Tag content={content2} gradient="var(--color-bg-main)" ></Tag>
                         </div>
                     </div>
