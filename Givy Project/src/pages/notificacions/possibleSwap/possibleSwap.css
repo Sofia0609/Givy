@@ -11,11 +11,21 @@
     flex-direction: column;
 }
 
-.swapDecision{
+.swapSectionsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.swap{
     display: flex;
     flex-direction: column;
     width: fit-content;
     margin-left: 4%;
     margin-top: 2%;
     margin-bottom: 20px;
+}
+
+.swapTitle{
+    font-weight: 600;
 }

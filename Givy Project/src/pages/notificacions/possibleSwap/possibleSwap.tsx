@@ -14,11 +14,19 @@ function PossibleSwap() {
       </div>
       <div className='swapContent'>
           <Header title='Swap?'></Header>   
-          <div className='swapDecision'>
-              <h2>Do you wanna Swap?</h2>
-              <EntityCard photo='./src/assets/profile_picture.png' name="Carla Gonzales"></EntityCard>
-              <EntityCard photo='./src/assets/profile_picture.png' name="Sofia Velez"></EntityCard>
-              <EntityCard photo='./src/assets/profile_picture.png' name="Alejandro Arango"></EntityCard>
+          <div className='swapSectionsContainer'>
+            <div className='swap'>
+                <h2 className='swapTitle'>Do you wanna Swap?</h2>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Carla Gonzales" content='art' content2='developer'></EntityCard>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Sofia Velez" content='math' content2='music'></EntityCard>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Alejandro Arango"  content='dance' content2='art'></EntityCard>
+            </div>
+            <div className='swap'>
+                <h2 className='swapTitle'>Match Status</h2>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Carla Gonzales"  content='music' content2='desing'></EntityCard>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Sofia Velez"  content='teatre' content2='fotografy'></EntityCard>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Alejandro Arango"  content='writting' content2='singing'></EntityCard>
+          </div>
           </div>
       </div>
     </div>
