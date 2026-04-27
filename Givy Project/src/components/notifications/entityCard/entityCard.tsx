@@ -4,13 +4,14 @@ import './entityCard.css'
 interface EntityCard{
     photo: string,
     name: string
+    description?: string
     content?: string
     content2? : string
     desicionButtons?: boolean
-    beginButton?: boolean
+    button?: string
 }
 
-function EntityCard({name,photo, content, content2, desicionButtons, beginButton}:EntityCard){
+function EntityCard({name,photo, description, content, content2, desicionButtons, button}:EntityCard){
 
     return(
         <>
@@ -19,10 +20,11 @@ function EntityCard({name,photo, content, content2, desicionButtons, beginButton
                 <div className='entityCardContent'>
                     <div className='entityCardLeft'>
                         <h3 className='nameEntityCard'>  {name} </h3>
+                        {description && <p>{description}</p>}
                         <div className='tags'>
                             {content && <Tag content={content} gradient="var(--color-purple-light-buttons)" ></Tag>}
-                            <img src="./src/assets/tag_swap_icon.svg" alt="" />
-                            <Tag content={content2} gradient="var(--color-bg-main)" ></Tag>
+                            {content && content2 && <img src="./src/assets/tag_swap_icon.svg" alt="" />}
+                            {content2 &&<Tag content={content2} gradient="var(--color-bg-main)" ></Tag>}
                         </div>
                     </div>
                     {desicionButtons &&(
@@ -33,9 +35,9 @@ function EntityCard({name,photo, content, content2, desicionButtons, beginButton
                         </div>
                         
                     )}
-                    {beginButton &&(
+                    {button &&(
                         <div className='entityCardButtons'>
-                            <button id='beginButton'>Begin</button>
+                            <button id='button'>{button}</button>
                         </div>
                     )}
 

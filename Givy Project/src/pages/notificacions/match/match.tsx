@@ -17,9 +17,9 @@ function Match() {
           <div className='matchSectionsContainer'>
             <div className='match'>
                 <h2 className='matchTitle'>What do you wanna learn today?</h2>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Carla Gonzales" content='art' content2='developer' beginButton={true}></EntityCard>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Sofia Velez" content='math' content2='music' beginButton={true}></EntityCard>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Alejandro Arango"  content='dance' content2='art' beginButton={true}></EntityCard>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Carla Gonzales" content='art' content2='developer' button='Begin'></EntityCard>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Sofia Velez" content='math' content2='music' button='Begin'></EntityCard>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Alejandro Arango"  content='dance' content2='art' button='Begin'></EntityCard>
             </div>
 
             <div className='divider'></div>
