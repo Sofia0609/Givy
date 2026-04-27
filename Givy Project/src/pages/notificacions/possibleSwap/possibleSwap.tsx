@@ -17,9 +17,9 @@ function PossibleSwap() {
           <div className='swapSectionsContainer'>
             <div className='swap'>
                 <h2 className='swapTitle'>Do you wanna Swap?</h2>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Carla Gonzales" content='art' content2='developer'></EntityCard>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Sofia Velez" content='math' content2='music'></EntityCard>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Alejandro Arango"  content='dance' content2='art'></EntityCard>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Carla Gonzales" content='art' content2='developer' desicionButtons = {true}></EntityCard>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Sofia Velez" content='math' content2='music' desicionButtons = {true}></EntityCard>
+                <EntityCard photo='./src/assets/profile_picture.png' name="Alejandro Arango"  content='dance' content2='art' desicionButtons = {true}></EntityCard>
             </div>
             <div className='swap'>
                 <h2 className='swapTitle'>Match Status</h2>

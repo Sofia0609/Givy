@@ -3,12 +3,21 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    width: 500px;
+    width: 80%;
     gap: 10px;
     padding: 15px;
     background-color: var(--color-purple-light);
     border-radius: 20px;
     margin: 5px;
+    padding: 15px 30px;
+}
+
+.entityCardContent{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .photo{
@@ -18,11 +27,40 @@
 }
 
 .nameEntityCard{
-    margin: 5px 0px;
+    margin: 0px;
+}
+
+.entityCardLeft{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .tags{
     display: flex;
     flex-direction: row;
     gap: 10px;
+}
+
+.entityCardButtons{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.decisionButton{
+    width: 100%;
+    height: 2.2vw;
+}
+
+#beginButton{
+    width: 100px;
+    height: 40px;
+    font-weight: bold;
+    background-color: var(--color-brand-lime);
+    color: var(--color-text-primary);
+    border: none;
+    border-radius: 20px;
+    font-size: 1vw;
+    cursor: pointer;
 }
