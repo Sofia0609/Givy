@@ -1,6 +1,7 @@
 [
   {
     "id": "u1",
+    "photo": "../src/assets/profile_picture.png",
     "username": "Emilio Álvarez",
     "at": "@emilioalvarez",
     "email": "emilio@gmail.com",
@@ -17,6 +18,7 @@
   {
     "id": "u2",
     "username": "Carla Gonzales",
+    "photo": "../src/assets/profile_picture.png",
     "at": "@carlagonzales",
     "email": "carla@gmail.com",
     "password": "hashed_password",
@@ -32,6 +34,7 @@
   {
     "id": "u3",
     "username": "Sofia Velez",
+    "photo": "../src/assets/profile_picture.png",
     "at": "@sofiavelez",
     "email": "sofia@gmail.com",
     "password": "hashed_password",
@@ -47,6 +50,7 @@
   {
     "id": "u4",
     "username": "Alejandro Arango",
+    "photo": "../src/assets/profile_picture.png",
     "at": "@alejarango",
     "email": "alejo@gmail.com",
     "password": "hashed_password",
@@ -62,6 +66,7 @@
   {
     "id": "u5",
     "username": "Miranda Palacios",
+    "photo": "../src/assets/profile_picture.png",
     "at": "@mirandapal",
     "email": "miranda@gmail.com",
     "password": "hashed_password",

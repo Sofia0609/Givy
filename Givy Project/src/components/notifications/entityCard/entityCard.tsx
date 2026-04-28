@@ -9,9 +9,10 @@ interface EntityCard{
     content2? : string
     desicionButtons?: boolean
     button?: string
+    id?:string
 }
 
-function EntityCard({name,photo, description, content, content2, desicionButtons, button}:EntityCard){
+function EntityCard({name,photo, description, content, content2, desicionButtons, button,id}:EntityCard){
 
     return(
         <>
