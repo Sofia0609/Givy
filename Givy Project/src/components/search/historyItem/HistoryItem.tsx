@@ -1,3 +1,5 @@
+import './HistoryItem.css'
+
 interface HistoryItem {
     text: string
     onDelete: () => void
@@ -6,7 +8,16 @@ interface HistoryItem {
 function HistoryItem({ text, onDelete }: HistoryItem) {
     return (
         <div className="historyItem">
-            <img src="/icons/refresh.svg" alt="history" />
+            <svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_765_16735)">
+                    <path d="M12.4577 2.33342V5.83342M12.4577 5.83342H9.20768M12.4577 5.83342L9.94435 3.29008C9.36219 2.66283 8.64198 2.20462 7.85091 1.9582C7.05984 1.71178 6.2237 1.68519 5.4205 1.8809C4.61731 2.07661 3.87324 2.48825 3.25773 3.07741C2.64221 3.66657 2.17531 4.41404 1.9006 5.25008M0.541016 11.6668V8.16675M0.541016 8.16675H3.79102M0.541016 8.16675L3.05435 10.7101C3.6365 11.3373 4.35672 11.7955 5.14779 12.042C5.93886 12.2884 6.775 12.315 7.57819 12.1193C8.38139 11.9236 9.12546 11.5119 9.74097 10.9228C10.3565 10.3336 10.8234 9.58613 11.0981 8.75009" stroke="#292D32" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </g>
+                <defs>
+                    <clipPath id="clip0_765_16735">
+                        <rect width="13" height="14" fill="white"/>
+                    </clipPath>
+                </defs>
+            </svg>
             <span>{text}</span>
             <button onClick={onDelete}>✕</button>
         </div>

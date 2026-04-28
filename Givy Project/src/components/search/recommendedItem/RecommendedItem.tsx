@@ -1,3 +1,5 @@
+import './RecommendedItem.css'
+
 interface RecommendedItem {
     title: string
     onClick: () => void

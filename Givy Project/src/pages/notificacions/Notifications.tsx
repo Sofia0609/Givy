@@ -14,7 +14,7 @@ function Notifications() {
       </div>
       <div className='notificationsContent'>
           <Header title="Notification Center"></Header>
-          <Banner title="In this sections you can see your Interactions Posibles Swaps, and Matches!"></Banner>
+          <Banner title="In this56 sections you can see your Interactions Posibles Swaps, and Matches!"></Banner>
       </div>
     </div>
     </>

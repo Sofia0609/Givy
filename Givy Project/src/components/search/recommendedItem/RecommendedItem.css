@@ -3,11 +3,12 @@
     align-items: center;
     gap: 12px;
     padding: 12px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #9e9e9e;
     cursor: pointer;
+    width: 100%; 
 }
 
 .dot {
-    color: #c8d62b;
-    font-size: 20px;
+    color: #D1D84E;
+    font-size: 14px;
 }

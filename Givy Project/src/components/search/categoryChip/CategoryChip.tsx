@@ -1,3 +1,5 @@
+import './CategoryChip.css'
+
 interface CategoryChip {
     label: string
     onClick: () => void
