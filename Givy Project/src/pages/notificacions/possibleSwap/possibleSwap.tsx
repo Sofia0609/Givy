@@ -5,6 +5,7 @@ import Header from '../../../components/header/header'
 import EntityCard from '../../../components/notifications/entityCard/entityCard'
 import swapRequests from '../../../data/swapRequests.json'
 import users from '../../../data/users.json'
+import tags from '../../../data/tags.json'
 
 
 function PossibleSwap() {
@@ -50,11 +51,13 @@ function PossibleSwap() {
                 <h2 className='swapTitle'>Do you wanna Swap?</h2>
                 { 
                     filteredSwap.map((swap,key)=>{
-                        console.log(filteredUser.username);
+                      
+                      const tagOffered = tags.find(tag => tag.id === swap.tagOffered)
+                      const tagRequested = tags.find(tag => tag.id === swap.tagRequested)
                         
                       return(
                       <>
-                      <EntityCard id={String(key)} photo={filteredUser.photo} name={filteredUser.username} content={swap.tagOffered} content2={swap.tagRequested} desicionButtons = {true}></EntityCard>
+                      <EntityCard id={String(key)} photo={filteredUser.photo} name={filteredUser.username} content={tagOffered.name} content2={tagRequested.name} desicionButtons = {true}></EntityCard>
                       </>                    
                           )
                     } 
