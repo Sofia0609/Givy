@@ -15,7 +15,6 @@ function PossibleSwap() {
   const [filteredUser,setUser] = useState<any>({})
 
   useEffect(() => {
-  // Setup: Code to run after render
   
   function getUserbyID(id){
     const user = users.find((user)=> user.id === id)
@@ -49,20 +48,31 @@ function PossibleSwap() {
           <div className='swapSectionsContainer'>
             <div className='swap'>
                 <h2 className='swapTitle'>Do you wanna Swap?</h2>
-                { 
-                    filteredSwap.map((swap,key)=>{
+
+
+                    if (filteredSwap.length == 0){
+                    
+                          <>
+                            <h1>No tienes swaps pendientes</h1>
+                          </>
+        
+                    } else{
+                      
+                      filteredSwap.map((swap,key)=>{
                       
                       const tagOffered = tags.find(tag => tag.id === swap.tagOffered)
                       const tagRequested = tags.find(tag => tag.id === swap.tagRequested)
                         
                       return(
                       <>
-                      <EntityCard id={String(key)} photo={filteredUser.photo} name={filteredUser.username} content={tagOffered.name} content2={tagRequested.name} desicionButtons = {true}></EntityCard>
+                      <EntityCard id={String(key)} photo={filteredUser.profilePicture} name={filteredUser.username} content={tagOffered.name} content2={tagRequested.name} desicionButtons = {true}></EntityCard>
                       </>                    
                           )
-                    } 
-                )
-                }
+                      } 
+                      )
+                    }
+                
+          
             </div>
             <div className='swap'>
                 <h2 className='swapTitle'>Match Status</h2>
