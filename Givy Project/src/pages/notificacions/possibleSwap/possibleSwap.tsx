@@ -41,7 +41,14 @@ function PossibleSwap() {
 }, []);
 
 
+  function acceptSwap(swapId: string) {
+    console.log("acepté el swap:", swapId)
+  }
 
+  function rejectSwap(swapId: string) {
+    console.log("rechacé el swap:", swapId)
+  }
+  
 
   return (
     <><div className='swapLayout'>
@@ -49,7 +56,9 @@ function PossibleSwap() {
           <NavBar></NavBar>
       </div>
       <div className='swapContent'>
-          <Header title='Swap?'></Header>   
+          <Header title='Swap?'></Header>  
+          
+           
 
           <div className='swapSectionsContainer'>
             <div className='swap'>
@@ -62,6 +71,7 @@ function PossibleSwap() {
 
                     filteredSwap.map((swap, key) => {
 
+
                         const fromUser = users.find(u => u.id === swap.fromUserId) 
                         const tagOffered = tags.find(tag => tag.id === swap.tagOffered)
                         const tagRequested = tags.find(tag => tag.id === swap.tagRequested)
@@ -73,6 +83,8 @@ function PossibleSwap() {
                                 content={tagOffered?.name}
                                 content2={tagRequested?.name}
                                 desicionButtons={true}
+                                onAccept={() => acceptSwap(swap.id)}   
+                                onReject={() => rejectSwap(swap.id)}
                             />
                         )
                     })

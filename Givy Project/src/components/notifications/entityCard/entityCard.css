@@ -48,6 +48,10 @@
     gap: 20px;
 }
 
+.decisionButton{
+    cursor: pointer;
+}
+
 #button{
     width: 95px;
     height: 35px;

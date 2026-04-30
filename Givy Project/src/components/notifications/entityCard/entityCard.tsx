@@ -10,9 +10,11 @@ interface EntityCard{
     desicionButtons?: boolean
     button?: string
     id?:string
+    onAccept?: () => void  
+    onReject?: () => void
 }
 
-function EntityCard({name,photo, description, content, content2, desicionButtons, button,id}:EntityCard){
+function EntityCard({name,photo, description, content, content2, desicionButtons, button,id, onAccept, onReject}:EntityCard){
 
     return(
         <>
@@ -31,8 +33,8 @@ function EntityCard({name,photo, description, content, content2, desicionButtons
                     {desicionButtons &&(
                     
                         <div className='entityCardButtons'>
-                            <img className='decisionButton' src="./src/assets/accept_swap_icon.svg" alt="" />
-                            <img className='decisionButton' src="./src/assets/decline_swap_icon.svg" alt="" />
+                            <img className='decisionButton' src="./src/assets/accept_swap_icon.svg" alt="" onClick={onAccept} />
+                            <img className='decisionButton' src="./src/assets/decline_swap_icon.svg" alt="" onClick={onReject} />
                         </div>
                         
                     )}
