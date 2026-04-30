@@ -1,0 +1,49 @@
+.profile-button-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid #fff;
+  cursor: pointer;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.15s;
+}
+
+.profile-button:hover {
+  transform: scale(1.06);
+}
+
+.profile-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0) invert(1);
+}
+
+.profile-plus {
+  position: absolute;
+  bottom: -8px;
+  background: #7c3aed;
+  color: #fff;
+  font-size: 0.75em;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  line-height: 1;
+}

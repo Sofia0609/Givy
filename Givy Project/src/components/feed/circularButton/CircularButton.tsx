@@ -1,20 +1,25 @@
-import React from "react";
-import "./circularButton.css";
-import likeIcon from "../../../assets/like_icon.svg";
+import "./CircularButton.css";
 
 interface Props {
-  liked: boolean;
-  likeCount: number;
+  icon: string;
+  count?: number;
   onClick: () => void;
+  active?: boolean;
 }
 
-const CircularButton: React.FC<Props> = ({ liked, likeCount, onClick }) => (
-  <div className="circular-button">
-    <button className={liked ? "Liked" : ""} onClick={onClick}>
-      <img src={likeIcon} alt="like" />
-    </button>
-    <span className="like_counter">{likeCount}</span>
-  </div>
-);
+function CircularButton({ icon, count, onClick, active = false }: Props) {
+  return (
+    <div className="circular-button">
+      <button
+        onClick={onClick}
+        className={active ? "active" : ""}
+        aria-label="action"
+      >
+        <img src={icon} alt="button-icon" />
+      </button>
+      {count !== undefined && <span>{count}</span>}
+    </div>
+  );
+}
 
 export default CircularButton;

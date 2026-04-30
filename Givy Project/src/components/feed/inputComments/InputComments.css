@@ -1,0 +1,25 @@
+.input-comment {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.input-comment input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.input-comment button {
+  background-color: #0077cc;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.input-comment button:hover {
+  background-color: #005fa3;
+}

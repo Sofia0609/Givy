@@ -1,30 +1,6 @@
-.description {
-  padding: 12px;
-}
-
-.user-info h2 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.user-info p {
-  margin: 4px 0;
-  font-size: 14px;
-  color: #555;
-}
-
 .tags {
-  margin-top: 8px;
   display: flex;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tag-btn {
-  background: #eee;
-  border: none;
-  border-radius: 12px;
-  padding: 4px 10px;
-  font-size: 12px;
-  cursor: pointer;
+  margin-top: 8px;
 }

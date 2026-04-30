@@ -1,0 +1,93 @@
+/* =====================
+   FEED PAGE
+   ===================== */
+.feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  background: #f0eef8;
+}
+
+/* Cada item ocupa toda la pantalla (estilo TikTok) */
+.feed-item {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #000;
+  margin: 0 auto;
+}
+
+/* ---- Video de fondo ---- */
+.feed-video-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* ---- Sidebar derecho ---- */
+.feed-sidebar {
+  position: absolute;
+  right: 12px;
+  bottom: 120px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* ---- Info inferior izquierda ---- */
+.feed-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 70px;
+  z-index: 10;
+  padding: 16px 16px 20px 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 70%, transparent);
+}
+
+/* ---- Overlay de comentarios ---- */
+.feed-comments-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 20px 20px 0 0;
+  padding: 16px;
+  max-height: 60vh;
+  overflow-y: auto;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+}
+
+/* ---- Desktop: layout lateral ---- */
+@media (min-width: 768px) {
+  .feed {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: unset;
+    scroll-snap-type: none;
+    padding: 40px 0;
+    background: #edeaf8;
+  }
+
+  .feed-item {
+    height: 80vh;
+    max-height: 700px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(100, 80, 200, 0.18);
+  }
+}
