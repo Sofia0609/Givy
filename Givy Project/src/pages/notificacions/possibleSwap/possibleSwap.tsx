@@ -41,13 +41,31 @@ function PossibleSwap() {
 }, []);
 
 
-  function acceptSwap(swapId: string) {
-    console.log("acepté el swap:", swapId)
-  }
+function acceptSwap(swapId: string) {
 
-  function rejectSwap(swapId: string) {
-    console.log("rechacé el swap:", swapId)
-  }
+    setSwapRequest(actualList => actualList.filter(swapRequest => swapRequest.id !== swapId))
+
+    const stored = localStorage.getItem('swapRequests')
+    const allSwaps = stored ? JSON.parse(stored) : swapRequests
+
+    const updated = allSwaps.map(swapRequest =>
+        swapRequest.id === swapId ? { ...swapRequest, status: 'accepted' } : swapRequest
+    )
+    localStorage.setItem('swapRequests', JSON.stringify(updated))
+}
+
+function rejectSwap(swapId: string) {
+
+    setSwapRequest(actualList => actualList.filter(swapRequest => swapRequest.id !== swapId))
+
+    const stored = localStorage.getItem('swapRequests')
+    const allSwaps = stored ? JSON.parse(stored) : swapRequests
+
+    const updated = allSwaps.map(swapRequest =>
+        swapRequest.id === swapId ? { ...swapRequest, status: 'rejected' } : swapRequest
+    )
+    localStorage.setItem('swapRequests', JSON.stringify(updated))
+}
   
 
   return (
