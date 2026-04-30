@@ -9,29 +9,35 @@ import tags from '../../../data/tags.json'
 
 
 function PossibleSwap() {
-  const userLogged = "u5"
+  const userLogged = "u1"
 
-  const [filteredSwap, setSwapRequest] = useState([])
+  const [filteredSwap, setSwapRequest] = useState<typeof swapRequests>([])
+  const [filteredSwapStatus, setSwapStatusUser] = useState<typeof swapRequests>([])
   const [filteredUser,setUser] = useState<any>({})
 
   useEffect(() => {
   
-  function getUserbyID(id){
+  function getUserbyID(id:string){
     const user = users.find((user)=> user.id === id)
     setUser(user)
     console.log(user)
-
   }
 
-  function getSwapbyUser(user){
-    const swapUser = swapRequests.filter((request)=> request.toUserId === user)
-    console.log(swapUser );
-    
+  function getSwapbyUser(user:string){
+    const swapUser = swapRequests.filter((request)=> request.toUserId === user && request.status === "pending")
+    console.log(swapUser )
     setSwapRequest(swapUser)
-
   } 
+
+  function getStatusStatusbyUser(user:string){
+    const swapStatusUser = swapRequests.filter((swapStatus)=> swapStatus.toUserId === user && swapStatus.status !== "pending")
+    console.log(swapStatusUser)
+    setSwapStatusUser(swapStatusUser)
+  }
+
   getUserbyID(userLogged);
   getSwapbyUser(userLogged);
+  getStatusStatusbyUser(userLogged);
 }, []);
 
 
@@ -49,36 +55,54 @@ function PossibleSwap() {
             <div className='swap'>
                 <h2 className='swapTitle'>Do you wanna Swap?</h2>
 
+                {filteredSwap.length === 0 ? (
 
-                    if (filteredSwap.length == 0){
-                    
-                          <>
-                            <h1>No tienes swaps pendientes</h1>
-                          </>
-        
-                    } else{
-                      
-                      filteredSwap.map((swap,key)=>{
-                      
-                      const tagOffered = tags.find(tag => tag.id === swap.tagOffered)
-                      const tagRequested = tags.find(tag => tag.id === swap.tagRequested)
-                        
-                      return(
-                      <>
-                      <EntityCard id={String(key)} photo={filteredUser.profilePicture} name={filteredUser.username} content={tagOffered.name} content2={tagRequested.name} desicionButtons = {true}></EntityCard>
-                      </>                    
-                          )
-                      } 
-                      )
-                    }
-                
-          
+                    <h3>You don't have any pending swap requests</h3>
+                ) : (
+
+                    filteredSwap.map((swap, key) => {
+
+                        const fromUser = users.find(u => u.id === swap.fromUserId) 
+                        const tagOffered = tags.find(tag => tag.id === swap.tagOffered)
+                        const tagRequested = tags.find(tag => tag.id === swap.tagRequested)
+                        return (
+                            <EntityCard
+                                key={key}
+                                photo={fromUser?.profilePicture}
+                                name={fromUser?.username}
+                                content={tagOffered?.name}
+                                content2={tagRequested?.name}
+                                desicionButtons={true}
+                            />
+                        )
+                    })
+                )}
             </div>
             <div className='swap'>
-                <h2 className='swapTitle'>Match Status</h2>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Carla Gonzales"  content='music' content2='desing'></EntityCard>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Sofia Velez"  content='teatre' content2='fotografy'></EntityCard>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Alejandro Arango"  content='writting' content2='singing'></EntityCard>
+                <h2 className='swapTitle'>Swap Status</h2>
+
+                {filteredSwapStatus.length === 0 ? (
+
+                    <h3>You don't have any swap requests notification</h3>
+                ) : (
+
+                    filteredSwapStatus.map((swap, key) => {
+
+                        const fromUser = users.find(u => u.id === swap.fromUserId) 
+                        const tagOffered = tags.find(tag => tag.id === swap.tagOffered)
+                        const tagRequested = tags.find(tag => tag.id === swap.tagRequested)
+                        return (
+                            <EntityCard
+                                key={key}
+                                photo={fromUser?.profilePicture}
+                                name={fromUser?.username}
+                                content={tagOffered?.name}
+                                content2={tagRequested?.name}
+                            />
+                        )
+                    })
+                )}
+
           </div>
           </div>
       </div>

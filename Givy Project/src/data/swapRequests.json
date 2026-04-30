@@ -3,7 +3,7 @@
     "id": "sr1",
     "fromUserId": "u3",
     "toUserId": "u1",
-    "status": "accepted",
+    "status": "pending",
     "tagOffered": "t5",
     "tagRequested": "t4",
     "date": "2026-04-07T14:00:00Z"
@@ -20,7 +20,7 @@
   {
     "id": "sr3",
     "fromUserId": "u2",
-    "toUserId": "u4",
+    "toUserId": "u1",
     "status": "rejected",
     "tagOffered": "t2",
     "tagRequested": "t4",
