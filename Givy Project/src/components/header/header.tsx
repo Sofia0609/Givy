@@ -7,9 +7,10 @@ interface Header{
 function Header({ title }: Header) {
     return (
         <div className='header'>
+            <img className='returnIcon' src="./src/assets/return_icon.svg" alt="" />
             <h2 className='headerTitle'>{title}</h2>
         </div>
     )
 }
 
-export default Header
+export default Header;

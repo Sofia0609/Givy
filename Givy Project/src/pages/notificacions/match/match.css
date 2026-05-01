@@ -1,0 +1,53 @@
+.matchLayout {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+}
+
+.matchContent {
+    margin-left: 250px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.matchSectionsContainer {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.match {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 40px;
+    width: 40%;
+}
+
+.divider {
+    width: 2px;
+    background-color: #000000;
+    height: 90%;
+    align-self: center;
+}
+
+.chatSection {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.chatSection h1{
+    font-weight: 600;
+}
+
+.matchTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+

@@ -16,3 +16,8 @@
     font-weight: 500;
     color: var(--color-text-primary);
 }
+
+.returnIcon {
+    width: 20px;
+    height: 20px;
+}
