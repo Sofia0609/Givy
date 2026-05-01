@@ -1,0 +1,38 @@
+.profileLayout {
+    display: flex;
+    height: 100vh;
+    background-color: #f0eef8;
+}
+
+.profileMain {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+    gap: 12px;
+}
+
+.profileStats {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    justify-content: center;
+    margin: 8px 0;
+}
+
+.profileBio {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+}
+
+.profileTags {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+}

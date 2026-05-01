@@ -1,0 +1,17 @@
+.notificationsLayout {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+}
+
+.notificationsContent {
+    margin-left: 250px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.sectionsContainer{
+    display: flex;
+    flex-direction: row !important;
+}

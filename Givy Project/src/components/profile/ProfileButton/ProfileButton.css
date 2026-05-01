@@ -1,0 +1,15 @@
+.profileButton {
+    padding: 8px 24px;
+    border-radius: 20px;
+    border: 2px solid var(--color-text-primary);
+    background-color: transparent;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: poppins, sans-serif;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.profileButton:hover {
+    background-color: var(--color-purple-light);
+}
