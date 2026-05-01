@@ -3,12 +3,16 @@ import './match.css'
 import NavBar from '../../../components/navBar/navBar'
 import Header from '../../../components/header/header'
 import EntityCard from '../../../components/notifications/entityCard/entityCard'
+import UploadVideo from '../../../components/create/uploadVideo/uploadVideo'
+import BigButton from '../../../components/bigButton/bigButton'
+import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
 
 
 function Match() {
 
   return (
-    <><div className='matchLayout'>
+    <>
+    <div className='matchLayout'>
       <div>
           <NavBar></NavBar>
       </div>
@@ -25,12 +29,11 @@ function Match() {
             <div className='divider'></div>
 
             <div className='chatSection'>
-                <h1>What do you want to Learn Today?</h1>
+                <UploadVideoMatch tittle='Upload a video to start the chat' description='This way you can receive the educate video from you Match!' icon='./src/assets/upload_icon.svg'></UploadVideoMatch>
             </div>
-
           </div>
+        </div>
       </div>
-    </div>
     </>
   )
 }
