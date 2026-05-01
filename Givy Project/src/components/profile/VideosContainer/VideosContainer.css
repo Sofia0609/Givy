@@ -23,3 +23,14 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
 }
+
+.videoCard {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+    height: 100%;  /* ← agregar esto */
+}
