@@ -9,187 +9,162 @@ import likeIcon from "../../assets/like_icon.svg";
 import commentIcon from "../../assets/comment_icon.svg";
 import shareIcon from "../../assets/share_icon.svg";
 import swapIcon from "../../assets/swap_icon.svg";
+import usersData from "../../data/users.json";
+import videosData from "../../data/videos.json";
+import tagsData from "../../data/tags.json";
 import "./Feed.css";
+import NavBar from "../../components/navBar/navBar";
 
-interface UserData {
-  id: string;
-  username: string;
-  initials: string;
-  teaches: string;
-  bio: string;
-  lookingFor: string;
-  wantsToTeach: string[];
-  swapTabs: string[];
+const resolveTagNames = (tagIds: string[]): string[] =>
+  tagIds
+    .map((id) => tagsData.find((t) => t.id === id)?.name ?? id)
+    .filter(Boolean);
+
+const getInitials = (username: string): string =>
+  username
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
+interface FeedItem {
+  user: (typeof usersData)[0];
+  video: (typeof videosData)[0];
 }
 
-interface VideoData {
-  id: string;
-  title: string;
-  url: string;
-}
 
-// Reemplaza con tu import desde JSON
-const users: UserData[] = [
-  {
-    id: "1",
-    username: "Emilio Álvarez",
-    initials: "EA",
-    teaches: "Math teacher",
-    bio: "Hi! I've been a teacher in this area for more than 5 years. I'm very hardworking and proactive. Today's lesson was about derivatives. Do you need a lesson on this or another topic?",
-    lookingFor: "Looking for...",
-    wantsToTeach: ["Bass teacher", "Music teacher", "Bass coach"],
-    swapTabs: ["Art", "Music"],
-  },
-  {
-    id: "2",
-    username: "Sara López",
-    initials: "SL",
-    teaches: "Music teacher",
-    bio: "Profesora de música con 3 años de experiencia. Enseño guitarra, piano y teoría musical.",
-    lookingFor: "Looking for...",
-    wantsToTeach: ["Math tutor", "English teacher"],
-    swapTabs: ["Math", "English"],
-  },
-];
+const feedItems: FeedItem[] = videosData
+  .map((video) => {
+    const user = usersData.find((u) => u.id === video.userId);
+    if (!user) return null;
+    return { user, video };
+  })
+  .filter((item): item is FeedItem => item !== null);
 
-const videos: VideoData[] = [
-  { id: "v1", title: "Derivadas", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
-  { id: "v2", title: "Guitarra",  url: "https://www.w3schools.com/html/mov_bbb.mp4" },
-];
 
 function Feed() {
-  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
-  const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>({});
-  const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
 
-  const toggleLike = (id: string) => {
-    const liked = likedMap[id];
-    setLikedMap({ ...likedMap, [id]: !liked });
-    setLikeCountMap({ ...likeCountMap, [id]: (likeCountMap[id] || 0) + (liked ? -1 : 1) });
+  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
+  const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(
+    Object.fromEntries(videosData.map((v) => [v.id, v.likes]))
+  );
+  const [showCommentsMap, setShowCommentsMap] = useState<
+    Record<string, boolean>
+  >({});
+
+  const toggleLike = (videoId: string) => {
+    const liked = likedMap[videoId] ?? false;
+    setLikedMap({ ...likedMap, [videoId]: !liked });
+    setLikeCountMap({
+      ...likeCountMap,
+      [videoId]: (likeCountMap[videoId] ?? 0) + (liked ? -1 : 1),
+    });
   };
 
-  const toggleComments = (id: string) => {
-    setShowCommentsMap({ ...showCommentsMap, [id]: !showCommentsMap[id] });
+  const toggleComments = (videoId: string) => {
+    setShowCommentsMap({
+      ...showCommentsMap,
+      [videoId]: !showCommentsMap[videoId],
+    });
   };
 
   return (
     <div className="layout">
-      {/* ── Sidebar izquierdo — solo desktop ── */}
-      <aside className="sidebar-left">
-        <div className="logo">
-          <img src="/assets/Logotype.png" alt="Givy" />
-          <div>
-            <p className="logo-welcome">Welcome to Givy!</p>
-            <p className="logo-name">Your Name</p>
-          </div>
-        </div>
-        <nav>
-          <a className="button-nav active" href="#">
-            <img src="/assets/home_icon.svg" alt="" />
-            <span>Feed</span>
-          </a>
-          <a className="button-nav" href="#">
-            <img src="/assets/search_icon.svg" alt="" />
-            <span>Buscar</span>
-          </a>
-          <a className="button-nav" href="#">
-            <img src="/assets/notification_icon.svg" alt="" />
-            <span>Notificaciones</span>
-          </a>
-          <a className="button-nav" href="#">
-            <img src="/assets/user_icon.svg" alt="" />
-            <span>Perfil</span>
-          </a>
-          <a className="button-nav" href="#">
-            <img src="/assets/create_icon.svg" alt="" />
-            <span>Crear</span>
-          </a>
-        </nav>
-      </aside>
 
-      {/* ── Scroll feed ── */}
+      <NavBar />
+
       <div className="feed">
-        {users.map((user, index) => (
-          <div key={user.id} className="feed-item">
+        {feedItems.map(({ user, video }) => {
 
-            {/* Panel usuario — solo desktop */}
-            <div className="user-panel">
-              <Description
-                username={user.username}
-                bio={user.bio}
-                teaches={user.teaches}
-                lookingFor={user.lookingFor}
-              />
-              <Tags items={user.wantsToTeach} />
-            </div>
+          const teachTagNames = resolveTagNames(user.wantsToTeach);
+          const learnTagNames = resolveTagNames(user.wantsToLearn);
+          const videoTagNames = resolveTagNames(video.tags);
 
-            {/* Video + overlays */}
-            <div className="video-section">
+          const swapTabs = [
+            teachTagNames[0] ?? "Enseña",
+            learnTagNames[0] ?? "Aprende",
+          ];
 
-              {/* Overlay top mobile */}
-              <div className="video-user-top">
-                <span className="video-username">{user.username}</span>
-                <div className="swap-tabs">
-                  {user.swapTabs.map((tab, i) => (
-                    <button key={i} className={`tab-btn ${i === 1 ? "active-tab" : ""}`}>
-                      {tab}
-                    </button>
-                  ))}
-                </div>
+          return (
+            <div key={video.id} className="feed-item">
+
+              <div className="user-panel">
+                <Description
+                  username={user.username}
+                  bio={user.bio}
+                  teaches={teachTagNames}
+                  lookingFor={learnTagNames}
+                />
+                <Tags items={videoTagNames} />
               </div>
 
-              <VideoSection
-                id={videos[index]?.id ?? "v1"}
-                title={videos[index]?.title ?? ""}
-                url={videos[index]?.url ?? ""}
-              />
+              <div className="video-section">
 
-              {/* Overlay bottom mobile */}
-              <div className="video-user-bottom">
-                <h3>@{user.username}</h3>
-                <p>{user.bio}</p>
+                <div className="video-user-top">
+                  <span className="video-username">{user.username}</span>
+                  <div className="swap-tabs">
+                    {swapTabs.map((tab, i) => (
+                      <button
+                        key={i}
+                        className={`tab-btn ${i === 0 ? "active-tab" : ""}`}
+                      >
+                        {tab}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <VideoSection
+                  id={video.id}
+                  title={video.title}
+                  url={video.url}
+                />
+
+  
+                <div className="video-user-bottom">
+                  <h3>{user.at}</h3>
+                  <p>{video.description}</p>
+                </div>
+
+                {showCommentsMap[video.id] && (
+                  <div className="comments-overlay">
+                    <Comments onClose={() => toggleComments(video.id)} />
+                  </div>
+                )}
               </div>
 
-              {/* Comentarios sobre el video */}
-              {showCommentsMap[user.id] && (
-                <div className="comments-overlay">
-                  <Comments onClose={() => toggleComments(user.id)} />
-                </div>
-              )}
+              <div className="sidebar-right">
+                <ProfileButton initials={getInitials(user.username)} />
+
+                <CircularButton
+                  icon={likeIcon}
+                  count={likeCountMap[video.id] ?? video.likes}
+                  onClick={() => toggleLike(video.id)}
+                  active={likedMap[video.id] ?? false}
+                />
+
+                <CircularButton
+                  icon={commentIcon}
+                  onClick={() => toggleComments(video.id)}
+                />
+
+                <CircularButton
+                  icon={swapIcon}
+                  onClick={() => {}}
+                />
+
+                <CircularButton
+                  icon={shareIcon}
+                  onClick={() => {}}
+                />
+              </div>
+
             </div>
-
-            {/* ── Sidebar derecho: profile → like → comments → swap → share ── */}
-            <div className="sidebar-right">
-              <ProfileButton initials={user.initials} />
-
-              <CircularButton
-                icon={likeIcon}
-                count={likeCountMap[user.id] || 0}
-                onClick={() => toggleLike(user.id)}
-                active={likedMap[user.id]}
-              />
-
-              <CircularButton
-                icon={commentIcon}
-                onClick={() => toggleComments(user.id)}
-              />
-
-              <CircularButton
-                icon={swapIcon}
-                onClick={() => {}}
-              />
-
-              <CircularButton
-                icon={shareIcon}
-                onClick={() => {}}
-              />
-            </div>
-
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* ── Bottom nav — solo mobile ── */}
       <nav className="bottom-nav">
         <a href="#"><img src="/assets/home_icon.svg" alt="Feed" /></a>
         <a href="#"><img src="/assets/search_icon.svg" alt="Buscar" /></a>
