@@ -9,7 +9,7 @@ import tags from '../../../data/tags.json'
 
 
 function PossibleSwap() {
-  const userLogged = "u2"
+  const userLogged = "u3"
 
   const [filteredSwap, setSwapRequest] = useState<typeof swapRequests>([])
   const [filteredSwapStatus, setSwapStatusUser] = useState<typeof swapRequests>([])
@@ -122,17 +122,27 @@ function rejectSwap(swapId: string) {
                     filteredSwapStatus.map((swap, key) => {
 
                         const fromUser = users.find(u => u.id === swap.fromUserId)
-                        const tagOffered = tags.find(tag => tag.id === swap.tagOffered)
-                        const tagRequested = tags.find(tag => tag.id === swap.tagRequested)
-                        return (
-                            <EntityCard
-                                key={key}
-                                photo={fromUser?.profilePicture}
-                                name={fromUser?.username}
-                                content={tagOffered?.name}
-                                content2={tagRequested?.name}
-                            />
-                        )
+                        if(swap.status === "accepted") {
+
+                            return (
+                                <EntityCard
+                                    key={key}
+                                    photo={fromUser?.profilePicture}
+                                    name={fromUser?.username}
+                                    description='Accepted'
+                                />
+                            )
+                        }else{
+                        
+                            return (
+                                <EntityCard
+                                    key={key}
+                                    photo={fromUser?.profilePicture}
+                                    name={fromUser?.username}
+                                    description='Rejected'
+                                />
+                            )
+                        }
                     })
                 )}
 

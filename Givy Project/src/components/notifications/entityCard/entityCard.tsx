@@ -23,7 +23,7 @@ function EntityCard({name,photo, description, content, content2, desicionButtons
                 <div className='entityCardContent'>
                     <div className='entityCardLeft'>
                         <h3 className='nameEntityCard'>  {name} </h3>
-                        {description && <p>{description}</p>}
+                        {description && <p className='description'>{description}</p>}
                         <div className='tags'>
                             {content && <Tag content={content} gradient="var(--color-purple-light-buttons)" ></Tag>}
                             {content && content2 && <img src="./src/assets/tag_swap_icon.svg" alt="" />}
