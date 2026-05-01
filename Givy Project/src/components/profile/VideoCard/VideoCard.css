@@ -1,0 +1,59 @@
+.videoCard {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.videoCard:hover {
+    transform: scale(1.02);
+}
+
+.videoCardThumbnail {
+    width: 100%;
+    aspect-ratio: 16/9;
+}
+
+.videoCardThumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.videoCardPlaceholder {
+    width: 100%;
+    height: 100%;
+    background-color: #d0d5dd;
+}
+
+.videoCardInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+}
+
+.videoCardTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.videoCardAuthor {
+    font-size: 11px;
+    color: #888;
+}
+
+.videoCardDescription {
+    font-size: 11px;
+    color: #666;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

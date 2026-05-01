@@ -1,0 +1,25 @@
+.videosContainer {
+    width: 100%;
+    max-width: 500px;
+}
+
+.videosHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    justify-content: center;
+}
+
+.videosTitle {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+    letter-spacing: 0.05em;
+}
+
+.videosGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
