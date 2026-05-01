@@ -3,16 +3,16 @@
     "id": "sr1",
     "fromUserId": "u3",
     "toUserId": "u1",
-    "status": "accepted",
+    "status": "pending",
     "tagOffered": "t5",
     "tagRequested": "t4",
     "date": "2026-04-07T14:00:00Z"
   },
   {
     "id": "sr2",
-    "fromUserId": "u4",
+    "fromUserId": "u1",
     "toUserId": "u5",
-    "status": "pending",
+    "status": "accepted",
     "tagOffered": "t4",
     "tagRequested": "t7",
     "date": "2026-04-11T09:00:00Z"
@@ -20,7 +20,7 @@
   {
     "id": "sr3",
     "fromUserId": "u2",
-    "toUserId": "u4",
+    "toUserId": "u1",
     "status": "rejected",
     "tagOffered": "t2",
     "tagRequested": "t4",

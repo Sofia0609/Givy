@@ -1,0 +1,40 @@
+.tagsContainer {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tagsTitle {
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+    margin: 0;
+    letter-spacing: 0.05em;
+}
+
+.tagsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.tag--teaching {
+    background-color: #fde8d8;
+    color: #c0622a;
+}
+
+.tag--learning {
+    background-color: #eefad4;
+    color: #5a7a1e;
+}
