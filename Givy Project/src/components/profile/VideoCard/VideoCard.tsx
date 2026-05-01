@@ -1,25 +1,24 @@
-import './VideoCard.css' 
+import './VideoCard.css'
 
 interface VideoCardProps {
-    title?: string
-    author?: string
     thumbnail?: string
     views?: number
 }
 
-function VideoCard({ title, author, thumbnail, views }: VideoCardProps) {
+function VideoCard({ thumbnail, views }: VideoCardProps) {
     return (
         <div className="videoCard">
             <div className="videoCardThumbnail">
                 {thumbnail
-                    ? <img src={thumbnail} alt={title} />
+                    ? <img src={thumbnail} alt="video" />
                     : <div className="videoCardPlaceholder" />
                 }
-            </div>
-            <div className="videoCardInfo">
-                {title && <span className="videoCardTitle">{title}</span>}
-                {author && <span className="videoCardAuthor">{author}</span>}
-                {views !== undefined && <span className="videoCardViews">{views} views</span>}
+                <div className="videoCardOverlay">
+                    <span className="videoCardPlay">▶</span>
+                    {views !== undefined && (
+                        <span className="videoCardViews">{views.toLocaleString()} views</span>
+                    )}
+                </div>
             </div>
         </div>
     )
