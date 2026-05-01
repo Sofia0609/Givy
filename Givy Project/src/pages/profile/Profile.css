@@ -1,37 +1,38 @@
-.videoCard {
+.profileLayout {
+    display: flex;
+    height: 100vh;
+    background-color: #f0eef8;
+}
+
+.profileMain {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #fff;
-    cursor: pointer;
-    transition: transform 0.2s;
-    gap: 4px;
+    align-items: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+    gap: 12px;
 }
 
-.videoCard:hover {
-    transform: scale(1.02);
+.profileStats {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    justify-content: center;
+    margin: 8px 0;
 }
 
-.videoCardThumbnail {
-    width: 100%;
-    aspect-ratio: 16/9;
-}
-
-.videoCardThumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.videoCardPlaceholder {
-    width: 100%;
-    height: 100%;
-    background-color: #d0d5dd;
-}
-
-.videoCardViews {
-    font-size: 11px;
+.profileBio {
+    font-size: 0.9rem;
     color: #888;
-    padding: 0 4px 4px;
+    margin: 0;
+}
+
+.profileTags {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
 }
