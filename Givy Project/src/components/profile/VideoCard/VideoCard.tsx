@@ -1,3 +1,5 @@
+import './VideoCard.css' 
+
 interface VideoCardProps {
     title?: string
     author?: string

@@ -1,58 +1,25 @@
-.videoCard {
+.videosContainer {
+    width: 100%;
+    max-width: 500px;
+}
+
+.videosHeader {
     display: flex;
-    flex-direction: column;
-    border-radius: 12px;
-    overflow: hidden;
-    background-color: #fff;
-    cursor: pointer;
-    transition: transform 0.2s;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    justify-content: center;
 }
 
-.videoCard:hover {
-    transform: scale(1.02);
-}
-
-.videoCardThumbnail {
-    width: 100%;
-    aspect-ratio: 16/9;
-}
-
-.videoCardThumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.videoCardPlaceholder {
-    width: 100%;
-    height: 100%;
-    background-color: #d0d5dd;
-}
-
-.videoCardInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px;
-}
-
-.videoCardTitle {
-    font-size: 13px;
+.videosTitle {
+    font-size: 0.85rem;
     font-weight: 600;
-    color: #1a1a1a;
+    color: #555;
+    letter-spacing: 0.05em;
 }
 
-.videoCardAuthor {
-    font-size: 11px;
-    color: #888;
-}
-
-.videoCardDescription {
-    font-size: 11px;
-    color: #666;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+.videosGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
 }
