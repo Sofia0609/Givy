@@ -8,7 +8,7 @@ import Tags from "../../components/feed/tags/Tags";
 import likeIcon from "../../assets/like_icon.svg";
 import commentIcon from "../../assets/comment_icon.svg";
 import shareIcon from "../../assets/share_icon.svg";
-import interactionsIcon from "../../assets/interactions_icon.svg";
+import swapIcon from "../../assets/swap_icon.svg";
 import "./Feed.css";
 
 interface UserData {
@@ -54,7 +54,7 @@ const users: UserData[] = [
 
 const videos: VideoData[] = [
   { id: "v1", title: "Derivadas", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
-  { id: "v2", title: "Guitarra", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+  { id: "v2", title: "Guitarra",  url: "https://www.w3schools.com/html/mov_bbb.mp4" },
 ];
 
 function Feed() {
@@ -126,15 +126,12 @@ function Feed() {
             {/* Video + overlays */}
             <div className="video-section">
 
-              {/* Overlay top mobile: nombre + swap tabs */}
+              {/* Overlay top mobile */}
               <div className="video-user-top">
                 <span className="video-username">{user.username}</span>
                 <div className="swap-tabs">
                   {user.swapTabs.map((tab, i) => (
-                    <button
-                      key={i}
-                      className={`tab-btn ${i === 1 ? "active-tab" : ""}`}
-                    >
+                    <button key={i} className={`tab-btn ${i === 1 ? "active-tab" : ""}`}>
                       {tab}
                     </button>
                   ))}
@@ -147,13 +144,13 @@ function Feed() {
                 url={videos[index]?.url ?? ""}
               />
 
-              {/* Overlay bottom mobile: usuario + bio */}
+              {/* Overlay bottom mobile */}
               <div className="video-user-bottom">
                 <h3>@{user.username}</h3>
                 <p>{user.bio}</p>
               </div>
 
-              {/* Panel de comentarios sobre el video */}
+              {/* Comentarios sobre el video */}
               {showCommentsMap[user.id] && (
                 <div className="comments-overlay">
                   <Comments onClose={() => toggleComments(user.id)} />
@@ -161,20 +158,30 @@ function Feed() {
               )}
             </div>
 
-            {/* Sidebar derecho */}
+            {/* ── Sidebar derecho: profile → like → comments → swap → share ── */}
             <div className="sidebar-right">
               <ProfileButton initials={user.initials} />
+
               <CircularButton
                 icon={likeIcon}
                 count={likeCountMap[user.id] || 0}
                 onClick={() => toggleLike(user.id)}
                 active={likedMap[user.id]}
               />
-              <CircularButton icon={shareIcon} onClick={() => {}} />
-              <CircularButton icon={interactionsIcon} onClick={() => {}} />
+
               <CircularButton
                 icon={commentIcon}
                 onClick={() => toggleComments(user.id)}
+              />
+
+              <CircularButton
+                icon={swapIcon}
+                onClick={() => {}}
+              />
+
+              <CircularButton
+                icon={shareIcon}
+                onClick={() => {}}
               />
             </div>
 

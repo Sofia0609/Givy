@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./Comments.css";
 import Comment from "../comment/Comment";
 import avatarImg from "../../../assets/avatar.png";
+import shareIcon from "../../../assets/share_icon.svg";
 
 interface CommentData {
   id: number;
@@ -11,7 +12,6 @@ interface CommentData {
   replies: number;
 }
 
-// Comentarios de ejemplo — reemplaza con fetch a tu JSON
 const initialComments: CommentData[] = [
   { id: 1, user: "Valentine Bustamante", avatar: "", text: "Me encantaaaa, siempre había querido un profesor con tu carisma!!😄", replies: 10 },
   { id: 2, user: "Jose David Cardenas",  avatar: "", text: "OMGGGG por fín alguien explicando el tema de mi examennnn 😄😄", replies: 1 },
@@ -37,14 +37,12 @@ function Comments({ onClose }: Props) {
 
   return (
     <div className="comments-sheet">
-      {/* Handle + header */}
       <div className="comments-header">
         <div className="comments-handle" />
         <span className="comments-title">{comments.length} comentarios</span>
         <button className="comments-close" onClick={onClose} aria-label="Cerrar">✕</button>
       </div>
 
-      {/* Lista de comentarios (scrollable) */}
       <div className="comments-list">
         {comments.map((c) => (
           <Comment
@@ -57,7 +55,6 @@ function Comments({ onClose }: Props) {
         ))}
       </div>
 
-      {/* Input fijo abajo */}
       <div className="comments-input-row">
         <div className="comments-input-avatar" />
         <input
@@ -68,8 +65,13 @@ function Comments({ onClose }: Props) {
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
-        <button className="comments-emoji-btn" aria-label="emoji">🙂</button>
-        <button className="comments-emoji-btn" aria-label="sticker">🎭</button>
+        <button
+          className="comments-send-btn"
+          onClick={handleSubmit}
+          aria-label="Enviar"
+        >
+          <img src={shareIcon} alt="Enviar" />
+        </button>
       </div>
     </div>
   );
