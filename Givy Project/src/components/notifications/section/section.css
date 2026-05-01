@@ -1,0 +1,13 @@
+.sectionContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 280px;
+    width: 250px;
+    height: 260px;    
+    border-radius: 20px;
+    margin: 5%;
+    margin-top: 20px;
+    margin-right: 0;
+}
