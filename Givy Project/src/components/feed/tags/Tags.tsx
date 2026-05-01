@@ -1,5 +1,4 @@
-
-import "./tags.css";
+import "./Tags.css";
 import Tag from "../tag/Tag";
 
 interface Props {

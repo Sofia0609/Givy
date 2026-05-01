@@ -15,7 +15,7 @@ function CircularButton({ icon, count, onClick, active = false }: Props) {
         className={active ? "active" : ""}
         aria-label="action"
       >
-        <img src={icon} alt="button-icon" />
+        <img src={icon} alt="icon" />
       </button>
       {count !== undefined && <span>{count}</span>}
     </div>

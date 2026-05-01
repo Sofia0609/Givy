@@ -1,4 +1,4 @@
-import "./tag.css";
+import "./Tag.css";
 
 interface Props {
   label: string;

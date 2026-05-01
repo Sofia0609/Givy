@@ -1,17 +1,16 @@
 import React from "react";
 import "./ProfileButton.css";
-import userIcon from "../../../assets/user_icon.svg";
 
 interface Props {
-  username?: string;
+  initials?: string;
 }
 
-const ProfileButton: React.FC<Props> = ({ username }) => (
+const ProfileButton: React.FC<Props> = ({ initials = "?" }) => (
   <div className="profile-button-wrapper">
-    <button className="profile-button" aria-label={`Perfil de ${username}`}>
-      <img src={userIcon} alt="profile" />
-    </button>
-    <span className="profile-plus">+</span>
+    <div className="profile-avatar">
+      <span>{initials}</span>
+    </div>
+    <div className="profile-plus">+</div>
   </div>
 );
 

@@ -1,17 +1,18 @@
 .tag {
-  background: rgba(255, 255, 255, 0.18);
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  border: 1.5px solid #292d32;
   border-radius: 16px;
-  padding: 5px 14px;
+  padding: 6px 14px;
   cursor: pointer;
-  font-size: 0.82em;
+  font-size: 0.88em;
   font-weight: 600;
-  color: #fff;
-  backdrop-filter: blur(4px);
-  transition: background 0.2s;
+  background: transparent;
+  color: #292d32;
+  font-family: poppins, sans-serif;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .tag:hover {
-  background: rgba(124, 58, 237, 0.55);
-  border-color: #a78bfa;
+  background: #ede9fe;
+  border-color: #9873ff;
+  color: #7c3aed;
 }

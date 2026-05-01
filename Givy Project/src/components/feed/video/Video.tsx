@@ -8,14 +8,13 @@ interface Props {
 
 function VideoSection({ id, title, url }: Props) {
   return (
-    <div className="video-section">
+    <div className="video-wrapper">
       <video
         id={id}
         src={url}
         title={title}
         loop
         playsInline
-        controls={false}
         autoPlay
         muted
       />
