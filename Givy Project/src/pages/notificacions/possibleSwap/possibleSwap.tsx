@@ -9,7 +9,7 @@ import tags from '../../../data/tags.json'
 
 
 function PossibleSwap() {
-  const userLogged = "u1"
+  const userLogged = "u2"
 
   const [filteredSwap, setSwapRequest] = useState<typeof swapRequests>([])
   const [filteredSwapStatus, setSwapStatusUser] = useState<typeof swapRequests>([])
@@ -24,14 +24,17 @@ function PossibleSwap() {
   }
 
   function getSwapbyUser(user:string){
-    const swapUser = swapRequests.filter((request)=> request.toUserId === user && request.status === "pending")
-    console.log(swapUser )
+
+    const stored = localStorage.getItem('swapRequests')
+    const allSwaps = stored ? JSON.parse(stored) : swapRequests
+    const swapUser = allSwaps.filter((request)=> request.toUserId === user && request.status === "pending")
     setSwapRequest(swapUser)
   } 
 
   function getStatusStatusbyUser(user:string){
-    const swapStatusUser = swapRequests.filter((swapStatus)=> swapStatus.toUserId === user && swapStatus.status !== "pending")
-    console.log(swapStatusUser)
+    const stored = localStorage.getItem('swapRequests')
+    const allSwaps = stored ? JSON.parse(stored) : swapRequests
+    const swapStatusUser = allSwaps.filter((swapStatus)=> swapStatus.fromUserId === user && swapStatus.status !== "pending")
     setSwapStatusUser(swapStatusUser)
   }
 
@@ -118,7 +121,7 @@ function rejectSwap(swapId: string) {
 
                     filteredSwapStatus.map((swap, key) => {
 
-                        const fromUser = users.find(u => u.id === swap.fromUserId) 
+                        const fromUser = users.find(u => u.id === swap.fromUserId)
                         const tagOffered = tags.find(tag => tag.id === swap.tagOffered)
                         const tagRequested = tags.find(tag => tag.id === swap.tagRequested)
                         return (

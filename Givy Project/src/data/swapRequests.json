@@ -10,9 +10,9 @@
   },
   {
     "id": "sr2",
-    "fromUserId": "u4",
+    "fromUserId": "u1",
     "toUserId": "u5",
-    "status": "pending",
+    "status": "accepted",
     "tagOffered": "t4",
     "tagRequested": "t7",
     "date": "2026-04-11T09:00:00Z"
