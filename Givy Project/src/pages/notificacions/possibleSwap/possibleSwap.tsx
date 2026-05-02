@@ -9,39 +9,39 @@ import tags from '../../../data/tags.json'
 
 
 function PossibleSwap() {
-  const userLogged = "u3"
+    const userLogged = "u3"
 
-  const [filteredSwap, setSwapRequest] = useState<typeof swapRequests>([])
-  const [filteredSwapStatus, setSwapStatusUser] = useState<typeof swapRequests>([])
-  const [filteredUser,setUser] = useState<any>({})
+    const [filteredSwap, setSwapRequest] = useState<typeof swapRequests>([])
+    const [filteredSwapStatus, setSwapStatusUser] = useState<typeof swapRequests>([])
+    const [filteredUser,setUser] = useState<any>({})
 
-  useEffect(() => {
-  
-  function getUserbyID(id:string){
-    const user = users.find((user)=> user.id === id)
-    setUser(user)
-    console.log(user)
-  }
+    useEffect(() => {
+    
+        function getUserbyID(id:string){
+            const user = users.find((user)=> user.id === id)
+            setUser(user)
+            console.log(user)
+        }
 
-  function getSwapbyUser(user:string){
+        function getSwapbyUser(user:string){
 
-    const stored = localStorage.getItem('swapRequests')
-    const allSwaps = stored ? JSON.parse(stored) : swapRequests
-    const swapUser = allSwaps.filter((request)=> request.toUserId === user && request.status === "pending")
-    setSwapRequest(swapUser)
-  } 
+            const stored = localStorage.getItem('swapRequests')
+            const allSwaps = stored ? JSON.parse(stored) : swapRequests
+            const swapUser = allSwaps.filter((request)=> request.toUserId === user && request.status === "pending")
+            setSwapRequest(swapUser)
+        } 
 
-  function getStatusStatusbyUser(user:string){
-    const stored = localStorage.getItem('swapRequests')
-    const allSwaps = stored ? JSON.parse(stored) : swapRequests
-    const swapStatusUser = allSwaps.filter((swapStatus)=> swapStatus.fromUserId === user && swapStatus.status !== "pending")
-    setSwapStatusUser(swapStatusUser)
-  }
+        function getStatusStatusbyUser(user:string){
+            const stored = localStorage.getItem('swapRequests')
+            const allSwaps = stored ? JSON.parse(stored) : swapRequests
+            const swapStatusUser = allSwaps.filter((swapStatus)=> swapStatus.fromUserId === user && swapStatus.status !== "pending")
+            setSwapStatusUser(swapStatusUser)
+        }
 
-  getUserbyID(userLogged);
-  getSwapbyUser(userLogged);
-  getStatusStatusbyUser(userLogged);
-}, []);
+        getUserbyID(userLogged);
+        getSwapbyUser(userLogged);
+        getStatusStatusbyUser(userLogged);
+    }, []);
 
 
 function acceptSwap(swapId: string) {
