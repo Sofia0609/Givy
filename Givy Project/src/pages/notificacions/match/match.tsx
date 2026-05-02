@@ -13,7 +13,7 @@ import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch
 
 function Match() {
 
-  const userLogged = "u1"
+  const userLogged = "u5"
 
   const [selectedMatch, setSelectedMatch] = useState<string | null>(null)
   const [filteredMatches, setFilteredMatches] = useState<typeof matches>([])
@@ -49,7 +49,7 @@ function Match() {
           <Header title='Match'></Header>   
           <div className='matchSectionsContainer'>
             <div className='match'>
-                <h2 className='matchTitle'>What do you wanna learn today?</h2>
+                <h2 className='matchTitle'>Active Matches</h2>
 
                 {filteredMatches.length === 0 ? (
 
@@ -64,16 +64,19 @@ function Match() {
                         const otherUser = users.find(u => u.id === otherUserId)
                         const tagOffered = tags.find(tag => tag.id === match.tagOffered)
                         const tagRequested = tags.find(tag => tag.id === match.tagRequested)
+                        const noStarted = !match.videoSentByUser1 && !match.videoSentByUser2
 
                         if (userLogged === match.user1Id || userLogged === match.user2Id) {
 
                           return (
                             <EntityCard
+                                onClick={() => setSelectedMatch(match.id)}
                                 key={key}
                                 photo={otherUser?.profilePicture}
                                 name={otherUser?.username}
                                 content={tagOffered?.name}
                                 content2={tagRequested?.name}
+                                button={noStarted ? 'Begin' : undefined} 
                             />
                         )
 
@@ -86,8 +89,17 @@ function Match() {
             <div className='divider'></div>
 
             <div className='chatSection'>
-                <UploadVideoMatch onClick={() => setSelectedMatch("m1")} tittle='Upload a video to start the chat' description='This way you can receive the educate video from you Match!' icon='./src/assets/upload_icon.svg'></UploadVideoMatch>
-            </div>
+
+              {selectedMatch === null ? (
+                    <h2 className='noMatchSelected'>What do you want to learn today?</h2>
+                ) : (
+                    <UploadVideoMatch
+                        tittle='Upload a video to start the chat'
+                        description='This way you can receive the educate video from your Match!'
+                        icon='./src/assets/upload_icon.svg'
+                    />
+                )}
+              </div>
           </div>
         </div>
       </div>
