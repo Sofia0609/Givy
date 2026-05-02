@@ -13,7 +13,7 @@ import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch
 
 function Match() {
 
-  const userLogged = "u5"
+  const userLogged = "u4"
 
   const [selectedMatch, setSelectedMatch] = useState<string | null>(null)
   const [filteredMatches, setFilteredMatches] = useState<typeof matches>([])
@@ -38,6 +38,11 @@ function Match() {
     getUserbyID(userLogged);
     getMatchesbyUser(userLogged);
   }, []);
+
+  const currentMatch = filteredMatches.find(match => match.id === selectedMatch)
+  const myUserId1 = currentMatch?.user1Id === userLogged ? currentMatch.user1Id : currentMatch?.user2Id
+ const iSentVideo = myUserId1? currentMatch?.videoSentByUser1 : currentMatch?.videoSentByUser2
+const otherSentVideo = myUserId1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
 
   return (
     <>
@@ -90,15 +95,34 @@ function Match() {
 
             <div className='chatSection'>
 
-              {selectedMatch === null ? (
+                {selectedMatch === null ? (
                     <h2 className='noMatchSelected'>What do you want to learn today?</h2>
-                ) : (
+
+                ) : !iSentVideo ? (
+  
                     <UploadVideoMatch
-                        tittle='Upload a video to start the chat'
-                        description='This way you can receive the educate video from your Match!'
+                        tittle='Upload your educative video!'
+                        description={otherSentVideo
+                            ? 'Your match already sent their video, send yours to watch it!'
+                            : 'This way you can receive the educate video from your Match!'}
                         icon='./src/assets/upload_icon.svg'
                     />
-                )}
+
+                ) : !otherSentVideo ? (
+     
+                    <UploadVideoMatch
+                        tittle='Congratulations!'
+                        description='Video Uploaded! Wait till your Match sends their Video'
+                        icon='./src/assets/uploaded_icon.svg'
+                    />
+
+                ) : (
+                    <div>
+                        <h2>Your match just dropped a video!</h2>
+                    </div>
+                )
+                }
+
               </div>
           </div>
         </div>
