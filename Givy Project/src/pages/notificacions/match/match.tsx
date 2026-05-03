@@ -4,16 +4,15 @@ import './match.css'
 import NavBar from '../../../components/navBar/navBar'
 import Header from '../../../components/header/header'
 import EntityCard from '../../../components/notifications/entityCard/entityCard'
-import UploadVideo from '../../../components/create/uploadVideo/uploadVideo'
-import BigButton from '../../../components/bigButton/bigButton'
 import matches from '../../../data/matches.json'
 import users from '../../../data/users.json'
 import tags from '../../../data/tags.json'
 import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
+import VideoScreen from '../../../components/notifications/videoScreen/videoScreen'
 
 function Match() {
 
-  const userLogged = "u4"
+  const userLogged = "u2"
 
   const [selectedMatch, setSelectedMatch] = useState<string | null>(null)
   const [filteredMatches, setFilteredMatches] = useState<typeof matches>([])
@@ -118,7 +117,7 @@ const otherSentVideo = myUserId1 ? currentMatch?.videoSentByUser2 : currentMatch
 
                 ) : (
                     <div>
-                        <h2>Your match just dropped a video!</h2>
+                        <VideoScreen icon='./src/assets/play_video_button.svg'/>
                     </div>
                 )
                 }

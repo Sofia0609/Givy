@@ -1,0 +1,10 @@
+.VideoScreen{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 800px;
+    height: 50vh;
+    background-color: var(--color-purple-light);
+    border-radius: 20px;
+    cursor: pointer;
+}
