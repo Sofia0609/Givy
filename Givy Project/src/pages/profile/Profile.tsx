@@ -1,3 +1,5 @@
+
+
 import NavBar from '../../components/navBar/navBar'
 import ProfilePicture from '../../components/profile/ProfilePicture/ProfilePicture'
 import ProfileName from '../../components/profile/ProfileName/ProfileName'
