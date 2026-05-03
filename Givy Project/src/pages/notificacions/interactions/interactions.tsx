@@ -1,11 +1,46 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './interactons.css'
+import interactions from '../../../data/notifications.json'
+import users from '../../../data/users.json'
 import NavBar from '../../../components/navBar/navBar'
 import Header from '../../../components/header/header'
 import EntityCard from '../../../components/notifications/entityCard/entityCard'
 
 
 function Interactions() {
+
+  const userLogged = "u1"
+  const [myInteractions, setMyInteractions] = useState<any[]>([])
+
+  useEffect(() => {
+
+  function getInteractionsbyUser(user: string) {
+
+    const stored = localStorage.getItem('interactions')
+    const allInteractions = stored ? JSON.parse(stored) : interactions
+
+    const userInteractions = 
+    
+        allInteractions.filter((interaction) => interaction.targetUserId === user)
+        allInteractions.map((interaction) => {
+
+            const fromUser = users.find(user => user.id === interaction.fromUserId)
+
+            let description = ''
+            if (interaction.type === 'like') description = 'Liked your video'
+            if (interaction.type === 'comment') description = 'Commented on your video'
+            if (interaction.type === 'reply') description = 'Replied to your comment'
+
+            return { ...interaction, fromUser, description }
+      })
+
+    setMyInteractions(userInteractions)
+
+  }
+
+    getInteractionsbyUser(userLogged);
+  }, []);
+  
 
   return (
     <><div className='interactionsLayout'>
@@ -15,11 +50,20 @@ function Interactions() {
       <div className='interactionsContent'>
           <Header title='Interactions'></Header>    
           <div className='interactionsSectionContainer'>
-            <EntityCard photo='./src/assets/profile_picture.png' name="Alejandro Arango" description='Liked your video'></EntityCard>
-            <EntityCard photo='./src/assets/profile_picture.png' name="Sofia Velez" description='Answered your comment'  button='Answer'></EntityCard>
-            <EntityCard photo='./src/assets/profile_picture.png' name="Carla Gonzales" description='Commented on your video'  button='Answer'></EntityCard>
-          </div>    
-      </div>
+                {myInteractions.length === 0 ? (
+                    <h3>You don't have any interactions yet</h3>
+                ) : (
+                  myInteractions.map((interaction, key) => (
+                    <EntityCard
+                        key={key}
+                        photo={interaction.fromUser?.profilePicture}
+                        name={interaction.fromUser?.username}
+                        description={interaction.description}
+                    />
+                  ))
+                )}
+          </div>
+    </div>
     </div>
     </>
   )

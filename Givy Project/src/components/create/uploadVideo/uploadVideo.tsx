@@ -1,17 +1,25 @@
-import { useNavigate } from 'react-router'
 import './uploadVideo.css'
 
 interface UploadVideoprops{
     icon : string
+    onVideoSelect?: (file: File) => void 
 }
 
-function UploadVideo({icon}:UploadVideoprops){
+function UploadVideo({icon, onVideoSelect}:UploadVideoprops){
+
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0]
+        if (file) {
+            onVideoSelect?.(file) 
+        }
+    }
 
     return(
         <>  
         <div className='uploadVideo'>
             <div className='border'>
                 <img src={icon} alt="" />
+                <input className='inputLink' type="file" accept="video/*" onChange={handleFileChange} />         
             </div>
          </div>
         </>

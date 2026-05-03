@@ -41,7 +41,7 @@ function Match() {
   const currentMatch = filteredMatches.find(match => match.id === selectedMatch)
   const myUserId1 = currentMatch?.user1Id === userLogged ? currentMatch.user1Id : currentMatch?.user2Id
  const iSentVideo = myUserId1? currentMatch?.videoSentByUser1 : currentMatch?.videoSentByUser2
-const otherSentVideo = myUserId1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
+  const otherSentVideo = myUserId1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
 
   return (
     <>
