@@ -1,0 +1,15 @@
+.login-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d2d2d;
+}
+
+.login-field input {
+  background-color: #E4E0F0;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 14px;
+  color: #2d2d2d;
+  outline: none;
+}

@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import Login from './pages/login/login'
 import Feed from './pages/feed/Feed'
 import Notifications from './pages/notificacions/Notifications'
 import Search from './pages/search/Search'
@@ -12,7 +13,11 @@ import {  createBrowserRouter, Navigate, RouterProvider } from 'react-router'
 let routes = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/feed" />  
+    element: <Navigate to="/login" />  
+  },
+  {
+  path: "/Login",
+  element: <Login></Login>
   },
   {
   path: "/Feed",
