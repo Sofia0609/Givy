@@ -7,6 +7,9 @@ import Search from './pages/search/Search'
 import Profile from './pages/profile/Profile'
 import Create from './pages/create/Create'
 import {  createBrowserRouter, Navigate, RouterProvider } from 'react-router'
+import PossibleSwap from './pages/notificacions/possibleSwap/possibleSwap'
+import Match from './pages/notificacions/match/match'
+import Interactions from './pages/notificacions/interactions/interactions'
 
 
 let routes = createBrowserRouter([
@@ -33,8 +36,19 @@ let routes = createBrowserRouter([
   {
     path: "/Create",
     element: <Create></Create>
+  },
+  { 
+    path: '/PossibleSwap', 
+    element: <PossibleSwap></PossibleSwap> 
+  },
+  {
+    path:'/Match',
+    element: <Match></Match>
+  },
+  {
+    path: '/Interactions',
+    element: <Interactions></Interactions>
   }
-
 ])
 
 createRoot(document.getElementById('root')!).render(

@@ -1,3 +1,6 @@
+import './HistoryItem.css'
+import historyicon from '../../../assets/search_icon.svg'
+
 interface HistoryItem {
     text: string
     onDelete: () => void
@@ -6,7 +9,7 @@ interface HistoryItem {
 function HistoryItem({ text, onDelete }: HistoryItem) {
     return (
         <div className="historyItem">
-            <img src="/icons/refresh.svg" alt="history" />
+                <img src={historyicon} alt="" />
             <span>{text}</span>
             <button onClick={onDelete}>✕</button>
         </div>

@@ -1,3 +1,6 @@
+import './SearchBar.css'
+import searchicon from '../../../assets/search_icon.svg'
+
 interface SearchBar {
     placeholder: string
     onChange: (value: string) => void
@@ -6,7 +9,7 @@ interface SearchBar {
 function SearchBar({ placeholder, onChange }: SearchBar) {
     return (
         <div className="searchBar">
-            <img src="/icons/search.svg" alt="search" />
+            <img src={searchicon} alt="" />
             <input 
                 type="text" 
                 placeholder={placeholder}
