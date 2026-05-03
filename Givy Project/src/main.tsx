@@ -11,7 +11,6 @@ import PossibleSwap from './pages/notificacions/possibleSwap/possibleSwap'
 import Match from './pages/notificacions/match/match'
 import Interactions from './pages/notificacions/interactions/interactions'
 
-
 let routes = createBrowserRouter([
   {
     path: "/",
