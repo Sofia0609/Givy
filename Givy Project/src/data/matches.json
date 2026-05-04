@@ -18,11 +18,24 @@
     "user2Id": "u5",
     "tagOffered": "t4",
     "tagRequested": "t5",
-    "videoSentByUser1": true,
-    "videoIdUser1": "v5",
+    "videoSentByUser1": false,
+    "videoIdUser1": null,
     "videoSentByUser2": false,
     "videoIdUser2": null,
     "completed": false,
+    "date": "2026-04-12T15:00:00Z"
+  },
+    {
+    "id": "m2",
+    "user1Id": "u2",
+    "user2Id": "u5",
+    "tagOffered": "t4",
+    "tagRequested": "t5",
+    "videoSentByUser1": true,
+    "videoIdUser1": "v2",
+    "videoSentByUser2": true,
+    "videoIdUser2": "v4",
+    "completed": true,
     "date": "2026-04-12T15:00:00Z"
   }
 ]

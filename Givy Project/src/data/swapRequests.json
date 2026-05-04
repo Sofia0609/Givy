@@ -25,5 +25,14 @@
     "tagOffered": "t2",
     "tagRequested": "t4",
     "date": "2026-04-09T16:00:00Z"
+  },
+  {
+    "id": "sr1",
+    "fromUserId": "u5",
+    "toUserId": "u3",
+    "status": "pending",
+    "tagOffered": "t5",
+    "tagRequested": "t4",
+    "date": "2026-04-07T14:00:00Z"
   }
 ]

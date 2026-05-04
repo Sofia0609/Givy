@@ -10,6 +10,7 @@ import commentIcon from "../../assets/comment_icon.svg";
 import shareIcon from "../../assets/share_icon.svg";
 import swapIcon from "../../assets/swap_icon.svg";
 import "./Feed.css";
+import NavBar from "../../components/navBar/navBar";
 
 interface UserData {
   id: string;
@@ -74,38 +75,8 @@ function Feed() {
 
   return (
     <div className="layout">
-      {/* ── Sidebar izquierdo — solo desktop ── */}
-      <aside className="sidebar-left">
-        <div className="logo">
-          <img src="/assets/Logotype.png" alt="Givy" />
-          <div>
-            <p className="logo-welcome">Welcome to Givy!</p>
-            <p className="logo-name">Your Name</p>
-          </div>
-        </div>
-        <nav>
-          <a className="button-nav active" href="#">
-            <img src="/assets/home_icon.svg" alt="" />
-            <span>Feed</span>
-          </a>
-          <a className="button-nav" href="#">
-            <img src="/assets/search_icon.svg" alt="" />
-            <span>Buscar</span>
-          </a>
-          <a className="button-nav" href="#">
-            <img src="/assets/notification_icon.svg" alt="" />
-            <span>Notificaciones</span>
-          </a>
-          <a className="button-nav" href="#">
-            <img src="/assets/user_icon.svg" alt="" />
-            <span>Perfil</span>
-          </a>
-          <a className="button-nav" href="#">
-            <img src="/assets/create_icon.svg" alt="" />
-            <span>Crear</span>
-          </a>
-        </nav>
-      </aside>
+
+      <NavBar/>
 
       {/* ── Scroll feed ── */}
       <div className="feed">
@@ -188,15 +159,6 @@ function Feed() {
           </div>
         ))}
       </div>
-
-      {/* ── Bottom nav — solo mobile ── */}
-      <nav className="bottom-nav">
-        <a href="#"><img src="/assets/home_icon.svg" alt="Feed" /></a>
-        <a href="#"><img src="/assets/search_icon.svg" alt="Buscar" /></a>
-        <a href="#"><img src="/assets/create_icon.svg" alt="Crear" /></a>
-        <a href="#"><img src="/assets/notification_icon.svg" alt="Notificaciones" /></a>
-        <a href="#"><img src="/assets/user_icon.svg" alt="Perfil" /></a>
-      </nav>
     </div>
   );
 }
