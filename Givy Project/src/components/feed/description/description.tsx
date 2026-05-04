@@ -16,19 +16,26 @@ function Description({ username, bio, teaches = [], lookingFor = [] }: Props) {
 
       {teaches.length > 0 && (
         <div className="description-teaches-wrapper">
-          <span className="description-teaches">{teaches.join(", ")}</span>
+          <span className="description-teaches">
+            {teaches.map((t) => t.charAt(0).toUpperCase() + t.slice(1)).join(", ")}
+          </span>
         </div>
       )}
 
       {lookingFor.length > 0 && (
         <div className="description-looking">
-          <span>Looking for...</span>
+          <span className="description-looking-label">Looking for...</span>
           <img src={swapIcon} alt="swap" className="description-swap-icon" />
-          <div className="description-looking-tags">
-            {lookingFor.map((tag, i) => (
-              <span key={i} className="description-looking-tag">{tag}</span>
-            ))}
-          </div>
+        </div>
+      )}
+
+      {lookingFor.length > 0 && (
+        <div className="description-looking-tags">
+          {lookingFor.map((tag, i) => (
+            <span key={i} className="description-looking-tag">
+              {tag.charAt(0).toUpperCase() + tag.slice(1)}
+            </span>
+          ))}
         </div>
       )}
     </section>

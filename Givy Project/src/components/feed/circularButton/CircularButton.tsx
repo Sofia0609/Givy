@@ -13,7 +13,7 @@ function CircularButton({ icon, count, onClick, active = false, extraClass = "" 
     <div className="circular-button">
       <button
         onClick={onClick}
-        className={`${active ? "active" : ""} ${extraClass}`}
+        className={[active ? "active" : "", extraClass].filter(Boolean).join(" ")}
         aria-label="action"
       >
         <img src={icon} alt="icon" />

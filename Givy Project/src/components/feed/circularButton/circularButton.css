@@ -5,34 +5,37 @@
   gap: 5px;
 }
 
+/* Círculo — mismo tamaño que antes */
 .circular-button button {
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   border: none;
   background: rgba(38, 37, 61, 0.48);
-  color: white;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 14px;
+  /* Sin padding extra — la imagen se encarga del tamaño */
+  padding: 0;
   transition: background 0.2s, transform 0.15s;
 }
 
 .circular-button button:hover {
-  background: rgba(38, 37, 61, 0.70);
-  transform: scale(1.07);
+  background: rgba(38, 37, 61, 0.68);
+  transform: scale(1.06);
 }
 
 .circular-button button.active {
   background: #9873ff;
 }
 
+/* Imagen más grande dentro del mismo círculo */
 .circular-button img {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   filter: brightness(0) invert(1);
+  display: block;
 }
 
 .circular-button span {
@@ -41,29 +44,28 @@
   color: #292d32;
 }
 
-/* Animación swap */
+/* ── Animación swap ── */
 @keyframes swapSpin {
-  0%   { transform: rotate(0deg)   scale(1); }
-  40%  { transform: rotate(180deg) scale(1.2); }
-  70%  { transform: rotate(340deg) scale(0.9); }
-  100% { transform: rotate(360deg) scale(1); }
+  0%   { transform: scale(1)   rotate(0deg); opacity: 1; }
+  30%  { transform: scale(0.8) rotate(180deg); opacity: 0.6; }
+  60%  { transform: scale(1.15) rotate(340deg); opacity: 1; }
+  100% { transform: scale(1)   rotate(360deg); opacity: 1; }
 }
 
 .swap-spin img {
-  animation: swapSpin 0.6s ease-in-out;
+  animation: swapSpin 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
-/* Mobile: botones un poco más pequeños */
+/* Mobile */
 @media (max-width: 768px) {
   .circular-button button {
     width: 52px;
     height: 52px;
-    padding: 11px;
   }
 
   .circular-button img {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
   }
 
   .circular-button span {

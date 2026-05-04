@@ -16,14 +16,14 @@ import commentsData from "../../data/comments.json";
 import "./Feed.css";
 import NavBar from "../../components/navBar/navBar";
 
-
+// ── Helpers ──────────────────────────────────────────────
 const resolveTagNames = (tagIds: string[]): string[] =>
   tagIds.map((id) => tagsData.find((t) => t.id === id)?.name ?? id);
 
 const getInitials = (username: string): string =>
   username.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
-
+// ── Tipos ────────────────────────────────────────────────
 export interface ReplyData {
   id: string;
   parentCommentId: string;
@@ -66,15 +66,7 @@ const buildInitialComments = (): Record<string, CommentData[]> => {
   });
   return map;
 };
-const createOwnComment = (videoId: string, text: string): CommentData => ({
-  id: `own-${Date.now()}`,
-  videoId,
-  userId: "me",
-  text,
-  date: new Date().toISOString(),
-  replies: [],
-  isOwn: true,
-});
+
 
 function Feed() {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
@@ -85,7 +77,8 @@ function Feed() {
   const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>(
     buildInitialComments()
   );
-  const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
+  const [swapAnimMap, setSwapAnimMap]   = useState<Record<string, boolean>>({});
+  const [swapModalVideo, setSwapModalVideo] = useState<string | null>(null);
 
   const toggleLike = (videoId: string) => {
     const liked = likedMap[videoId] ?? false;
@@ -106,16 +99,25 @@ function Feed() {
     });
   };
 
+
   const handleSwap = (videoId: string) => {
     setSwapAnimMap({ ...swapAnimMap, [videoId]: true });
     setTimeout(() => {
       setSwapAnimMap((prev) => ({ ...prev, [videoId]: false }));
     }, 600);
+    setSwapModalVideo(videoId);
   };
 
   const addComment = (videoId: string, text: string) => {
-    const newComment = createOwnComment(videoId, text);
-    // Nuevo comentario va al principio de la lista
+    const newComment: CommentData = {
+      id: `own-${Date.now()}`,
+      videoId,
+      userId: "me",
+      text,
+      date: new Date().toISOString(),
+      replies: [],
+      isOwn: true,
+    };
     setCommentsMap((prev) => ({
       ...prev,
       [videoId]: [newComment, ...(prev[videoId] ?? [])],
@@ -135,7 +137,7 @@ function Feed() {
 
       <div className="feed">
         {feedItems.map(({ user, video }) => {
-          const teachTagNames = resolveTagNames(user.wantsToTeach);
+          const teachTagNames  = resolveTagNames(user.wantsToTeach);
           const learnTagNames  = resolveTagNames(user.wantsToLearn);
           const videoTagNames  = resolveTagNames(video.tags);
           const videoComments  = commentsMap[video.id] ?? [];
@@ -143,7 +145,6 @@ function Feed() {
           return (
             <div key={video.id} className="feed-item">
 
-              {/* ── Panel usuario (desktop) ── */}
               <div className="user-panel">
                 <Description
                   username={user.username}
@@ -154,10 +155,8 @@ function Feed() {
                 <Tags items={videoTagNames} />
               </div>
 
-              {/* ── Video + overlays ── */}
+   
               <div className="video-section">
-
-                {/* Top overlay — solo mobile */}
                 <div className="video-user-top">
                   <span className="video-username">{user.username}</span>
                   <div className="swap-tabs">
@@ -168,13 +167,11 @@ function Feed() {
 
                 <VideoSection id={video.id} title={video.title} url={video.url} />
 
-                {/* Bottom overlay — solo mobile */}
                 <div className="video-user-bottom">
                   <h3>{user.at}</h3>
                   <p>{video.description}</p>
                 </div>
 
-                {/* Panel de comentarios */}
                 {showCommentsMap[video.id] && (
                   <div className="comments-overlay">
                     <Comments
@@ -187,7 +184,6 @@ function Feed() {
                 )}
               </div>
 
-              {/* ── Sidebar derecho ── */}
               <div className="sidebar-right">
                 <ProfileButton initials={getInitials(user.username)} />
 
@@ -221,7 +217,23 @@ function Feed() {
         })}
       </div>
 
-      {/* Bottom nav — solo mobile */}
+     
+      {swapModalVideo && (
+        <div className="swap-modal" onClick={() => setSwapModalVideo(null)}>
+          <div className="swap-modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>¿Swap de habilidades?</h3>
+            <p>
+              Propón un intercambio con este usuario.<br />
+              Tú enseñas lo que sabes, él te enseña lo que quieres aprender.
+            </p>
+            <button className="swap-modal-close" onClick={() => setSwapModalVideo(null)}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
+
+
       <nav className="bottom-nav">
         <a href="#"><img src="src/assets/home_icon.svg" alt="Feed" /></a>
         <a href="#"><img src="src/assets/search_icon.svg" alt="Buscar" /></a>
