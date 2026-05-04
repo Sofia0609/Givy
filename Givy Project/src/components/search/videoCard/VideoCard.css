@@ -1,0 +1,42 @@
+.videoCard {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.videoThumb {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 12px;
+    background-color: #d0cce0;
+}
+
+.videoTitle {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.videoUser {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.userPhoto {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #ccc;
+}
+
+.userName {
+    font-size: 12px;
+    color: #555;
+}

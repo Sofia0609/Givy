@@ -1,0 +1,33 @@
+.resultsScreen {
+    margin-left: 270px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.resultsHeader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.backButton {
+    border: none;
+    background: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+}
+
+.videosGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.noResults {
+    grid-column: span 4;
+    text-align: center;
+    color: #999;
+}
