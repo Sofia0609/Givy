@@ -1,6 +1,4 @@
-/* =====================
-   LAYOUT GLOBAL
-   ===================== */
+
 * {
   margin: 0;
   padding: 0;
@@ -15,9 +13,7 @@
   background: linear-gradient(135deg, #ffffff 0%, #dfdbff 70%, #8e84d7 100%);
 }
 
-/* =====================
-   FEED SCROLL
-   ===================== */
+
 .feed {
   margin-left: 250px;
   height: 100vh;
@@ -39,9 +35,7 @@
   align-items: stretch;
 }
 
-/* =====================
-   PANEL USUARIO
-   ===================== */
+
 .user-panel {
   width: 270px;
   min-width: 220px;
@@ -55,9 +49,7 @@
   gap: 16px;
 }
 
-/* =====================
-   VIDEO — llena el alto de la página
-   ===================== */
+
 .video-section {
   flex: 1;
   height: 100vh;
@@ -66,31 +58,57 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
+  background: #000;
 }
 
-/* Overlay top — solo mobile */
+
 .video-user-top  { display: none; }
-/* Overlay bottom — solo mobile */
+
 .video-user-bottom { display: none; }
 
-/* =====================
-   SIDEBAR DERECHO
-   ===================== */
+
 .sidebar-right {
-  width: 100px;
+
+  width: 110px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: 20px;
-  padding: 0 0 50px 0;
+
+  justify-content: center;
+  gap: 22px;
+  padding: 0;
 }
 
-/* =====================
-   COMENTARIOS OVERLAY
-   ===================== */
+
+.swap-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+
+  background: rgba(30, 27, 60, 0.45);
+}
+
+.swap-overlay-img {
+  width: 260px;
+  height: 260px;
+  animation: swapPopIn 1.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+@keyframes swapPopIn {
+  0%   { transform: scale(0.3) rotate(-20deg); opacity: 0; }
+  40%  { transform: scale(1.15) rotate(8deg);  opacity: 1; }
+  65%  { transform: scale(0.95) rotate(-4deg); opacity: 1; }
+  80%  { transform: scale(1.05) rotate(2deg);  opacity: 1; }
+  90%  { transform: scale(1)    rotate(0deg);  opacity: 1; }
+  100% { transform: scale(0.8)  rotate(0deg);  opacity: 0; }
+}
+
+
 .comments-overlay {
   position: absolute;
   bottom: 0;
@@ -111,75 +129,6 @@
   to   { transform: translateY(0); }
 }
 
-/* =====================
-   SWAP MODAL (estilo proyecto anterior)
-   ===================== */
-.swap-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(30, 27, 60, 0.75);
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeInModal 0.2s ease;
-}
-
-@keyframes fadeInModal {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-.swap-modal-content {
-  background: #1e1b3a;
-  border-radius: 20px;
-  padding: 36px 32px;
-  color: white;
-  position: relative;
-  min-width: 300px;
-  text-align: center;
-  animation: popIn 0.4s ease-out;
-}
-
-@keyframes popIn {
-  0%   { transform: scale(0.8); opacity: 0; }
-  60%  { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.swap-modal-content h3 {
-  font-size: 1.3em;
-  margin-bottom: 12px;
-  color: #c4b5fd;
-}
-
-.swap-modal-content p {
-  font-size: 0.95em;
-  font-weight: 400;
-  margin-bottom: 24px;
-  line-height: 1.5;
-  color: #e0d9ff;
-}
-
-.swap-modal-close {
-  background: #9873ff;
-  border: none;
-  color: white;
-  font-size: 0.9em;
-  font-weight: 700;
-  padding: 10px 28px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.swap-modal-close:hover {
-  background: #7c3aed;
-}
-
-/* =====================
-   SWAP TABS
-   ===================== */
 .swap-tabs { display: flex; align-items: center; gap: 8px; }
 
 .tab-btn {
@@ -198,19 +147,10 @@
   border-color: #9873ff;
 }
 
-/* =====================
-   BOTTOM NAV (mobile)
-   ===================== */
-.bottom-nav { display: none; }
-
-/* =====================
-   RESPONSIVE MOBILE
-   ===================== */
 @media (max-width: 768px) {
   .feed { margin-left: 0; width: 100%; }
   .feed-item { position: relative; }
   .user-panel { display: none; }
-
   .video-section { width: 100%; flex: unset; }
 
   .video-user-top {
@@ -235,7 +175,7 @@
   .video-user-bottom {
     display: block;
     position: absolute;
-    bottom: 70px;
+    bottom: 20px;
     left: 12px;
     right: 80px;
     background: rgba(60, 55, 100, 0.65);
@@ -251,36 +191,14 @@
   .sidebar-right {
     position: absolute;
     right: 12px;
-    bottom: 80px;
+
+    top: 50%;
+    transform: translateY(-50%);
     width: auto;
     padding: 0;
     gap: 18px;
     z-index: 10;
     background: transparent;
+    justify-content: center;
   }
-
-  .bottom-nav {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    justify-content: space-around;
-    align-items: center;
-    padding: 12px 0;
-    z-index: 50;
-    border-top: 1px solid #e0e0e0;
-  }
-
-  .bottom-nav a {
-    color: #292d32;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .bottom-nav img { width: 24px; height: 24px; }
 }
