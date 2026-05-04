@@ -12,18 +12,23 @@
     gap: 16px;
 }
 
+.resultsHeader .searchBar {
+    width: 320px;
+}
+
 .backButton {
     border: none;
     background: none;
-    font-size: 20px;
     cursor: pointer;
-    color: #333;
+    padding: 0;
+    display: flex;
+    align-items: center;
 }
 
 .videosGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(4, 220px); 
+    gap: 16px;
 }
 
 .noResults {

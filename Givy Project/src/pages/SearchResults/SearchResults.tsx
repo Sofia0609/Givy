@@ -7,6 +7,7 @@ import videos from '../../data/videos.json'
 import users from '../../data/users.json'
 import tags from '../../data/tags.json'
 import './SearchResults.css'
+import arrowLeft from '../../assets/arrow-left.svg'
 
 function SearchResults() {
     const [searchParams] = useSearchParams()
@@ -39,7 +40,9 @@ function SearchResults() {
             <div className="resultsScreen">
 
                 <div className="resultsHeader">
-                    <button className="backButton" onClick={() => navigate('/Search')}>◀</button>
+                    <button className="backButton" onClick={() => navigate('/Search')}> 
+                        <img src={arrowLeft} alt="back" />
+                    </button>
                     <SearchBar
                         placeholder={searchLabel}
                         onChange={() => {}}

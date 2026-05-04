@@ -3,11 +3,12 @@
     flex-direction: column;
     gap: 6px;
     cursor: pointer;
+    width: 220px;
 }
 
 .videoThumb {
     width: 100%;
-    aspect-ratio: 3/4;
+    height: 330px;       
     object-fit: cover;
     border-radius: 12px;
     background-color: #d0cce0;
