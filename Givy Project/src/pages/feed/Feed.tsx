@@ -12,21 +12,35 @@ import swapIcon from "../../assets/swap_icon.svg";
 import usersData from "../../data/users.json";
 import videosData from "../../data/videos.json";
 import tagsData from "../../data/tags.json";
+import commentsData from "../../data/comments.json";
 import "./Feed.css";
 import NavBar from "../../components/navBar/navBar";
 
+
 const resolveTagNames = (tagIds: string[]): string[] =>
-  tagIds
-    .map((id) => tagsData.find((t) => t.id === id)?.name ?? id)
-    .filter(Boolean);
+  tagIds.map((id) => tagsData.find((t) => t.id === id)?.name ?? id);
 
 const getInitials = (username: string): string =>
-  username
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+  username.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
+
+
+export interface ReplyData {
+  id: string;
+  parentCommentId: string;
+  userId: string;
+  text: string;
+  date: string;
+}
+
+export interface CommentData {
+  id: string;
+  videoId: string;
+  userId: string;
+  text: string;
+  date: string;
+  replies: ReplyData[];
+  isOwn?: boolean;
+}
 
 interface FeedItem {
   user: (typeof usersData)[0];
@@ -43,15 +57,35 @@ const feedItems: FeedItem[] = videosData
   .filter((item): item is FeedItem => item !== null);
 
 
-function Feed() {
+const buildInitialComments = (): Record<string, CommentData[]> => {
+  const map: Record<string, CommentData[]> = {};
+  feedItems.forEach(({ video }) => {
+    map[video.id] = commentsData
+      .filter((c) => c.videoId === video.id)
+      .map((c) => ({ ...c, isOwn: false }));
+  });
+  return map;
+};
+const createOwnComment = (videoId: string, text: string): CommentData => ({
+  id: `own-${Date.now()}`,
+  videoId,
+  userId: "me",
+  text,
+  date: new Date().toISOString(),
+  replies: [],
+  isOwn: true,
+});
 
+function Feed() {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(
     Object.fromEntries(videosData.map((v) => [v.id, v.likes]))
   );
-  const [showCommentsMap, setShowCommentsMap] = useState<
-    Record<string, boolean>
-  >({});
+  const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
+  const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>(
+    buildInitialComments()
+  );
+  const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
 
   const toggleLike = (videoId: string) => {
     const liked = likedMap[videoId] ?? false;
@@ -63,32 +97,53 @@ function Feed() {
   };
 
   const toggleComments = (videoId: string) => {
-    setShowCommentsMap({
-      ...showCommentsMap,
-      [videoId]: !showCommentsMap[videoId],
+    setShowCommentsMap({ ...showCommentsMap, [videoId]: !showCommentsMap[videoId] });
+  };
+
+  const handleShare = (url: string) => {
+    navigator.clipboard.writeText(url).then(() => {
+      alert("¡URL copiada al portapapeles!");
     });
+  };
+
+  const handleSwap = (videoId: string) => {
+    setSwapAnimMap({ ...swapAnimMap, [videoId]: true });
+    setTimeout(() => {
+      setSwapAnimMap((prev) => ({ ...prev, [videoId]: false }));
+    }, 600);
+  };
+
+  const addComment = (videoId: string, text: string) => {
+    const newComment = createOwnComment(videoId, text);
+    // Nuevo comentario va al principio de la lista
+    setCommentsMap((prev) => ({
+      ...prev,
+      [videoId]: [newComment, ...(prev[videoId] ?? [])],
+    }));
+  };
+
+  const deleteComment = (videoId: string, commentId: string) => {
+    setCommentsMap((prev) => ({
+      ...prev,
+      [videoId]: (prev[videoId] ?? []).filter((c) => c.id !== commentId),
+    }));
   };
 
   return (
     <div className="layout">
-
       <NavBar />
 
       <div className="feed">
         {feedItems.map(({ user, video }) => {
-
           const teachTagNames = resolveTagNames(user.wantsToTeach);
-          const learnTagNames = resolveTagNames(user.wantsToLearn);
-          const videoTagNames = resolveTagNames(video.tags);
-
-          const swapTabs = [
-            teachTagNames[0] ?? "Enseña",
-            learnTagNames[0] ?? "Aprende",
-          ];
+          const learnTagNames  = resolveTagNames(user.wantsToLearn);
+          const videoTagNames  = resolveTagNames(video.tags);
+          const videoComments  = commentsMap[video.id] ?? [];
 
           return (
             <div key={video.id} className="feed-item">
 
+              {/* ── Panel usuario (desktop) ── */}
               <div className="user-panel">
                 <Description
                   username={user.username}
@@ -99,41 +154,40 @@ function Feed() {
                 <Tags items={videoTagNames} />
               </div>
 
+              {/* ── Video + overlays ── */}
               <div className="video-section">
 
+                {/* Top overlay — solo mobile */}
                 <div className="video-user-top">
                   <span className="video-username">{user.username}</span>
                   <div className="swap-tabs">
-                    {swapTabs.map((tab, i) => (
-                      <button
-                        key={i}
-                        className={`tab-btn ${i === 0 ? "active-tab" : ""}`}
-                      >
-                        {tab}
-                      </button>
-                    ))}
+                    <button className="tab-btn active-tab">{teachTagNames[0] ?? "Enseña"}</button>
+                    <button className="tab-btn">{learnTagNames[0] ?? "Aprende"}</button>
                   </div>
                 </div>
 
-                <VideoSection
-                  id={video.id}
-                  title={video.title}
-                  url={video.url}
-                />
+                <VideoSection id={video.id} title={video.title} url={video.url} />
 
-  
+                {/* Bottom overlay — solo mobile */}
                 <div className="video-user-bottom">
                   <h3>{user.at}</h3>
                   <p>{video.description}</p>
                 </div>
 
+                {/* Panel de comentarios */}
                 {showCommentsMap[video.id] && (
                   <div className="comments-overlay">
-                    <Comments onClose={() => toggleComments(video.id)} />
+                    <Comments
+                      comments={videoComments}
+                      onClose={() => toggleComments(video.id)}
+                      onAddComment={(text) => addComment(video.id, text)}
+                      onDeleteComment={(commentId) => deleteComment(video.id, commentId)}
+                    />
                   </div>
                 )}
               </div>
 
+              {/* ── Sidebar derecho ── */}
               <div className="sidebar-right">
                 <ProfileButton initials={getInitials(user.username)} />
 
@@ -146,17 +200,19 @@ function Feed() {
 
                 <CircularButton
                   icon={commentIcon}
+                  count={videoComments.length}
                   onClick={() => toggleComments(video.id)}
                 />
 
                 <CircularButton
                   icon={swapIcon}
-                  onClick={() => {}}
+                  onClick={() => handleSwap(video.id)}
+                  extraClass={swapAnimMap[video.id] ? "swap-spin" : ""}
                 />
 
                 <CircularButton
                   icon={shareIcon}
-                  onClick={() => {}}
+                  onClick={() => handleShare(video.url)}
                 />
               </div>
 
@@ -165,12 +221,13 @@ function Feed() {
         })}
       </div>
 
+      {/* Bottom nav — solo mobile */}
       <nav className="bottom-nav">
-        <a href="#"><img src="/assets/home_icon.svg" alt="Feed" /></a>
-        <a href="#"><img src="/assets/search_icon.svg" alt="Buscar" /></a>
-        <a href="#"><img src="/assets/create_icon.svg" alt="Crear" /></a>
-        <a href="#"><img src="/assets/notification_icon.svg" alt="Notificaciones" /></a>
-        <a href="#"><img src="/assets/user_icon.svg" alt="Perfil" /></a>
+        <a href="#"><img src="src/assets/home_icon.svg" alt="Feed" /></a>
+        <a href="#"><img src="src/assets/search_icon.svg" alt="Buscar" /></a>
+        <a href="#"><img src="src/assets/create_icon.svg" alt="Crear" /></a>
+        <a href="#"><img src="src/assets/notification_icon.svg" alt="Notificaciones" /></a>
+        <a href="#"><img src="src/assets/user_icon.svg" alt="Perfil" /></a>
       </nav>
     </div>
   );
