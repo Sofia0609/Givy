@@ -1,15 +1,31 @@
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
 .login-field label {
   font-size: 14px;
   font-weight: 600;
-  color: #2d2d2d;
+  color: var(--text-main);
 }
 
 .login-field input {
-  background-color: #E4E0F0;
+  background-color: var(--action-focus);
   border: none;
   border-radius: 12px;
   padding: 14px 18px;
   font-size: 14px;
-  color: #2d2d2d;
+  color: var(--text-main);
   outline: none;
+  transition: background-color 0.2s;
+}
+
+.login-field input:focus {
+  background-color: var(--action-hover);
+}
+
+.login-field input::placeholder {
+  color: var(--text-low-contrast);
 }
