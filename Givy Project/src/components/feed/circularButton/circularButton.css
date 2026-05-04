@@ -5,7 +5,7 @@
   gap: 5px;
 }
 
-/* Círculo — mismo tamaño que antes */
+
 .circular-button button {
   width: 60px;
   height: 60px;
@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Sin padding extra — la imagen se encarga del tamaño */
+
   padding: 0;
   transition: background 0.2s, transform 0.15s;
 }
@@ -30,7 +30,7 @@
   background: #9873ff;
 }
 
-/* Imagen más grande dentro del mismo círculo */
+
 .circular-button img {
   width: 36px;
   height: 36px;
@@ -44,7 +44,6 @@
   color: #292d32;
 }
 
-/* ── Animación swap ── */
 @keyframes swapSpin {
   0%   { transform: scale(1)   rotate(0deg); opacity: 1; }
   30%  { transform: scale(0.8) rotate(180deg); opacity: 0.6; }

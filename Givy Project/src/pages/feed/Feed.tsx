@@ -9,6 +9,7 @@ import likeIcon from "../../assets/like_icon.svg";
 import commentIcon from "../../assets/comment_icon.svg";
 import shareIcon from "../../assets/share_icon.svg";
 import swapIcon from "../../assets/swap_icon.svg";
+import swapIllustration from "../../assets/swap_ilustration.svg";
 import usersData from "../../data/users.json";
 import videosData from "../../data/videos.json";
 import tagsData from "../../data/tags.json";
@@ -16,14 +17,13 @@ import commentsData from "../../data/comments.json";
 import "./Feed.css";
 import NavBar from "../../components/navBar/navBar";
 
-// ── Helpers ──────────────────────────────────────────────
+
 const resolveTagNames = (tagIds: string[]): string[] =>
   tagIds.map((id) => tagsData.find((t) => t.id === id)?.name ?? id);
 
 const getInitials = (username: string): string =>
   username.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
-// ── Tipos ────────────────────────────────────────────────
 export interface ReplyData {
   id: string;
   parentCommentId: string;
@@ -47,7 +47,6 @@ interface FeedItem {
   video: (typeof videosData)[0];
 }
 
-
 const feedItems: FeedItem[] = videosData
   .map((video) => {
     const user = usersData.find((u) => u.id === video.userId);
@@ -55,7 +54,6 @@ const feedItems: FeedItem[] = videosData
     return { user, video };
   })
   .filter((item): item is FeedItem => item !== null);
-
 
 const buildInitialComments = (): Record<string, CommentData[]> => {
   const map: Record<string, CommentData[]> = {};
@@ -77,8 +75,8 @@ function Feed() {
   const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>(
     buildInitialComments()
   );
-  const [swapAnimMap, setSwapAnimMap]   = useState<Record<string, boolean>>({});
-  const [swapModalVideo, setSwapModalVideo] = useState<string | null>(null);
+  // swapAnimMap: muestra la ilustración encima del video
+  const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
 
   const toggleLike = (videoId: string) => {
     const liked = likedMap[videoId] ?? false;
@@ -101,11 +99,10 @@ function Feed() {
 
 
   const handleSwap = (videoId: string) => {
-    setSwapAnimMap({ ...swapAnimMap, [videoId]: true });
+    setSwapAnimMap((prev) => ({ ...prev, [videoId]: true }));
     setTimeout(() => {
       setSwapAnimMap((prev) => ({ ...prev, [videoId]: false }));
-    }, 600);
-    setSwapModalVideo(videoId);
+    }, 1200);
   };
 
   const addComment = (videoId: string, text: string) => {
@@ -137,10 +134,10 @@ function Feed() {
 
       <div className="feed">
         {feedItems.map(({ user, video }) => {
-          const teachTagNames  = resolveTagNames(user.wantsToTeach);
-          const learnTagNames  = resolveTagNames(user.wantsToLearn);
-          const videoTagNames  = resolveTagNames(video.tags);
-          const videoComments  = commentsMap[video.id] ?? [];
+          const teachTagNames = resolveTagNames(user.wantsToTeach);
+          const learnTagNames = resolveTagNames(user.wantsToLearn);
+          const videoTagNames = resolveTagNames(video.tags);
+          const videoComments = commentsMap[video.id] ?? [];
 
           return (
             <div key={video.id} className="feed-item">
@@ -155,8 +152,10 @@ function Feed() {
                 <Tags items={videoTagNames} />
               </div>
 
-   
+            
               <div className="video-section">
+
+            
                 <div className="video-user-top">
                   <span className="video-username">{user.username}</span>
                   <div className="swap-tabs">
@@ -167,11 +166,23 @@ function Feed() {
 
                 <VideoSection id={video.id} title={video.title} url={video.url} />
 
+           
                 <div className="video-user-bottom">
                   <h3>{user.at}</h3>
                   <p>{video.description}</p>
                 </div>
 
+                {swapAnimMap[video.id] && (
+                  <div className="swap-overlay">
+                    <img
+                      src={swapIllustration}
+                      alt="swap"
+                      className="swap-overlay-img"
+                    />
+                  </div>
+                )}
+
+          
                 {showCommentsMap[video.id] && (
                   <div className="comments-overlay">
                     <Comments
@@ -183,6 +194,7 @@ function Feed() {
                   </div>
                 )}
               </div>
+
 
               <div className="sidebar-right">
                 <ProfileButton initials={getInitials(user.username)} />
@@ -203,7 +215,6 @@ function Feed() {
                 <CircularButton
                   icon={swapIcon}
                   onClick={() => handleSwap(video.id)}
-                  extraClass={swapAnimMap[video.id] ? "swap-spin" : ""}
                 />
 
                 <CircularButton
@@ -216,31 +227,6 @@ function Feed() {
           );
         })}
       </div>
-
-     
-      {swapModalVideo && (
-        <div className="swap-modal" onClick={() => setSwapModalVideo(null)}>
-          <div className="swap-modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>¿Swap de habilidades?</h3>
-            <p>
-              Propón un intercambio con este usuario.<br />
-              Tú enseñas lo que sabes, él te enseña lo que quieres aprender.
-            </p>
-            <button className="swap-modal-close" onClick={() => setSwapModalVideo(null)}>
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
-
-
-      <nav className="bottom-nav">
-        <a href="#"><img src="src/assets/home_icon.svg" alt="Feed" /></a>
-        <a href="#"><img src="src/assets/search_icon.svg" alt="Buscar" /></a>
-        <a href="#"><img src="src/assets/create_icon.svg" alt="Crear" /></a>
-        <a href="#"><img src="src/assets/notification_icon.svg" alt="Notificaciones" /></a>
-        <a href="#"><img src="src/assets/user_icon.svg" alt="Perfil" /></a>
-      </nav>
     </div>
   );
 }
