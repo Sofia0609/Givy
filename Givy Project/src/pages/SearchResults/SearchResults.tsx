@@ -9,6 +9,7 @@ import tags from '../../data/tags.json'
 import './SearchResults.css'
 import arrowLeft from '../../assets/arrow-left.svg'
 
+
 function SearchResults() {
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
@@ -17,11 +18,33 @@ function SearchResults() {
 
     const filtered = videos.filter(video => {
         if (tagId) {
-            return video.teaches.includes(tagId) || video.wantsToLearnInReturn.includes(tagId)
+            return video.teaches.includes(tagId) ||
+                video.wantsToLearnInReturn.includes(tagId)
         }
         if (query) {
-            return video.title.toLowerCase().includes(query) ||
-                   video.description.toLowerCase().includes(query)
+            const user = users.find(u => u.id === video.userId)
+            
+            
+            const normalize = (str: string) =>
+                str.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+
+            const q = normalize(query)
+
+            
+            const matchesTag = tags.some(tag =>
+                normalize(tag.name).includes(q) &&
+                (video.teaches.includes(tag.id) || video.wantsToLearnInReturn.includes(tag.id))
+            )
+
+            return (
+                normalize(video.title).includes(q) ||
+                normalize(video.description).includes(q) ||
+                normalize(user?.username || '').includes(q) ||
+                normalize(user?.at || '').includes(q) ||
+                matchesTag
+            )
         }
         return true
     })
@@ -40,12 +63,13 @@ function SearchResults() {
             <div className="resultsScreen">
 
                 <div className="resultsHeader">
-                    <button className="backButton" onClick={() => navigate('/Search')}> 
-                        <img src={arrowLeft} alt="back" />
+                    <button className="backButton" onClick={() => navigate('/Search')}>
+                        ◀
                     </button>
                     <SearchBar
                         placeholder={searchLabel}
                         onChange={() => {}}
+                        onSearch={(q) => navigate(`/Search/Results?q=${encodeURIComponent(q)}`)}
                     />
                 </div>
 
