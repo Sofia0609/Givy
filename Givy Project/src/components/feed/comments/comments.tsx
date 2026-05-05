@@ -1,21 +1,20 @@
 import { useState } from "react";
-import Description from "../../components/feed/description/description";
-import VideoSection from "../../components/feed/video/Video";
-import CircularButton from "../../components/feed/circularButton/CircularButton";
-import Comments from "../../components/feed/comments/comments";
-import ProfileButton from "../../components/feed/profileButton/ProfileButton";
-import Tags from "../../components/feed/tags/Tags";
-import likeIcon from "../../assets/like_icon.svg";
-import commentIcon from "../../assets/comment_icon.svg";
-import shareIcon from "../../assets/share_icon.svg";
-import swapIcon from "../../assets/swap_icon.svg";
-import swapIllustration from "../../assets/swap_ilustration.svg";
-import usersData from "../../data/users.json";
-import videosData from "../../data/videos.json";
-import tagsData from "../../data/tags.json";g
-import commentsData from "../../data/comments.json";
-import "./Feed.css";
-import NavBar from "../../components/navBar/navBar";
+import Description from "../../../components/feed/description/description";
+import VideoSection from "../../../components/feed/video/Video";
+import CircularButton from "../../../components/feed/circularButton/CircularButton";
+import Comments from "../../../components/feed/comments/comments";
+import ProfileButton from "../../../components/feed/profileButton/ProfileButton";
+import Tags from "../../../components/feed/tags/Tags";
+import likeIcon from "../../../assets/like_icon.svg";
+import commentIcon from "../../../assets/comment_icon.svg";
+import shareIcon from "../../../assets/share_icon.svg";
+import swapIcon from "../../../assets/swap_icon.svg";
+import swapIllustration from "../../../assets/swap_ilustration.svg";
+import usersData from "../../../data/users.json";
+import videosData from "../../../data/videos.json";
+import tagsData from "../../../data/tags.json";
+import commentsData from "../../../data/comments.json";
+import NavBar from "../../../components/navBar/navBar";
 
 const resolveTagNames = (tagIds: string[]): string[] =>
   tagIds.map((id) => tagsData.find((t) => t.id === id)?.name ?? id);
