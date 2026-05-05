@@ -11,6 +11,7 @@ import {  createBrowserRouter, Navigate, RouterProvider } from 'react-router'
 import PossibleSwap from './pages/notificacions/possibleSwap/possibleSwap'
 import Match from './pages/notificacions/match/match'
 import Interactions from './pages/notificacions/interactions/interactions'
+import SearchResults from './pages/SearchResults/SearchResults'
 
 
 let routes = createBrowserRouter([
@@ -53,6 +54,10 @@ let routes = createBrowserRouter([
   {
     path: '/Interactions',
     element: <Interactions></Interactions>
+  },
+  {
+    path: "/Search/Results",
+    element: <SearchResults />
   }
 ])
 

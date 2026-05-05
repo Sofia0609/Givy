@@ -1,19 +1,20 @@
 import './HistoryItem.css'
-import historyicon from '../../../assets/search_icon.svg'
+import historyicon from '../../../assets/Refresh cw.svg'
 
-interface HistoryItem {
+interface HistoryItemProps {
     text: string
     onDelete: () => void
+    onClick: () => void   // ← nueva prop
 }
 
-function HistoryItem({ text, onDelete }: HistoryItem) {
+function HistoryItem({ text, onDelete, onClick }: HistoryItemProps) {
     return (
         <div className="historyItem">
-                <img src={historyicon} alt="" />
-            <span>{text}</span>
+            <img src={historyicon} alt="" />
+            <span onClick={onClick}>{text}</span>
             <button onClick={onDelete}>✕</button>
         </div>
     )
 }
 
-export default HistoryItem;
+export default HistoryItem
