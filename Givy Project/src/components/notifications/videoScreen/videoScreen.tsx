@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router'
 import './videoScreen.css'
 
 interface VideoScreenprops{
@@ -10,8 +9,8 @@ function VideoScreen({icon}:VideoScreenprops){
     return(
         <>  
         <div className='VideoScreen'>
-            <div>
-                <img src={icon} alt="" />
+            <div className='video'>
+                <img className='playIcon' src={icon} alt="" />
             </div>
          </div>
         </>

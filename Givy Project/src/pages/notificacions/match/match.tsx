@@ -12,19 +12,12 @@ import VideoScreen from '../../../components/notifications/videoScreen/videoScre
 
 function Match() {
 
-  const userLogged = "u2"
+  const userLogged = "u5"
 
   const [selectedMatch, setSelectedMatch] = useState<string | null>(null)
   const [filteredMatches, setFilteredMatches] = useState<typeof matches>([])
-  const [filteredUser,setUser] = useState<any>({})
 
   useEffect(() => {
-  
-    function getUserbyID(id:string){
-      const user = users.find((user)=> user.id === id)
-      setUser(user)
-      console.log(user)
-    }
 
     function getMatchesbyUser(user:string){
 
@@ -34,13 +27,12 @@ function Match() {
       setFilteredMatches(userMatches)
     } 
 
-    getUserbyID(userLogged);
     getMatchesbyUser(userLogged);
   }, []);
 
   const currentMatch = filteredMatches.find(match => match.id === selectedMatch)
   const myUserId1 = currentMatch?.user1Id === userLogged ? currentMatch.user1Id : currentMatch?.user2Id
- const iSentVideo = myUserId1? currentMatch?.videoSentByUser1 : currentMatch?.videoSentByUser2
+  const iSentVideo = myUserId1? currentMatch?.videoSentByUser1 : currentMatch?.videoSentByUser2
   const otherSentVideo = myUserId1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
 
   return (

@@ -18,7 +18,7 @@ function UploadVideo({icon, onVideoSelect}:UploadVideoprops){
         <>  
         <div className='uploadVideo'>
             <div className='border'>
-                <img src={icon} alt="" />
+                <img className='icon' src={icon} alt="" />
                 <input className='inputLink' type="file" accept="video/*" onChange={handleFileChange} />         
             </div>
          </div>
