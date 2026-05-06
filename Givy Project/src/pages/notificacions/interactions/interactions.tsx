@@ -58,6 +58,7 @@ function Interactions() {
                         photo={interaction.fromUser?.profilePicture}
                         name={interaction.fromUser?.username}
                         description={interaction.description}
+                        button={interaction.type !== 'like' ? 'Answer' : undefined}
                     />
                   ))
                 )}
