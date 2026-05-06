@@ -2,6 +2,7 @@
   {
     "id": "n1",
     "targetUserId": "u1",
+    "fromUserId": "u2",
     "type": "like",
     "videoId": "v1",
     "commentId": null,
@@ -11,6 +12,7 @@
   {
     "id": "n2",
     "targetUserId": "u1",
+    "fromUserId": "u3",
     "type": "like",
     "videoId": "v1",
     "commentId": null,
@@ -20,6 +22,7 @@
   {
     "id": "n3",
     "targetUserId": "u1",
+    "fromUserId": "u2",
     "type": "comment",
     "videoId": "v1",
     "commentId": "c1",
@@ -29,6 +32,7 @@
   {
     "id": "n4",
     "targetUserId": "u1",
+    "fromUserId": "u3",
     "type": "comment",
     "videoId": "v1",
     "commentId": "c2",
@@ -38,6 +42,7 @@
   {
     "id": "n5",
     "targetUserId": "u2",
+    "fromUserId": "u5",
     "type": "reply",
     "videoId": "v1",
     "commentId": "r1",
@@ -47,6 +52,7 @@
   {
     "id": "n6",
     "targetUserId": "u3",
+    "fromUserId": "u1",
     "type": "like",
     "videoId": "v4",
     "commentId": null,
@@ -56,6 +62,7 @@
   {
     "id": "n7",
     "targetUserId": "u3",
+    "fromUserId": "u4",
     "type": "comment",
     "videoId": "v4",
     "commentId": "c3",
@@ -65,6 +72,7 @@
   {
     "id": "n8",
     "targetUserId": "u5",
+    "fromUserId": "u4",
     "type": "like",
     "videoId": "v6",
     "commentId": null,

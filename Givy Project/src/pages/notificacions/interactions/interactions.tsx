@@ -15,24 +15,23 @@ function Interactions() {
   useEffect(() => {
 
   function getInteractionsbyUser(user: string) {
-
     const stored = localStorage.getItem('interactions')
     const allInteractions = stored ? JSON.parse(stored) : interactions
 
-    const userInteractions = 
-    
-        allInteractions.filter((interaction) => interaction.targetUserId === user)
-        allInteractions.map((interaction) => {
+    const userInteractions = allInteractions
+        .filter((interaction) => interaction.targetUserId === user)
+        .map((interaction) => {
+            // Busca quién generó la notificación
+            const fromUser = users.find(u => u.id === interaction.fromUserId)
 
-            const fromUser = users.find(user => user.id === interaction.fromUserId)
-
+            // Arma el texto según el tipo
             let description = ''
             if (interaction.type === 'like') description = 'Liked your video'
-            if (interaction.type === 'comment') description = 'Commented on your video'
+            if (interaction.type === 'comment') description = 'Commented on your video' 
             if (interaction.type === 'reply') description = 'Replied to your comment'
 
             return { ...interaction, fromUser, description }
-      })
+        })
 
     setMyInteractions(userInteractions)
 
