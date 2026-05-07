@@ -29,3 +29,26 @@
 .login-field input::placeholder {
   color: var(--text-low-contrast);
 }
+
+.input-big {
+    background-color: var(--action-focus);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: var(--text-main);
+    outline: none;
+    transition: background-color 0.2s;
+    width: 100%;
+    height: 120px;
+    resize: none;
+    box-sizing: border-box; 
+}
+
+.input-big:focus {
+    background-color: var(--action-hover);
+}
+
+.input-big::placeholder {
+    color: var(--text-low-contrast);
+}

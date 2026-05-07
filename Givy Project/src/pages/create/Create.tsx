@@ -3,6 +3,7 @@ import NavBar from '../../components/navBar/navBar'
 import Header from '../../components/header/header'
 import BigButton from '../../components/bigButton/bigButton'
 import UploadVideo from '../../components/create/uploadVideo/uploadVideo'
+import InputGivy from '../../components/inputGivy/inputGivy'
 
 function Create() {
 
@@ -17,6 +18,14 @@ function Create() {
             icon='./src/assets/uploaded_icon.svg'
           />
           <BigButton content='Upload'></BigButton>
+
+          <InputGivy 
+            label="Title"
+            type="text"
+            value='Hola'
+            placeholder="placeholder"
+            big={true}
+          />
       </div>
     </div>
     </>
