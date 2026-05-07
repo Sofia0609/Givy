@@ -13,7 +13,6 @@ import Match from './pages/notificacions/match/match'
 import Interactions from './pages/notificacions/interactions/interactions'
 import SearchResults from './pages/SearchResults/SearchResults'
 
-
 let routes = createBrowserRouter([
   {
     path: "/",
