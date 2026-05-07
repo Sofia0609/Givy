@@ -1,0 +1,18 @@
+.tag {
+  border: 1.5px solid #292d32;
+  border-radius: 16px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 0.88em;
+  font-weight: 600;
+  background: transparent;
+  color: #292d32;
+  font-family: poppins, sans-serif;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.tag:hover {
+  background: #ede9fe;
+  border-color: #9873ff;
+  color: #7c3aed;
+}

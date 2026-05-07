@@ -1,0 +1,71 @@
+.searchHeader {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 0;
+}
+
+.closeButton {
+    border: none;
+    background: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #333;
+    padding: 0;
+}
+
+
+.searchScreen {
+    width: 360px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-left: 270px;
+    background-color: #F6F6FE;
+    border-radius: 16px;
+    margin-top: 0px;
+    padding-top: 20px;
+   
+}
+
+.categories {
+    display: flex;
+    gap: 10px;
+}
+
+.history {
+    display: flex;
+    flex-direction: column;
+}
+
+.seeMoreContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.seeMoreLine {
+    flex: 1;
+    border: none;
+    border-top: 1px solid #8880FF;
+    margin: 0;
+}
+
+.seeMore {
+    font-size: 13px;
+    color: #8880FF;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.recommendedTitle {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.recommendedList {
+    display: flex;
+    flex-direction: column;
+}
+
