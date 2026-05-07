@@ -8,7 +8,7 @@ import matches from '../../../data/matches.json'
 import users from '../../../data/users.json'
 import tags from '../../../data/tags.json'
 import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
-import VideoScreen from '../../../components/notifications/videoScreen/videoScreen'
+import VideoScreen from '../../../components/create/videoScreen/videoScreen'
 
 function Match() {
 
