@@ -1,13 +1,13 @@
-import './dropdownGivy.css'
+import './dropdown.css'
 
-interface DropdownGivyProps {
+interface DropdownProps {
     label: string
     options: { id: string, name: string }[] 
     value?: string
     onChange?: (value: string) => void
 }
 
-function DropdownGivy({ label, options, value, onChange }: DropdownGivyProps) {
+function Dropdown({ label, options, value, onChange }: DropdownProps) {
     return (
         <div className='dropdown-field'>
             <label>{label}</label>
@@ -24,4 +24,4 @@ function DropdownGivy({ label, options, value, onChange }: DropdownGivyProps) {
     )
 }
 
-export default DropdownGivy
+export default Dropdown

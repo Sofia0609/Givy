@@ -4,11 +4,11 @@ import Header from '../../components/header/header'
 import BigButton from '../../components/bigButton/bigButton'
 import UploadVideo from '../../components/create/uploadVideo/uploadVideo'
 import InputGivy from '../../components/inputGivy/inputGivy'
-import users from "../../data/users.json"
 import videos from "../../data/videos.json"
 import tagsData from '../../data/tags.json'
 import { useState } from 'react'
 import VideoScreen from '../../components/create/videoScreen/videoScreen'
+import Dropdown from '../../components/create/dropDown/dropDown.tsx'
 
 const userLogged = "u1"
 
@@ -25,13 +25,9 @@ function Create() {
     const url = URL.createObjectURL(file)
     setVideoUrl(url)
   }
-
-
-  const stored = localStorage.getItem('videos')
-  const allVideos = stored ? JSON.parse(stored) : videos
     
 
-  function pusblishVideo(){ 
+  function publishVideo(){ 
 
         if (!videoUrl || !tagToTeach || !tagToLearn) return
 
@@ -74,10 +70,11 @@ function Create() {
           
           {!selectedFile ?(
 
-          <div className='uploadVideo'>
+          <div className='uploadVideoContainer'>
             <Header title="Upload your own video!" />
             <UploadVideo
               icon='./src/assets/upload_icon.svg'
+              onVideoSelect={handleVideoSelect}
             />
             <BigButton
               content='Upload'
@@ -85,14 +82,44 @@ function Create() {
           </div>
 
         ):(
-                <InputGivy
-                  label="Description"
-                  type="text"
-                  value={description}
-                  placeholder="Write something..."
-                  onChange={e => setDescription(e.target.value)}
-                  big={true}
-                />
+
+          <>
+          <div className='publishVideoContainer'>
+
+              <VideoScreen icon='../src/assets/play_video_button.svg'/>
+              <div  className='videoinformation'>
+                  <Dropdown
+                      label="What do you want to teach?"
+                      options={tagsData}
+                      value={tagToTeach}
+                      onChange={val => setTagToTeach(val)}
+                  />
+                  <Dropdown
+                      label="What do you want to learn?"
+                      options={tagsData}
+                      value={tagToLearn}
+                      onChange={val => setTagToLearn(val)}
+                  />
+                  
+                  <InputGivy
+                    label="Description"
+                    type="text"
+                    value={description}
+                    placeholder="Write something..."
+                    onChange={e => setDescription(e.target.value)}
+                    big={true}
+                  />
+                  <BigButton
+                    content='Publish'
+                    onClick={publishVideo}
+                  />
+
+              </div>
+
+
+          </div>
+            
+          </>
 
         )}
 
