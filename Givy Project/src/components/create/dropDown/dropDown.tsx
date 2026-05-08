@@ -9,7 +9,7 @@ interface DropdownProps {
 
 function Dropdown({ label, options, value, onChange }: DropdownProps) {
     return (
-        <div className='dropdown-field'>
+        <div className='dropdownField'>
             <label>{label}</label>
             <select
                 value={value}

@@ -1,4 +1,4 @@
-import BigButton from '../../bigButton/bigButton'
+import BigButton from '../../buttonsGivy/bigButton/bigButton'
 import UploadVideo from '../../create/uploadVideo/uploadVideo'
 import './UploadVideoMatch.css'
 

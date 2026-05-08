@@ -8,16 +8,16 @@
 .login-field label {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-main);
+  color: var(--color-text-primary);
 }
 
 .login-field input {
-  background-color: var(--action-focus);
+  background-color: var(--color-purple-light);
   border: none;
   border-radius: 12px;
   padding: 14px 18px;
   font-size: 14px;
-  color: var(--text-main);
+  color: var(--color-text-primary);
   outline: none;
   transition: background-color 0.2s;
 }
@@ -31,7 +31,7 @@
 }
 
 .input-big {
-    background-color: var(--action-focus);
+    background-color: var(--color-purple-light);
     border: none;
     border-radius: 12px;
     padding: 14px 18px;
@@ -46,7 +46,7 @@
 }
 
 .input-big:focus {
-    background-color: var(--action-hover);
+    background-color: var(--color-purple-sections-focus);
 }
 
 .input-big::placeholder {

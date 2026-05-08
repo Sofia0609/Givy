@@ -1,7 +1,7 @@
 import './create.css'
 import NavBar from '../../components/navBar/navBar'
 import Header from '../../components/header/header'
-import BigButton from '../../components/bigButton/bigButton'
+import BigButton from '../../components/buttonsGivy/bigButton/bigButton.tsx'
 import UploadVideo from '../../components/create/uploadVideo/uploadVideo'
 import InputGivy from '../../components/inputGivy/inputGivy'
 import videos from "../../data/videos.json"
@@ -9,6 +9,7 @@ import tagsData from '../../data/tags.json'
 import { useState } from 'react'
 import VideoScreen from '../../components/create/videoScreen/videoScreen'
 import Dropdown from '../../components/create/dropDown/dropDown.tsx'
+import MediumButton from '../../components/buttonsGivy/mediumButtons/mediumButton.tsx'
 
 const userLogged = "u1"
 
@@ -104,7 +105,6 @@ function Create() {
                       value={tagToLearn}
                       onChange={val => setTagToLearn(val)}
                   />
-                  
                   <InputGivy
                     label="Description"
                     type="text"
@@ -113,7 +113,7 @@ function Create() {
                     onChange={e => setDescription(e.target.value)}
                     big={true}
                   />
-                  <BigButton
+                  <MediumButton
                     content='Publish'
                     onClick={publishVideo}
                   />
