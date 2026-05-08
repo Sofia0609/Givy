@@ -9,14 +9,17 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 .uploadVideoContainer{
+    margin-top: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
+    gap: 50px;
 }
 
 .publishVideoContainer{
@@ -24,10 +27,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 40px;
 }
 
 .videoInformation{
     display: flex;
     flex-direction: column;
     width: 20%;
+    gap: 10px;
 }

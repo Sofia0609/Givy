@@ -67,11 +67,15 @@ function Create() {
           <NavBar/>
         </div>
         <div className='createContent'>
-          
+
+          <Header title="Upload your own video!" />
+
           {!selectedFile ?(
 
           <div className='uploadVideoContainer'>
-            <Header title="Upload your own video!" />
+
+            <p>Chose what you want to share!</p>
+            
             <UploadVideo
               icon='./src/assets/upload_icon.svg'
               onVideoSelect={handleVideoSelect}
@@ -87,7 +91,7 @@ function Create() {
           <div className='publishVideoContainer'>
 
               <VideoScreen icon='../src/assets/play_video_button.svg'/>
-              <div  className='videoinformation'>
+              <div  className='videoInformation'>
                   <Dropdown
                       label="What do you want to teach?"
                       options={tagsData}
