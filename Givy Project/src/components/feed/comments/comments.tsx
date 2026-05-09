@@ -1,232 +1,126 @@
 import { useState } from "react";
-import Description from "../../../components/feed/description/description";
-import VideoSection from "../../../components/feed/video/Video";
-import CircularButton from "../../../components/feed/circularButton/CircularButton";
-import Comments from "../../../components/feed/comments/comments";
-import ProfileButton from "../../../components/feed/profileButton/ProfileButton";
-import Tags from "../../../components/feed/tags/Tags";
-import likeIcon from "../../../assets/like_icon.svg";
-import commentIcon from "../../../assets/comment_icon.svg";
+import "./Comments.css";
 import shareIcon from "../../../assets/share_icon.svg";
-import swapIcon from "../../../assets/swap_icon.svg";
-import swapIllustration from "../../../assets/swap_ilustration.svg";
+import commentIconAsset from "../../../assets/comment_icon.svg";
 import usersData from "../../../data/users.json";
-import videosData from "../../../data/videos.json";
-import tagsData from "../../../data/tags.json";
-import commentsData from "../../../data/comments.json";
-import NavBar from "../../../components/navBar/navBar";
+import type { CommentData } from "../../../pages/feed/Feed";
 
-const resolveTagNames = (tagIds: string[]): string[] =>
-  tagIds.map((id) => tagsData.find((t) => t.id === id)?.name ?? id);
+const resolveUsername = (userId: string): string =>
+  usersData.find((u) => u.id === userId)?.username ?? userId;
 
-const getInitials = (username: string): string =>
-  username.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
-
-
-export interface ReplyData {
-  id: string;
-  parentCommentId: string;
-  userId: string;
-  text: string;
-  date: string;
+interface Props {
+  comments: CommentData[];
+  onClose: () => void;
+  onAddComment: (text: string) => void;
+  onDeleteComment: (commentId: string) => void;
 }
 
-export interface CommentData {
-  id: string;
-  videoId: string;
-  userId: string;
-  text: string;
-  date: string;
-  replies: ReplyData[];
-  isOwn?: boolean;
-}
+function Comments({ comments, onClose, onAddComment, onDeleteComment }: Props) {
+  const [inputText, setInputText] = useState("");
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [expandedReplies, setExpandedReplies] = useState<Record<string, boolean>>({});
 
-interface FeedItem {
-  user: (typeof usersData)[0];
-  video: (typeof videosData)[0];
-}
-
-
-const feedItems: FeedItem[] = videosData
-  .map((video) => {
-    const user = usersData.find((u) => u.id === video.userId);
-    if (!user) return null;
-    return { user, video };
-  })
-  .filter((item): item is FeedItem => item !== null);
-
-
-const buildInitialComments = (): Record<string, CommentData[]> => {
-  const map: Record<string, CommentData[]> = {};
-  feedItems.forEach(({ video }) => {
-    map[video.id] = commentsData
-      .filter((c) => c.videoId === video.id)
-      .map((c) => ({ ...c, isOwn: false }));
-  });
-  return map;
-};
-
-function Feed() {
-  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
-  const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(
-    Object.fromEntries(videosData.map((v) => [v.id, v.likes]))
-  );
-  const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
-  const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>(
-    buildInitialComments()
-  );
-
-  const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
-
-  const toggleLike = (videoId: string) => {
-    const liked = likedMap[videoId] ?? false;
-    setLikedMap({ ...likedMap, [videoId]: !liked });
-    setLikeCountMap({
-      ...likeCountMap,
-      [videoId]: (likeCountMap[videoId] ?? 0) + (liked ? -1 : 1),
-    });
+  const handleSubmit = () => {
+    if (!inputText.trim()) return;
+    onAddComment(inputText.trim());
+    setInputText("");
   };
 
-  const toggleComments = (videoId: string) => {
-    setShowCommentsMap({ ...showCommentsMap, [videoId]: !showCommentsMap[videoId] });
+  const toggleMenu = (id: string) => {
+    setMenuOpenId(menuOpenId === id ? null : id);
   };
 
-  const handleShare = (url: string) => {
-    navigator.clipboard.writeText(url).then(() => {
-      alert("¡URL copiada al portapapeles!");
-    });
-  };
-
- 
-  const handleSwap = (videoId: string) => {
-    setSwapAnimMap((prev) => ({ ...prev, [videoId]: true }));
-    setTimeout(() => {
-      setSwapAnimMap((prev) => ({ ...prev, [videoId]: false }));
-    }, 1200);
-  };
-
-  const addComment = (videoId: string, text: string) => {
-    const newComment: CommentData = {
-      id: `own-${Date.now()}`,
-      videoId,
-      userId: "me",
-      text,
-      date: new Date().toISOString(),
-      replies: [],
-      isOwn: true,
-    };
-    setCommentsMap((prev) => ({
-      ...prev,
-      [videoId]: [newComment, ...(prev[videoId] ?? [])],
-    }));
-  };
-
-  const deleteComment = (videoId: string, commentId: string) => {
-    setCommentsMap((prev) => ({
-      ...prev,
-      [videoId]: (prev[videoId] ?? []).filter((c) => c.id !== commentId),
-    }));
+  const toggleReplies = (commentId: string) => {
+    setExpandedReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
   };
 
   return (
-    <div className="layout">
-      <NavBar />
+    <div className="comments-sheet" onClick={() => setMenuOpenId(null)}>
+      <div className="comments-header">
+        <div className="comments-handle" />
+        <span className="comments-title">{comments.length} comentarios</span>
+        <button className="comments-close" onClick={onClose} aria-label="Cerrar">✕</button>
+      </div>
 
-      <div className="feed">
-        {feedItems.map(({ user, video }) => {
-          const teachTagNames = resolveTagNames(user.wantsToTeach);
-          const learnTagNames = resolveTagNames(user.wantsToLearn);
-          const videoTagNames = resolveTagNames(video.tags);
-          const videoComments = commentsMap[video.id] ?? [];
-
-          return (
-            <div key={video.id} className="feed-item">
-
-            
-              <div className="user-panel">
-                <Description
-                  username={user.username}
-                  bio={user.bio}
-                  teaches={teachTagNames}
-                  lookingFor={learnTagNames}
-                />
-                <Tags items={videoTagNames} />
-              </div>
-
-              <div className="video-section">
-
-                <div className="video-user-top">
-                  <span className="video-username">{user.username}</span>
-                  <div className="swap-tabs">
-                    <button className="tab-btn active-tab">{teachTagNames[0] ?? "Enseña"}</button>
-                    <button className="tab-btn">{learnTagNames[0] ?? "Aprende"}</button>
-                  </div>
+      <div className="comments-list">
+        {comments.length === 0 ? (
+          <div className="comments-empty">
+            <img src={commentIconAsset} alt="sin comentarios" className="comments-empty-icon" />
+            <p>No hay comentarios aún.</p>
+            <p>¡Sé el primero en comentar!</p>
+          </div>
+        ) : (
+          comments.map((c) => (
+            <div key={c.id} className="comment-block">
+              <div className="comment-row">
+                <div className="comment-avatar">
+                  <span>{c.isOwn ? "Tú" : resolveUsername(c.userId).charAt(0).toUpperCase()}</span>
                 </div>
-
-                <VideoSection id={video.id} title={video.title} url={video.url} />
-
-                <div className="video-user-bottom">
-                  <h3>{user.at}</h3>
-                  <p>{video.description}</p>
+                <div className="comment-body">
+                  <h4 className="comment-user">{c.isOwn ? "Tú" : resolveUsername(c.userId)}</h4>
+                  <p className="comment-text">{c.text}</p>
+                  {c.replies.length > 0 && (
+                    <button className="comment-replies-btn" onClick={() => toggleReplies(c.id)}>
+                      {expandedReplies[c.id]
+                        ? "Ocultar respuestas"
+                        : `Ver ${c.replies.length} respuesta${c.replies.length !== 1 ? "s" : ""}`}
+                    </button>
+                  )}
                 </div>
-
-                {swapAnimMap[video.id] && (
-                  <div className="swap-overlay">
-                    <img
-                      src={swapIllustration}
-                      alt="swap"
-                      className="swap-overlay-img"
-                    />
-                  </div>
-                )}
-
-
-                {showCommentsMap[video.id] && (
-                  <div className="comments-overlay">
-                    <Comments
-                      comments={videoComments}
-                      onClose={() => toggleComments(video.id)}
-                      onAddComment={(text) => addComment(video.id, text)}
-                      onDeleteComment={(commentId) => deleteComment(video.id, commentId)}
-                    />
+                {c.isOwn && (
+                  <div className="comment-menu-wrapper" onClick={(e) => { e.stopPropagation(); toggleMenu(c.id); }}>
+                    <button className="comment-menu-btn" aria-label="opciones">···</button>
+                    {menuOpenId === c.id && (
+                      <div className="comment-menu-dropdown">
+                        <button
+                          className="comment-menu-delete"
+                          onClick={(e) => { e.stopPropagation(); onDeleteComment(c.id); setMenuOpenId(null); }}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
 
-
-              <div className="sidebar-right">
-                <ProfileButton initials={getInitials(user.username)} />
-
-                <CircularButton
-                  icon={likeIcon}
-                  count={likeCountMap[video.id] ?? video.likes}
-                  onClick={() => toggleLike(video.id)}
-                  active={likedMap[video.id] ?? false}
-                />
-
-                <CircularButton
-                  icon={commentIcon}
-                  count={videoComments.length}
-                  onClick={() => toggleComments(video.id)}
-                />
-
-                <CircularButton
-                  icon={swapIcon}
-                  onClick={() => handleSwap(video.id)}
-                />
-
-                <CircularButton
-                  icon={shareIcon}
-                  onClick={() => handleShare(video.url)}
-                />
-              </div>
-
+              {expandedReplies[c.id] && c.replies.length > 0 && (
+                <div className="replies-list">
+                  {c.replies.map((r) => (
+                    <div key={r.id} className="reply-row">
+                      <div className="reply-avatar">
+                        <span>{resolveUsername(r.userId).charAt(0).toUpperCase()}</span>
+                      </div>
+                      <div className="reply-body">
+                        <h4 className="reply-user">{resolveUsername(r.userId)}</h4>
+                        <p className="reply-text">{r.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          );
-        })}
+          ))
+        )}
+      </div>
+
+      <div className="comments-input-row">
+        <div className="comments-input-avatar" />
+        <input
+          className="comments-input"
+          type="text"
+          placeholder="Agregar comentario..."
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+          onClick={(e) => e.stopPropagation()}
+        />
+        <button className="comments-send-btn" onClick={(e) => { e.stopPropagation(); handleSubmit(); }} aria-label="Enviar">
+          <img src={shareIcon} alt="Enviar" />
+        </button>
       </div>
     </div>
   );
 }
 
-export default Feed;
+export default Comments;
