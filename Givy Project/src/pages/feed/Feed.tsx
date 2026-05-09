@@ -5,18 +5,17 @@ import CircularButton from "../../components/feed/circularButton/CircularButton"
 import Comments from "../../components/feed/comments/comments";
 import ProfileButton from "../../components/feed/profileButton/ProfileButton";
 import Tags from "../../components/feed/tags/Tags";
+import ShareButton from "../../components/feed/shareButton/ShareButton";
+import SwapButton from "../../components/feed/swapButton/SwapButton";
+import SwapOverlay from "../../components/feed/swapOverlay/SwapOverlay";
 import likeIcon from "../../assets/like_icon.svg";
 import commentIcon from "../../assets/comment_icon.svg";
-import shareIcon from "../../assets/share_icon.svg";
-import swapIcon from "../../assets/swap_icon.svg";
-import swapIllustration from "../../assets/swap_ilustration.svg";
 import usersData from "../../data/users.json";
 import videosData from "../../data/videos.json";
 import tagsData from "../../data/tags.json";
 import commentsData from "../../data/comments.json";
 import "./Feed.css";
 import NavBar from "../../components/navBar/navBar";
-
 
 const resolveTagNames = (tagIds: string[]): string[] =>
   tagIds.map((id) => tagsData.find((t) => t.id === id)?.name ?? id);
@@ -65,7 +64,6 @@ const buildInitialComments = (): Record<string, CommentData[]> => {
   return map;
 };
 
-
 function Feed() {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(
@@ -75,7 +73,6 @@ function Feed() {
   const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>(
     buildInitialComments()
   );
-  // swapAnimMap: muestra la ilustración encima del video
   const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
 
   const toggleLike = (videoId: string) => {
@@ -90,13 +87,6 @@ function Feed() {
   const toggleComments = (videoId: string) => {
     setShowCommentsMap({ ...showCommentsMap, [videoId]: !showCommentsMap[videoId] });
   };
-
-  const handleShare = (url: string) => {
-    navigator.clipboard.writeText(url).then(() => {
-      alert("¡URL copiada al portapapeles!");
-    });
-  };
-
 
   const handleSwap = (videoId: string) => {
     setSwapAnimMap((prev) => ({ ...prev, [videoId]: true }));
@@ -131,7 +121,6 @@ function Feed() {
   return (
     <div className="layout">
       <NavBar />
-
       <div className="feed">
         {feedItems.map(({ user, video }) => {
           const teachTagNames = resolveTagNames(user.wantsToTeach);
@@ -141,7 +130,6 @@ function Feed() {
 
           return (
             <div key={video.id} className="feed-item">
-
               <div className="user-panel">
                 <Description
                   username={user.username}
@@ -152,10 +140,7 @@ function Feed() {
                 <Tags items={videoTagNames} />
               </div>
 
-            
               <div className="video-section">
-
-            
                 <div className="video-user-top">
                   <span className="video-username">{user.username}</span>
                   <div className="swap-tabs">
@@ -166,23 +151,13 @@ function Feed() {
 
                 <VideoSection id={video.id} title={video.title} url={video.url} />
 
-           
                 <div className="video-user-bottom">
                   <h3>{user.at}</h3>
                   <p>{video.description}</p>
                 </div>
 
-                {swapAnimMap[video.id] && (
-                  <div className="swap-overlay">
-                    <img
-                      src={swapIllustration}
-                      alt="swap"
-                      className="swap-overlay-img"
-                    />
-                  </div>
-                )}
+                <SwapOverlay visible={swapAnimMap[video.id] ?? false} />
 
-          
                 {showCommentsMap[video.id] && (
                   <div className="comments-overlay">
                     <Comments
@@ -195,34 +170,22 @@ function Feed() {
                 )}
               </div>
 
-
               <div className="sidebar-right">
                 <ProfileButton initials={getInitials(user.username)} />
-
                 <CircularButton
                   icon={likeIcon}
                   count={likeCountMap[video.id] ?? video.likes}
                   onClick={() => toggleLike(video.id)}
                   active={likedMap[video.id] ?? false}
                 />
-
                 <CircularButton
                   icon={commentIcon}
                   count={videoComments.length}
                   onClick={() => toggleComments(video.id)}
                 />
-
-                <CircularButton
-                  icon={swapIcon}
-                  onClick={() => handleSwap(video.id)}
-                />
-
-                <CircularButton
-                  icon={shareIcon}
-                  onClick={() => handleShare(video.url)}
-                />
+                <SwapButton onSwap={() => handleSwap(video.id)} />
+                <ShareButton />
               </div>
-
             </div>
           );
         })}

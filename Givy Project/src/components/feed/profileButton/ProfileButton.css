@@ -7,8 +7,8 @@
 }
 
 .profile-avatar {
-  width: 54px;
-  height: 54px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: #4a3d8c;
   border: 3px solid #2d2a6e;
@@ -39,5 +39,4 @@
   align-items: center;
   justify-content: center;
   border: 2px solid #fff;
-  line-height: 1;
 }

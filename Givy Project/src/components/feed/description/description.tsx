@@ -1,5 +1,5 @@
 import "./Description.css";
-import swapIcon from "../../../assets/swap_icon.svg";
+import swapIlustration from "../../../assets/swap_ilustration.svg";
 
 interface Props {
   username: string;
@@ -25,17 +25,14 @@ function Description({ username, bio, teaches = [], lookingFor = [] }: Props) {
       {lookingFor.length > 0 && (
         <div className="description-looking">
           <span className="description-looking-label">Looking for...</span>
-          <img src={swapIcon} alt="swap" className="description-swap-icon" />
-        </div>
-      )}
-
-      {lookingFor.length > 0 && (
-        <div className="description-looking-tags">
-          {lookingFor.map((tag, i) => (
-            <span key={i} className="description-looking-tag">
-              {tag.charAt(0).toUpperCase() + tag.slice(1)}
-            </span>
-          ))}
+          <img src={swapIlustration} alt="swap" className="description-swap-icon" />
+          <div className="description-looking-tags">
+            {lookingFor.map((tag, i) => (
+              <span key={i} className="description-looking-tag">
+                {tag.charAt(0).toUpperCase() + tag.slice(1)}
+              </span>
+            ))}
+          </div>
         </div>
       )}
     </section>

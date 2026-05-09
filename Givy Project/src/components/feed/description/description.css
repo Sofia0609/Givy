@@ -1,10 +1,11 @@
 .description {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   width: 100%;
   color: #292d32;
+  text-align: center;
 }
 
 .description-username {
@@ -12,6 +13,7 @@
   font-weight: 700;
   margin: 0;
   color: #292d32;
+  align-self: flex-start;
 }
 
 .description-bio {
@@ -20,13 +22,15 @@
   line-height: 1.55;
   color: #292d32;
   margin: 0;
+  text-align: left;
+  align-self: flex-start;
 }
 
-/* Badge "Math teacher" */
 .description-teaches-wrapper {
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-top: 8px;
 }
 
 .description-teaches {
@@ -40,39 +44,37 @@
   font-weight: 700;
 }
 
-/* Looking for + ícono swap */
 .description-looking {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .description-looking-label {
-  font-size: 0.88em;
+  font-size: 0.9em;
   font-weight: 600;
   color: #555;
 }
 
 .description-swap-icon {
-  width: 38px;
-  height: 38px;
-  opacity: 0.75;
+  width: 44px;
+  height: 44px;
+  opacity: 0.8;
 }
 
-/* Tags "music, dance" */
 .description-looking-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
   justify-content: center;
   width: 100%;
 }
 
 .description-looking-tag {
   color: #7c3aed;
-  font-size: 0.9em;
+  font-size: 0.95em;
   font-weight: 700;
   background: transparent;
 }
