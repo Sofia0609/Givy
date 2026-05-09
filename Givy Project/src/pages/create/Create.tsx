@@ -8,8 +8,8 @@ import videos from "../../data/videos.json"
 import tagsData from '../../data/tags.json'
 import { useState } from 'react'
 import VideoScreen from '../../components/create/videoScreen/videoScreen'
-import Dropdown from '../../components/create/dropDown/dropDown.tsx'
 import MediumButton from '../../components/buttonsGivy/mediumButtons/mediumButton.tsx'
+import DropdownCustom from '../../components/create/dropDown/dropDown.tsx'
 
 const userLogged = "u1"
 
@@ -93,13 +93,13 @@ function Create() {
 
               <VideoScreen icon='../src/assets/play_video_button.svg'/>
               <div  className='videoInformation'>
-                  <Dropdown
+                  <DropdownCustom
                       label="What do you want to teach?"
                       options={tagsData}
                       value={tagToTeach}
                       onChange={val => setTagToTeach(val)}
                   />
-                  <Dropdown
+                  <DropdownCustom
                       label="What do you want to learn?"
                       options={tagsData}
                       value={tagToLearn}
