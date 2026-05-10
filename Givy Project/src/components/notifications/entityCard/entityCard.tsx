@@ -3,8 +3,8 @@ import './entityCard.css'
 
 interface EntityCard{
     photo: string | undefined,
-    name: string
-    description?: string
+    name: string | undefined,
+    description?: string,
     content?: string
     content2? : string
     desicionButtons?: boolean
