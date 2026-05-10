@@ -9,7 +9,12 @@ import tags from '../../../data/tags.json'
 
 
 function PossibleSwap() {
-    const userLogged = "u3"
+
+
+  const userLogged = localStorage.getItem('loggeduser')
+  console.log(JSON.parse(userLogged));
+  
+
 
     const [filteredSwap, setSwapRequest] = useState<typeof swapRequests>([])
     const [filteredSwapStatus, setSwapStatusUser] = useState<typeof swapRequests>([])
@@ -38,10 +43,10 @@ function PossibleSwap() {
             setSwapStatusUser(swapStatusUser)
         }
 
-        getUserbyID(userLogged);
-        getSwapbyUser(userLogged);
-        getStatusStatusbyUser(userLogged);
-    }, []);
+  getUserbyID(userLogged?.id || "u3");
+  getSwapbyUser(userLogged?.id || "u3");
+  getStatusStatusbyUser(userLogged?.id || "u3");
+}, []);
 
 
 function acceptSwap(swapId: string) {

@@ -1,0 +1,26 @@
+.swap-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: rgba(30, 27, 60, 0.35);
+}
+
+.swap-overlay-img {
+  width: 260px;
+  height: 260px;
+  object-fit: contain;
+  animation: swapPopIn 1.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+@keyframes swapPopIn {
+  0%   { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+  40%  { transform: scale(1.15) rotate(6deg);  opacity: 1; }
+  65%  { transform: scale(0.95) rotate(-3deg); opacity: 1; }
+  85%  { transform: scale(1.03) rotate(1deg);  opacity: 1; }
+  95%  { transform: scale(1)    rotate(0deg);  opacity: 1; }
+  100% { transform: scale(0.85) rotate(0deg);  opacity: 0; }
+}
