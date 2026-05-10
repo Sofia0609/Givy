@@ -7,9 +7,12 @@ import UserInfo from '../../components/profile/UserInfo/UserInfo'
 import TagsContainer from '../../components/profile/TagsContainer/TagsContainer'
 import VideosContainer from '../../components/profile/VideosContainer/VideosContainer'
 import './Profile.css'
+import videos from '../../data/videos.json'
 
 const teachingTags = ['Web Development', 'UI/UX Design', 'JavaScript']
 const learningTags = ['Guitar', 'Photography', 'Korean']
+
+
 
 const profileVideos = [
   { id: 1, views: 1240 },
@@ -38,7 +41,7 @@ function Profile() {
           <TagsContainer title="TEACHING" tags={teachingTags} variant="teaching" />
           <TagsContainer title="LEARNING" tags={learningTags} variant="learning" />
         </div>
-        <VideosContainer videos={profileVideos} />
+        <VideosContainer videos={videos} />
       </main>
     </div>
   )
