@@ -1,0 +1,39 @@
+.createLayout {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+}
+
+.createContent {
+    margin-left: 250px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.uploadVideoContainer{
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 50px;
+}
+
+.publishVideoContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.videoInformation{
+    display: flex;
+    flex-direction: column;
+    width: 37%;
+    gap: 10px;
+}

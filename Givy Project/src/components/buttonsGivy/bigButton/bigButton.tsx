@@ -1,15 +1,15 @@
-import { useNavigate } from 'react-router'
 import './BigButton.css'
 
 interface BigButtonprops{
     content : string
+    onClick?: () => void
 }
 
-function BigButton({content}:BigButtonprops){
+function BigButton({content, onClick}:BigButtonprops){
 
     return(
         <>  
-        <div className='bigButton'>
+        <div className='bigButton' onClick={onClick}>
                 <h2>{content}</h2>
          </div>
         </>

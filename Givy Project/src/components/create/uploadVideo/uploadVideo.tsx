@@ -1,29 +1,32 @@
 import './uploadVideo.css'
 
-interface UploadVideoprops{
-    icon : string
-    onVideoSelect?: (file: File) => void 
+interface UploadVideoprops {
+    icon: string
+    onVideoSelect?: (file: File) => void
 }
 
-function UploadVideo({icon, onVideoSelect}:UploadVideoprops){
+function UploadVideo({ icon, onVideoSelect }: UploadVideoprops) {
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0]
         if (file) {
-            onVideoSelect?.(file) 
+            onVideoSelect?.(file)
         }
     }
 
-    return(
-        <>  
+    return (
         <div className='uploadVideo'>
             <div className='border'>
                 <img className='icon' src={icon} alt="" />
-                <input className='inputLink' type="file" accept="video/*" onChange={handleFileChange} />         
+                <input
+                    className='inputFile'
+                    type="file"
+                    accept="video/*"
+                    onChange={handleFileChange}
+                />
             </div>
-         </div>
-        </>
+        </div>
     )
 }
 
-export default UploadVideo;
+export default UploadVideo

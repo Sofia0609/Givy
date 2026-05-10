@@ -1,19 +1,19 @@
-import BigButton from '../../bigButton/bigButton'
+import BigButton from '../../buttonsGivy/bigButton/bigButton'
 import UploadVideo from '../../create/uploadVideo/uploadVideo'
 import './UploadVideoMatch.css'
 
 interface UploadVideoMatchprops{
-    tittle: string
+    title: string
     description: string
     icon: string
 }
 
-function UploadVideoMatch({tittle, description, icon}:UploadVideoMatchprops){
+function UploadVideoMatch({title, description, icon}:UploadVideoMatchprops){
 
     return(
         <>  
         <div className='uploadVideoMatchContainer'>
-                <h2 className='tittleMatch'>  {tittle} </h2>
+                <h2 className='tittleMatch'>  {title} </h2>
                 <UploadVideo icon={icon} />
                 <BigButton content='UPLOAD'/>
                 <p className='descriptionMatch'>  {description} </p>

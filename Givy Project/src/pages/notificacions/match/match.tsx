@@ -8,7 +8,7 @@ import matches from '../../../data/matches.json'
 import users from '../../../data/users.json'
 import tags from '../../../data/tags.json'
 import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
-import VideoScreen from '../../../components/notifications/videoScreen/videoScreen'
+import VideoScreen from '../../../components/create/videoScreen/videoScreen'
 
 function Match() {
 
@@ -92,7 +92,7 @@ function Match() {
                 ) : !iSentVideo ? (
   
                     <UploadVideoMatch
-                        tittle='Upload your educative video!'
+                        title='Upload your educative video!'
                         description={otherSentVideo
                             ? 'Your match already sent their video, send yours to watch it!'
                             : 'This way you can receive the educate video from your Match!'}
@@ -102,7 +102,7 @@ function Match() {
                 ) : !otherSentVideo ? (
      
                     <UploadVideoMatch
-                        tittle='Congratulations!'
+                        title='Congratulations!'
                         description='Video Uploaded! Wait till your Match sends their Video'
                         icon='./src/assets/uploaded_icon.svg'
                     />
