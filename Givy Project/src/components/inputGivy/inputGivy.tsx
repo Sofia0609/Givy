@@ -5,14 +5,15 @@ interface InputGivyProps {
   type: string;
   value?: string;
   placeholder?: string;
+  onChange?: (e: any) => void;
 }
 
-function InputGivy({ label, type, value, placeholder}: InputGivyProps) {
+function InputGivy({ label, type, value, placeholder, onChange}: InputGivyProps) {
 
     return(
         <div className="login-field">
             <label>{label}</label>
-            <input  type={type} value={value} placeholder={placeholder} />
+            <input onChange={onChange}  type={type} value={value} placeholder={placeholder} />
         </div>
     )
 }
