@@ -10,15 +10,16 @@ interface EntityCard{
     desicionButtons?: boolean
     button?: string
     id?:string
+    onClick?: () => void
     onAccept?: () => void  
     onReject?: () => void
 }
 
-function EntityCard({name,photo, description, content, content2, desicionButtons, button,id, onAccept, onReject}:EntityCard){
+function EntityCard({name,photo, description, content, content2, desicionButtons, button,id, onClick, onAccept, onReject}:EntityCard){
 
     return(
         <>
-            <div className='entityCardContainer'>
+            <div className='entityCardContainer' onClick={onClick}>
                 <img className='photo' src={photo} alt="" />
                 <div className='entityCardContent'>
                     <div className='entityCardLeft'>

@@ -2,27 +2,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .circular-button button {
-  width: 54px;
-  height: 54px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   border: none;
-  background: rgba(38, 37, 61, 0.54);
-  color: white;
+  background: rgba(38, 37, 61, 0.48);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 0;
   transition: background 0.2s, transform 0.15s;
 }
 
 .circular-button button:hover {
-  background: rgba(38, 37, 61, 0.72);
-  transform: scale(1.07);
+  background: rgba(38, 37, 61, 0.68);
+  transform: scale(1.06);
 }
 
 .circular-button button.active {
@@ -30,28 +29,20 @@
 }
 
 .circular-button img {
-  width: 26px;
-  height: 26px;
+  width: 36px;
+  height: 36px;
   filter: brightness(0) invert(1);
+  display: block;
 }
 
 .circular-button span {
-  font-size: 0.8em;
+  font-size: 0.82em;
   font-weight: 700;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  color: #292d32;
 }
 
-/* En desktop los botones son un poco más grandes */
-@media (min-width: 769px) {
-  .circular-button button {
-    width: 60px;
-    height: 60px;
-  }
-
-  /* Texto del contador en desktop es oscuro (fondo claro) */
-  .circular-button span {
-    color: #292d32;
-    text-shadow: none;
-  }
+@media (max-width: 768px) {
+  .circular-button button { width: 52px; height: 52px; }
+  .circular-button img { width: 30px; height: 30px; }
+  .circular-button span { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 }
