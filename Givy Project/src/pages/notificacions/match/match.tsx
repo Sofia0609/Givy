@@ -1,36 +1,177 @@
 import { useState } from 'react'
+import { useEffect } from 'react'
 import './match.css'
 import NavBar from '../../../components/navBar/navBar'
 import Header from '../../../components/header/header'
 import EntityCard from '../../../components/notifications/entityCard/entityCard'
-
+import matches from '../../../data/matches.json'
+import users from '../../../data/users.json'
+import tags from '../../../data/tags.json'
+import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
+import VideoScreen from '../../../components/create/videoScreen/videoScreen'
 
 function Match() {
 
+  const userLogged = "u2"
+
+  const [selectedMatch, setSelectedMatch] = useState<string | null>(null)
+  const [filteredMatches, setFilteredMatches] = useState<typeof matches>([])
+
+  useEffect(() => {
+    function getMatchesbyUser(user: string) {
+      const stored = localStorage.getItem('matches')
+      const allMatches = stored ? JSON.parse(stored) : matches
+      const userMatches = allMatches.filter((match) => match.user1Id === user || match.user2Id === user)
+      setFilteredMatches(userMatches)
+    } 
+
+    getMatchesbyUser(userLogged);
+  }, []);
+
+  const currentMatch = filteredMatches.find(match => match.id === selectedMatch)
+  const soyUser1 = currentMatch?.user1Id === userLogged
+  const iSentVideo = soyUser1 ? currentMatch?.videoSentByUser1 : currentMatch?.videoSentByUser2
+  const otherSentVideo = soyUser1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
+
+  function getMatchVideo() {
+    const stored = localStorage.getItem('matchVideos')
+    const allVideos = stored ? JSON.parse(stored) : []
+    return allVideos.find(v => v.matchId === selectedMatch && v.userId !== userLogged)
+  }
+
+  const otherUserVideo = getMatchVideo()
+
+  function handleUploadVideo(file: File) {
+    if (!selectedMatch) return
+
+    const videoUrl = URL.createObjectURL(file)
+
+    // Guardar video en localStorage
+    const storedVideos = localStorage.getItem('matchVideos')
+    const allVideos = storedVideos ? JSON.parse(storedVideos) : []
+    const newVideo = {
+      matchId: selectedMatch,
+      userId: userLogged,
+      videoUrl: videoUrl,
+      uploadDate: new Date().toISOString()
+    }
+    localStorage.setItem('matchVideos', JSON.stringify([...allVideos, newVideo]))
+
+    // Actualizar el match
+    const storedMatches = localStorage.getItem('matches')
+    const allMatches = storedMatches ? JSON.parse(storedMatches) : matches
+
+    const updatedMatches = allMatches.map(m => {
+      if (m.id === selectedMatch) {
+        return {
+          ...m,
+          videoSentByUser1: soyUser1 ? true : m.videoSentByUser1,
+          videoSentByUser2: !soyUser1 ? true : m.videoSentByUser2,
+        }
+      }
+      return m
+    })
+    localStorage.setItem('matches', JSON.stringify(updatedMatches))
+    setFilteredMatches(updatedMatches.filter(m => m.user1Id === userLogged || m.user2Id === userLogged))
+  }
+
   return (
-    <><div className='matchLayout'>
-      <div>
-          <NavBar></NavBar>
-      </div>
-      <div className='matchContent'>
-          <Header title='Match'></Header>   
+    <>
+      <div className='matchLayout'>
+        <div>
+          <NavBar />
+        </div>
+        <div className='matchContent'>
+          <Header title='Match' />   
           <div className='matchSectionsContainer'>
             <div className='match'>
-                <h2 className='matchTitle'>What do you wanna learn today?</h2>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Carla Gonzales" content='art' content2='developer' button='Begin'></EntityCard>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Sofia Velez" content='math' content2='music' button='Begin'></EntityCard>
-                <EntityCard photo='./src/assets/profile_picture.png' name="Alejandro Arango"  content='dance' content2='art' button='Begin'></EntityCard>
+              <h2 className='matchTitle'>Active Matches</h2>
+
+              {filteredMatches.length === 0 ? (
+                <h3>You don't have any matches</h3>
+              ) : (
+                filteredMatches.map((match, key) => {
+                  const otherUserId = userLogged === match.user1Id ? match.user2Id : match.user1Id
+                  const otherUser = users.find(u => u.id === otherUserId)
+                  const tagOffered = tags.find(tag => tag.id === match.tagOffered)
+                  const tagRequested = tags.find(tag => tag.id === match.tagRequested)
+                  const noStarted = !match.videoSentByUser1 && !match.videoSentByUser2
+                  const otherHasSent = soyUser1 ? match.videoSentByUser2 : match.videoSentByUser1
+
+                  return (
+                    <div key={key} style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
+                      <EntityCard
+                        onClick={() => setSelectedMatch(match.id)}
+                        photo={otherUser?.profilePicture}
+                        name={otherUser?.username}
+                        content={tagOffered?.name}
+                        content2={tagRequested?.name}
+                        button={noStarted ? 'Begin' : undefined} 
+                      />
+                      {/* Notificación círculo rojo */}
+                      {otherHasSent && !noStarted && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '10px',
+                          right: '20px',
+                          width: '16px',
+                          height: '16px',
+                          backgroundColor: '#ff4444',
+                          borderRadius: '50%'
+                        }} />
+                      )}
+                    </div>
+                  )
+                })
+              )}
             </div>
 
-            <div className='divider'></div>
+            <div className='divider' />
 
             <div className='chatSection'>
-                <h1>What do you want to Learn Today?</h1>
-            </div>
+              {selectedMatch === null ? (
+                <h2 className='noMatchSelected'>What do you want to learn today?</h2>
 
+              ) : !iSentVideo ? (
+                // Caso 1 y 3: Yo no envié → puedo subir
+                <UploadVideoMatch
+                  tittle='Upload your educative video!'
+                  description={otherSentVideo
+                    ? 'Your match already sent their video, send yours to watch it!'
+                    : 'This way you can receive the educate video from your Match!'}
+                  icon='./src/assets/upload_icon.svg'
+                  onVideoSelect={handleUploadVideo}
+                />
+
+              ) : !otherSentVideo ? (
+                // Caso 2: Yo envié, el otro no → esperando
+                <UploadVideoMatch
+                  tittle='Congratulations!'
+                  description='Video Uploaded! Wait till your Match sends their Video'
+                  icon='./src/assets/uploaded_icon.svg'
+                  disabled={true}
+                />
+
+              ) : (
+                // Caso 4: Ambos enviaron → ver video
+                <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center', width: '100%' }}>
+                  <h2>Your match sent you a video!</h2>
+                  {otherUserVideo ? (
+                    <video
+                      src={otherUserVideo.videoUrl}
+                      controls
+                      style={{ width: '100%', maxWidth: '500px', borderRadius: '12px', backgroundColor: '#f5f5f5' }}
+                    />
+                  ) : (
+                    <p>Loading video...</p>
+                  )}
+                  <p style={{ color: '#666' }}>Great exchange! You can now rate and give feedback.</p>
+                </div>
+              )}
+            </div>
           </div>
+        </div>
       </div>
-    </div>
     </>
   )
 }

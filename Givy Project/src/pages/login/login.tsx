@@ -1,10 +1,14 @@
 import { useState } from "react";
 import users from "../../data/users.json";
 import "./login.css";
+import InputGivy from "../../components/inputGivy/inputGivy";
+import ButtonGivy from "../../components/buttonGivy/ProfileButton/buttonGivy";
+import { useNavigate } from 'react-router'
 
-function Login({ onNavigate }: { onNavigate: (page: string) => void }) {
+function Login() {
   const [entryEmail, setEntryEmail] = useState("");
   const [entryPassword, setEntryPassword] = useState("");
+  const navigate = useNavigate();
 
   function handleAuth() {
     const userFound = users.find((user) => user.email === entryEmail);
@@ -15,7 +19,7 @@ function Login({ onNavigate }: { onNavigate: (page: string) => void }) {
     if (userFound.password === entryPassword) {
       alert("Login exitoso");
       localStorage.setItem("loggeduser", JSON.stringify(userFound));
-      onNavigate("feed");
+      navigate("/Feed"); //cambia de pagina a feed
     } else {
       alert("Contraseña incorrecta");
     }
@@ -25,35 +29,28 @@ function Login({ onNavigate }: { onNavigate: (page: string) => void }) {
     <div className="login-wrapper">
       <div className="login-card">
         <div className="login-logo">
-          <img src="/src/assets/logo.png" alt="Givy" />
-          <h1 className="login-brand">Givy</h1>
+          <img src="/src/assets/Logotype.png" alt="Givy" />
           <p className="login-tagline">Learn. Teach. Connect.</p>
         </div>
         <div className="login-form">
-          <div className="login-field">
-            <label>E-mail</label>
-            <input
-              type="email"
-              placeholder="Example: Dianac@ejemplo.com"
-              value={entryEmail}
-              onChange={(e) => setEntryEmail(e.target.value)}
-            />
-          </div>
-          <div className="login-field">
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Example123*"
-              value={entryPassword}
-              onChange={(e) => setEntryPassword(e.target.value)}
-            />
-          </div>
-          <button className="login-btn" onClick={handleAuth}>
-            Log In
-          </button>
+          <InputGivy
+            label="E-mail"
+            type="email"
+            placeholder="Example: Dianac@ejemplo.com"
+            value={entryEmail}
+            onChange={(e) => setEntryEmail(e.target.value)}
+          />
+          <InputGivy
+            label="Password"
+            type="password"
+            placeholder="Example123*"
+            value={entryPassword}
+            onChange={(e) => setEntryPassword(e.target.value)}
+          />
+          <ButtonGivy label="Log In" onClick={handleAuth} />
           <p className="login-footer">
             Don't have an account?{" "}
-            <span onClick={() => onNavigate("register")}>Sign up.</span>
+            <span onClick={() => navigate("register")}>Sign up.</span>
           </p>
         </div>
       </div>
@@ -61,4 +58,6 @@ function Login({ onNavigate }: { onNavigate: (page: string) => void }) {
   );
 }
 
-export default Login;
+export default Login; 
+
+

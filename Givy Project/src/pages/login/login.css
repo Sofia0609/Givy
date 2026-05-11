@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: poppins, sans-serif;
   padding: 24px;
 }
 
@@ -54,7 +54,7 @@
 
 .login-field label {
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 700;
   color: var(--text-main);
 }
 
@@ -71,6 +71,10 @@
 
 .login-field input:focus {
   background-color: var(--action-hover);
+}
+
+.login-field input::placeholder {
+  color: var(--text-low-contrast);
 }
 
 .login-field input::placeholder {
@@ -107,3 +111,8 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+
+
+
+

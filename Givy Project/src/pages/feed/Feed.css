@@ -1,6 +1,3 @@
-/* =====================
-   LAYOUT GLOBAL
-   ===================== */
 * {
   margin: 0;
   padding: 0;
@@ -15,90 +12,15 @@
   background: linear-gradient(135deg, #ffffff 0%, #dfdbff 70%, #8e84d7 100%);
 }
 
-/* =====================
-   SIDEBAR IZQUIERDO
-   ===================== */
-.sidebar-left {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  width: 200px;
-  background: #e9e7f4;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  z-index: 100;
-}
-
-.logo {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.logo img {
-  width: 55px;
-  height: 62px;
-}
-
-.logo-welcome {
-  font-size: 0.9em;
-  font-weight: 700;
-}
-
-.logo-name {
-  font-size: 0.85em;
-  font-weight: 400;
-  color: #555;
-}
-
-.sidebar-left nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.button-nav {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  text-decoration: none;
-  color: #292d32;
-  transition: background 0.15s;
-}
-
-.button-nav img {
-  width: 20px;
-  height: 20px;
-}
-
-.button-nav:hover {
-  background: #ddd9f5;
-}
-
-.button-nav.active {
-  background: #d1c4e9;
-}
-
-/* =====================
-   FEED SCROLL
-   ===================== */
 .feed {
-  margin-left: 200px;
+  margin-left: 250px;
   height: 100vh;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   flex: 1;
 }
 
-.feed::-webkit-scrollbar {
-  display: none;
-}
+.feed::-webkit-scrollbar { display: none; }
 
 .feed-item {
   height: 100vh;
@@ -106,26 +28,26 @@
   scroll-snap-align: start;
   display: flex;
   flex-direction: row;
+  align-items: stretch;
 }
 
-/* =====================
-   PANEL USUARIO (desktop)
-   ===================== */
+/* ── Panel usuario ── */
 .user-panel {
-  width: 30%;
+  width: 270px;
   min-width: 220px;
-  max-width: 340px;
+  max-width: 290px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  padding: 30px 24px 40px 24px;
+  padding: 30px 20px 50px 20px;
   gap: 16px;
 }
 
-/* =====================
-   VIDEO
-   ===================== */
+
+
+
 .video-section {
   flex: 1;
   height: 100vh;
@@ -134,34 +56,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #000;
+  background: transparent;
 }
 
-/* Overlay top — nombre + swap tabs */
-.video-user-top {
-  display: none; /* visible solo en mobile */
-}
+.video-user-top    { display: none; }
+.video-user-bottom { display: none; }
 
-/* Overlay bottom — solo mobile */
-.video-user-bottom {
-  display: none;
-}
 
-/* =====================
-   SIDEBAR DERECHO
-   ===================== */
 .sidebar-right {
+  width: 110px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: 24px;
-  padding: 0 28px 50px 28px;
+  justify-content: center;
+  gap: 22px;
+  padding: 0;
 }
 
-/* =====================
-   COMENTARIOS OVERLAY
-   ===================== */
+
 .comments-overlay {
   position: absolute;
   bottom: 0;
@@ -182,21 +95,8 @@
   to   { transform: translateY(0); }
 }
 
-/* =====================
-   BOTTOM NAV (mobile)
-   ===================== */
-.bottom-nav {
-  display: none;
-}
 
-/* =====================
-   SWAP TABS
-   ===================== */
-.swap-tabs {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+.swap-tabs { display: flex; align-items: center; gap: 8px; }
 
 .tab-btn {
   padding: 3px 18px;
@@ -214,34 +114,13 @@
   border-color: #9873ff;
 }
 
-/* =====================
-   RESPONSIVE MOBILE
-   ===================== */
+
 @media (max-width: 768px) {
-  .sidebar-left {
-    display: none;
-  }
+  .feed { margin-left: 0; width: 100%; }
+  .feed-item { position: relative; }
+  .user-panel { display: none; }
+  .video-section { width: 100%; flex: unset; }
 
-  .feed {
-    margin-left: 0;
-    width: 100%;
-  }
-
-  .feed-item {
-    position: relative;
-  }
-
-  .user-panel {
-    display: none;
-  }
-
-  /* Video ocupa todo el ancho */
-  .video-section {
-    width: 100%;
-    flex: unset;
-  }
-
-  /* Overlay top: nombre centrado + tabs */
   .video-user-top {
     display: flex;
     flex-direction: column;
@@ -259,18 +138,14 @@
     white-space: nowrap;
   }
 
-  .video-username {
-    font-weight: 700;
-    font-size: 13px;
-  }
+  .video-username { font-weight: 700; font-size: 13px; }
 
-  /* Overlay bottom: usuario + bio */
   .video-user-bottom {
     display: block;
     position: absolute;
-    bottom: 70px;
+    bottom: 20px;
     left: 12px;
-    right: 70px;
+    right: 80px;
     background: rgba(60, 55, 100, 0.65);
     border-radius: 12px;
     padding: 12px 16px;
@@ -278,54 +153,18 @@
     color: white;
   }
 
-  .video-user-bottom h3 {
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
+  .video-user-bottom h3 { font-size: 14px; margin-bottom: 4px; }
+  .video-user-bottom p  { font-size: 12px; font-weight: 400; line-height: 1.4; }
 
-  .video-user-bottom p {
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 1.4;
-  }
-
-  /* Sidebar derecho flotante */
   .sidebar-right {
     position: absolute;
     right: 12px;
-    bottom: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
     padding: 0;
     gap: 18px;
     z-index: 10;
     background: transparent;
-  }
-
-  /* Bottom nav */
-  .bottom-nav {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    justify-content: space-around;
-    align-items: center;
-    padding: 12px 0;
-    z-index: 50;
-    border-top: 1px solid #e0e0e0;
-  }
-
-  .bottom-nav a {
-    color: #292d32;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .bottom-nav img {
-    width: 24px;
-    height: 24px;
   }
 }
