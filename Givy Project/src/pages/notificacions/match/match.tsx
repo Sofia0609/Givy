@@ -10,6 +10,9 @@ import tags from '../../../data/tags.json'
 import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
 import VideoScreen from '../../../components/create/videoScreen/videoScreen'
 import { Navigate } from 'react-router-dom'
+import InputGivy from '../../../components/inputGivy/inputGivy'
+import Dropdown from '../../../components/create/dropDown/dropDown'
+import BigButton from '../../../components/buttonsGivy/bigButton/bigButton'
 
 
 function Match() {
@@ -23,6 +26,24 @@ function Match() {
 
   const [selectedMatch, setSelectedMatch] = useState<string | null>(null)
   const [filteredMatches, setFilteredMatches] = useState<typeof matches>([])
+  const [likeVideo, setLikeVideo] = useState('')
+  const [rating, setRating] = useState('')
+
+
+  const likeOptions = [
+    { id: 'yes', name: 'Yes' },
+    { id: 'no', name: 'No' }
+  ]
+
+  function handleSubmitRating() {
+    if (!likeVideo || !rating) {
+      alert('Please complete all fields')
+      return
+    }
+    alert('Rating submitted!')
+    setLikeVideo('')
+    setRating('')
+  }
 
   useEffect(() => {
     function getMatchesbyUser(user: string) {
@@ -53,7 +74,6 @@ function Match() {
 
     const videoUrl = URL.createObjectURL(file)
 
-    // Guardar video en localStorage
     const storedVideos = localStorage.getItem('matchVideos')
     const allVideos = storedVideos ? JSON.parse(storedVideos) : []
     const newVideo = {
@@ -64,7 +84,6 @@ function Match() {
     }
     localStorage.setItem('matchVideos', JSON.stringify([...allVideos, newVideo]))
 
-    // Actualizar el match
     const storedMatches = localStorage.getItem('matches')
     const allMatches = storedMatches ? JSON.parse(storedMatches) : matches
 
@@ -115,7 +134,7 @@ function Match() {
                         content2={tagRequested?.name}
                         button={noStarted ? 'Begin' : undefined} 
                       />
-                      {/* Notificación círculo rojo */}
+            
                       {otherHasSent && !noStarted && (
                         <div style={{
                           position: 'absolute',
@@ -140,7 +159,7 @@ function Match() {
                 <h2 className='noMatchSelected'>What do you want to learn today?</h2>
 
               ) : !iSentVideo ? (
-                // Caso 1 y 3: Yo no envié → puedo subir
+ 
                 <UploadVideoMatch
                   tittle='Upload your educative video!'
                   description={otherSentVideo
@@ -151,7 +170,7 @@ function Match() {
                 />
 
               ) : !otherSentVideo ? (
-                // Caso 2: Yo envié, el otro no → esperando
+ 
                 <UploadVideoMatch
                   tittle='Congratulations!'
                   description='Video Uploaded! Wait till your Match sends their Video'
@@ -160,20 +179,38 @@ function Match() {
                 />
 
               ) : (
-                // Caso 4: Ambos enviaron → ver video
-                <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center', width: '100%' }}>
-                  <h2>Your match sent you a video!</h2>
-                  {otherUserVideo ? (
-                    <video
-                      src={otherUserVideo.videoUrl}
-                      controls
-                      style={{ width: '100%', maxWidth: '500px', borderRadius: '12px', backgroundColor: '#f5f5f5' }}
-                    />
-                  ) : (
-                    <p>Loading video...</p>
-                  )}
-                  <p style={{ color: '#666' }}>Great exchange! You can now rate and give feedback.</p>
-                </div>
+
+                  <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center', width: '100%' }}>
+                      <h2>Your match sent you a video!</h2>
+                      {otherUserVideo ? (
+                          <video
+                              src={otherUserVideo.videoUrl}
+                              controls
+                              style={{ width: '100%', maxWidth: '500px', borderRadius: '12px', backgroundColor: '#f5f5f5' }}
+                          />
+                      ) : (
+                          <p>Loading video...</p>
+                      )}
+
+                      <div style={{ width: '100%', maxWidth: '500px', textAlign: 'left', marginTop: '20px', padding: '20px', backgroundColor: '#f9f9f9', borderRadius: '12px' }}>
+                          <Dropdown
+                              label="Did you like the educative Video?"
+                              options={likeOptions}
+                              value={likeVideo}
+                              onChange={setLikeVideo}
+                          />
+
+                          <InputGivy
+                              label={`Rate ${currentMatch ? users.find(u => u.id !== userLogged && (u.id === currentMatch.user1Id || u.id === currentMatch.user2Id))?.username : 'User'} (1-10)`}
+                              type="number"
+                              value={rating}
+                              placeholder="Type here"
+                              onChange={e => setRating(e.target.value)}
+                          />
+
+                          <BigButton content="SEND" onClick={handleSubmitRating} />
+                      </div>
+                  </div>
               )}
             </div>
           </div>
