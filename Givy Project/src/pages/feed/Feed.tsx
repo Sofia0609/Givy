@@ -54,7 +54,6 @@ const loggedUser = usersData[1];
 const buildFeedItems = (): FeedItem[] => {
   const wantsToLearn = loggedUser.wantsToLearn;
 
-  // Read LocalStorage
   const stored = localStorage.getItem('videos')
   const allVideos = stored ? JSON.parse(stored) : videosData
   
@@ -167,8 +166,8 @@ function Feed() {
 
       <div className="feed">
         {feedItems.map(({ user, video }) => {
-          const teachTagNames = resolveTagNames(user.wantsToTeach);
-          const learnTagNames = resolveTagNames(user.wantsToLearn);
+          const teachTagNames = resolveTagNames(video.teaches);
+          const learnTagNames = resolveTagNames(video.wantsToLearnInReturn);
           const videoTagNames = resolveTagNames(video.tags);
           const videoComments = commentsMap[video.id] ?? [];
 
@@ -182,11 +181,10 @@ function Feed() {
               <div className="user-panel">
                 <Description
                   username={user.username}
-                  bio={user.bio}
+                  bio={video.description}
                   teaches={teachTagNames}
                   lookingFor={learnTagNames}
                 />
-                <Tags items={videoTagNames} />
               </div>
 
               <div className="video-section">
