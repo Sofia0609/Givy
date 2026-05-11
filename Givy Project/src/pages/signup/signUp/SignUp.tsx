@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './signup.css'
+import users from '../../../data/users.json'
 
 interface SignUpProps {
     onNavigate: (page: string) => void
@@ -68,6 +69,8 @@ function SignUp({ onNavigate }: SignUpProps) {
             </div>
         </div>
     )
+
 }
+
 
 export default SignUp
