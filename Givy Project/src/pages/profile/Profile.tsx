@@ -9,6 +9,7 @@ import './Profile.css'
 import videos from '../../data/videos.json'
 import tags from '../../data/tags.json'
 import { useNavigate } from 'react-router'
+import { useEffect } from 'react'
 
 const user = JSON.parse(localStorage.getItem('loggeduser') || '{}')
 
@@ -21,6 +22,7 @@ const learningTags = getTagNames(user.wantsToLearn || [])
 const profileVideos = videos.filter(v => v.userId === user.id)
 
 function Profile() {
+
   const navigate = useNavigate()  // ← adentro de la función
 
   return (

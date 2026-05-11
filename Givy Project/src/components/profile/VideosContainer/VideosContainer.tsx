@@ -33,6 +33,7 @@ function VideosContainer({ videos  }: VideosContainerProps) {
                 {videos?.map((video) => (
                     <VideoCard
                         key={video.id}
+                        videoId={video.id}
                         videourl={video.url}
                     />
                 ))

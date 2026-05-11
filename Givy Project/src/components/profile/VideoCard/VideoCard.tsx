@@ -12,7 +12,7 @@ function VideoCard({ videourl, videoId }: VideoCardProps) {
     function handleClick() {
         if (videoId) {
             navigate(`/Feed/${videoId}`)
-        }
+        } else { alert('Video URL not available') }
     }
 
     return (
