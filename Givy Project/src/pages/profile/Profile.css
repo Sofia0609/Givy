@@ -1,5 +1,57 @@
 .profileLayout {
     display: flex;
     min-height: 100vh;
-    justify-content: center;
+}
+
+.profileMain {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.profileStats {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+}
+
+.profileBio {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    font-family: poppins, sans-serif;
+    text-align: center;
+}
+
+.profileTags {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.profileFollowBtn {
+    padding: 8px 32px;
+    border-radius: 20px;
+    border: 2px solid var(--color-purple-active);
+    background-color: var(--color-purple-active);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: poppins, sans-serif;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.profileFollowBtn--following {
+    background-color: transparent;
+    color: var(--color-text-primary);
+}
+
+.profileFollowBtn:hover {
+    opacity: 0.85;
 }
