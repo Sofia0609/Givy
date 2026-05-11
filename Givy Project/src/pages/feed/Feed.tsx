@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router";
+import { Navigate, useParams } from "react-router";
 import Description from "../../components/feed/description/description";
 import VideoSection from "../../components/feed/video/Video";
 import CircularButton from "../../components/feed/circularButton/CircularButton";
@@ -48,7 +48,6 @@ interface FeedItem {
 }
 
 
-const loggedUser = usersData[1];
 
 
 const buildFeedItems = (videoId?: string): FeedItem[] => {
@@ -71,28 +70,18 @@ const buildFeedItems = (videoId?: string): FeedItem[] => {
       !video.teaches.some((tag: string) => wantsToLearn.includes(tag))
   );
 
-  return [...relevant, ...others]
-    .map((video) => {
-      const user = usersData.find((u) => u.id === video.userId);
-      if (!user) return null;
-      return { user, video };
-    })
-    .filter((item): item is FeedItem => item !== null);
-};
+    const buildInitialComments = (
+      items: FeedItem[]
+    ): Record<string, CommentData[]> => {
+      const map: Record<string, CommentData[]> = {};
+      items.forEach(({ video }) => {
+        map[video.id] = commentsData
+          .filter((c) => c.videoId === video.id)
+          .map((c) => ({ ...c, isOwn: false }));
+      });
+      return map;
+    };
 
-const buildInitialComments = (
-  items: FeedItem[]
-): Record<string, CommentData[]> => {
-  const map: Record<string, CommentData[]> = {};
-  items.forEach(({ video }) => {
-    map[video.id] = commentsData
-      .filter((c) => c.videoId === video.id)
-      .map((c) => ({ ...c, isOwn: false }));
-  });
-  return map;
-};
-
-function Feed() {
   // Lee el videoId de la URL si existe (/Feed/v4)
   const { videoId } = useParams<{ videoId?: string }>();
 

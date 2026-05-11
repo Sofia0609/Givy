@@ -5,11 +5,18 @@ import users from '../../../data/users.json'
 import NavBar from '../../../components/navBar/navBar'
 import Header from '../../../components/header/header'
 import EntityCard from '../../../components/notifications/entityCard/entityCard'
+import { Navigate } from 'react-router-dom'
 
 
 function Interactions() {
 
-  const userLogged = "u1"
+    const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
+    const userLogged = loggedUserData.id
+
+    if (!userLogged) {
+        return <Navigate to="/login" />
+    }
+
   const [myInteractions, setMyInteractions] = useState<any[]>([])
 
   useEffect(() => {
