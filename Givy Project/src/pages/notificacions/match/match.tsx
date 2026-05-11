@@ -13,6 +13,7 @@ import { Navigate } from 'react-router-dom'
 import InputGivy from '../../../components/inputGivy/inputGivy'
 import Dropdown from '../../../components/create/dropDown/dropDown'
 import BigButton from '../../../components/buttonsGivy/bigButton/bigButton'
+import MediumButton from '../../../components/buttonsGivy/mediumButtons/mediumButton'
 
 
 function Match() {
@@ -180,37 +181,42 @@ function Match() {
 
               ) : (
 
-                  <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center', width: '100%' }}>
-                      <h2>Your match sent you a video!</h2>
-                      {otherUserVideo ? (
-                          <video
-                              src={otherUserVideo.videoUrl}
-                              controls
-                              style={{ width: '100%', maxWidth: '500px', borderRadius: '12px', backgroundColor: '#f5f5f5' }}
-                          />
-                      ) : (
-                          <p>Loading video...</p>
-                      )}
+                    <div className='videoContainer'>
+                        <h2>{currentMatch ? users.find(u => u.id !== userLogged && (u.id === currentMatch.user1Id || u.id === currentMatch.user2Id))?.username : 'User'} just Dropped a Video!</h2>
+                        {otherUserVideo ? (
+                            <video
+                                src={otherUserVideo.videoUrl}
+                                controls
+                            />
+                        ) : (
+                            <p>Loading video...</p>
+                        )}
 
-                      <div style={{ width: '100%', maxWidth: '500px', textAlign: 'left', marginTop: '20px', padding: '20px', backgroundColor: '#f9f9f9', borderRadius: '12px' }}>
-                          <Dropdown
-                              label="Did you like the educative Video?"
-                              options={likeOptions}
-                              value={likeVideo}
-                              onChange={setLikeVideo}
-                          />
+                    <div className='surveySection'>
+                        <p>Did you like the educative Video?</p>
+                        <Dropdown
+                            label=""
+                            options={likeOptions}
+                            value={likeVideo}
+                            onChange={setLikeVideo}
+                        />
 
-                          <InputGivy
-                              label={`Rate ${currentMatch ? users.find(u => u.id !== userLogged && (u.id === currentMatch.user1Id || u.id === currentMatch.user2Id))?.username : 'User'} (1-10)`}
-                              type="number"
-                              value={rating}
-                              placeholder="Type here"
-                              onChange={e => setRating(e.target.value)}
-                          />
-
-                          <BigButton content="SEND" onClick={handleSubmitRating} />
-                      </div>
-                  </div>
+                        <p>Rate {currentMatch ? users.find(u => u.id !== userLogged && (u.id === currentMatch.user1Id || u.id === currentMatch.user2Id))?.username : 'User'} (1-10)</p>
+                        <InputGivy
+                            label=""
+                            type="number"
+                            value={rating}
+                            placeholder="Type here"
+                            onChange={(e) => {
+                                const value = e.target.value
+                                if (value === '' || (Number(value) >= 1 && Number(value) <= 10)) {
+                                    setRating(value)
+                                }
+                            }}
+                        />
+                        <MediumButton content="SEND" onClick={handleSubmitRating} />
+                    </div>
+                </div>
               )}
             </div>
           </div>
