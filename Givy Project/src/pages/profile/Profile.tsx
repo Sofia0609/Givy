@@ -1,5 +1,3 @@
-
-
 import NavBar from '../../components/navBar/navBar'
 import ProfilePicture from '../../components/profile/ProfilePicture/ProfilePicture'
 import ProfileName from '../../components/profile/ProfileName/ProfileName'
@@ -9,31 +7,29 @@ import TagsContainer from '../../components/profile/TagsContainer/TagsContainer'
 import VideosContainer from '../../components/profile/VideosContainer/VideosContainer'
 import './Profile.css'
 import videos from '../../data/videos.json'
+import tags from '../../data/tags.json'
+import { useNavigate } from 'react-router'
+import { useEffect } from 'react'
 
+const user = JSON.parse(localStorage.getItem('loggeduser') || '{}')
 
-const userLogged = localStorage.getItem('loggeduser')
-console.log(JSON.parse(userLogged));
-const user = JSON.parse(userLogged || '{}')
+const getTagNames = (tagIds: string[]) =>
+  tagIds.map(id => tags.find(t => t.id === id)?.name || id)
 
-const teachingTags = ['Web Development', 'UI/UX Design', 'JavaScript']
-const learningTags = ['Guitar', 'Photography', 'Korean']
+const teachingTags = getTagNames(user.wantsToTeach || [])
+const learningTags = getTagNames(user.wantsToLearn || [])
 
-
-
-const profileVideos = [
-  { id: 1, views: 1240 },
-  { id: 2, views: 856 },
-  { id: 3, views: 3421 },
-]
+const profileVideos = videos.filter(v => v.userId === user.id)
 
 function Profile() {
-  const bio = null
+
+  const navigate = useNavigate()  // ← adentro de la función
 
   return (
     <div className="profileLayout">
       <NavBar />
       <main className="profileMain">
-        <ProfilePicture src="https://placehold.co/150" size="large" />
+        <ProfilePicture src={user.profilePicture} size="large" />
         <ProfileName name={user.username} username={user.at} />
         <div className="profileStats">
           <UserInfo label="Following" count={user.following} />
@@ -42,12 +38,12 @@ function Profile() {
           <UserInfo label="Reputation" count={user.reputationAverage} />
         </div>
         <p className="profileBio">{user.bio ?? 'no bio yet.'}</p>
-        <ProfileButton label="Edit profile" />
+        <ProfileButton label="Edit profile" onClick={() => navigate('/EditProfile')} />
         <div className="profileTags">
           <TagsContainer title="TEACHING" tags={teachingTags} variant="teaching" />
           <TagsContainer title="LEARNING" tags={learningTags} variant="learning" />
         </div>
-        <VideosContainer videos={videos} />
+        <VideosContainer videos={profileVideos} />
       </main>
     </div>
   )

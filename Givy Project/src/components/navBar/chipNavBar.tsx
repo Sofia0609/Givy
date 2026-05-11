@@ -10,7 +10,7 @@ interface ChipNavBar{
 function ChipNavBar({icon, chip,to}: ChipNavBar){
 
     return(
-        <NavLink to={to}>
+        <NavLink replace to={to}>
             <li className="chip">
                 <img src={icon} alt="" />
                 <span className="chipName"> {chip} </span>

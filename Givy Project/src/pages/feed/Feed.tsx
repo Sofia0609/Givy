@@ -50,42 +50,25 @@ interface FeedItem {
 
 
 
-function Feed() {
+const buildFeedItems = (videoId?: string): FeedItem[] => {
+  const wantsToLearn = loggedUser.wantsToLearn;
 
-      const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
-      const loggedUser = usersData.find(u => u.id === loggedUserData.id)
+  const stored = localStorage.getItem('videos');
+  const allVideos: (typeof videosData)[0][] = stored
+    ? JSON.parse(stored)
+    : videosData;
 
-      if (!loggedUser) {
-          return <Navigate to="/login" />
-      }
+  const relevant = allVideos.filter(
+    (video) =>
+      (video.userId !== loggedUser.id || video.id === videoId) &&
+      video.teaches.some((tag: string) => wantsToLearn.includes(tag))
+  );
 
-
-      const buildFeedItems = (): FeedItem[] => {
-      const wantsToLearn = loggedUser.wantsToLearn;
-
-      const stored = localStorage.getItem('videos')
-      const allVideos = stored ? JSON.parse(stored) : videosData
-      
-      const relevant = allVideos.filter(
-        (video) =>
-          video.userId !== loggedUser.id &&
-          video.teaches.some((tag) => wantsToLearn.includes(tag))
-      );
-
-      const others = allVideos.filter(
-        (video) =>
-          video.userId !== loggedUser.id &&
-          !video.teaches.some((tag) => wantsToLearn.includes(tag))
-      );
-
-      return [...relevant, ...others]
-        .map((video) => {
-          const user = usersData.find((u) => u.id === video.userId);
-          if (!user) return null;
-          return { user, video };
-        })
-        .filter((item): item is FeedItem => item !== null);
-    };
+  const others = allVideos.filter(
+    (video) =>
+      (video.userId !== loggedUser.id || video.id === videoId) &&
+      !video.teaches.some((tag: string) => wantsToLearn.includes(tag))
+  );
 
     const buildInitialComments = (
       items: FeedItem[]
@@ -102,7 +85,7 @@ function Feed() {
   // Lee el videoId de la URL si existe (/Feed/v4)
   const { videoId } = useParams<{ videoId?: string }>();
 
-  const feedItems = buildFeedItems();
+  const feedItems = buildFeedItems(videoId);
 
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(
@@ -176,7 +159,6 @@ function Feed() {
         {feedItems.map(({ user, video }) => {
           const teachTagNames = resolveTagNames(video.teaches);
           const learnTagNames = resolveTagNames(video.wantsToLearnInReturn);
-          const videoTagNames = resolveTagNames(video.tags);
           const videoComments = commentsMap[video.id] ?? [];
 
           return (

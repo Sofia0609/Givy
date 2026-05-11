@@ -10,7 +10,10 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router'
 import PossibleSwap from './pages/notificacions/possibleSwap/possibleSwap'
 import Match from './pages/notificacions/match/match'
 import Interactions from './pages/notificacions/interactions/interactions'
+import ProfileView from './pages/profile/ProfileView'
+import EditProfile from './pages/profile/EditProfile'
 import Login from './pages/login/login'
+
 
 let routes = createBrowserRouter([
 
@@ -58,9 +61,23 @@ let routes = createBrowserRouter([
   {
     path: '/Interactions',
     element: <Interactions />
-  }
-])
+  },  
+  {
+    path: "/Profile/:userId",
+    element: <ProfileView />
+  },
 
+  {
+  path: "/EditProfile",
+  element: <EditProfile />
+},
+
+{
+  path: "/Login",
+  element: <Login />
+}
+
+])
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={routes} />
