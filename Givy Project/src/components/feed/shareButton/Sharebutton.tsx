@@ -1,11 +1,16 @@
 import "./ShareButton.css";
 import shareIcon from "../../../assets/share_icon.svg";
 
-function ShareButton() {
+interface Props {
+  videoId: string;
+}
+
+function ShareButton({ videoId }: Props) {
   const handleShare = () => {
-    const currentUrl = new URL(window.location.href);
-    navigator.clipboard.writeText(currentUrl.toString()).then(() => {
-      alert("¡URL copiada al portapapeles!");
+   
+    const videoUrl = `${window.location.origin}/Feed/${videoId}`;
+    navigator.clipboard.writeText(videoUrl).then(() => {
+      alert("¡Link del video copiado!");
     });
   };
 

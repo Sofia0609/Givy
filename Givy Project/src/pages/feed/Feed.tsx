@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router";
 import Description from "../../components/feed/description/description";
 import VideoSection from "../../components/feed/video/Video";
 import CircularButton from "../../components/feed/circularButton/CircularButton";
@@ -16,10 +17,6 @@ import tagsData from "../../data/tags.json";
 import commentsData from "../../data/comments.json";
 import "./Feed.css";
 import NavBar from "../../components/navBar/navBar";
-
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const userlogged = usersData[0];
 
 const resolveTagNames = (tagIds: string[]): string[] =>
   tagIds.map((id) => tagsData.find((t) => t.id === id)?.name ?? id);
@@ -50,11 +47,12 @@ interface FeedItem {
   video: (typeof videosData)[0];
 }
 
-const loggedUser = usersData[0]; 
+
+const loggedUser = usersData[0];
 
 
 const buildFeedItems = (): FeedItem[] => {
-  const wantsToLearn = loggedUser.wantsToLearn; 
+  const wantsToLearn = loggedUser.wantsToLearn;
 
   const relevant = videosData.filter(
     (video) =>
@@ -62,16 +60,13 @@ const buildFeedItems = (): FeedItem[] => {
       video.teaches.some((tag) => wantsToLearn.includes(tag))
   );
 
-  
   const others = videosData.filter(
     (video) =>
       video.userId !== loggedUser.id &&
       !video.teaches.some((tag) => wantsToLearn.includes(tag))
   );
 
-  const sorted = [...relevant, ...others];
-
-  return sorted
+  return [...relevant, ...others]
     .map((video) => {
       const user = usersData.find((u) => u.id === video.userId);
       if (!user) return null;
@@ -93,6 +88,9 @@ const buildInitialComments = (
 };
 
 function Feed() {
+  // Lee el videoId de la URL si existe (/Feed/v4)
+  const { videoId } = useParams<{ videoId?: string }>();
+
   const feedItems = buildFeedItems();
 
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
@@ -105,34 +103,41 @@ function Feed() {
   );
   const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
 
-  const toggleLike = (videoId: string) => {
-    const liked = likedMap[videoId] ?? false;
-    setLikedMap({ ...likedMap, [videoId]: !liked });
+
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+
+  useEffect(() => {
+    if (videoId && itemRefs.current[videoId]) {
+      itemRefs.current[videoId]?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [videoId]);
+
+  const toggleLike = (id: string) => {
+    const liked = likedMap[id] ?? false;
+    setLikedMap({ ...likedMap, [id]: !liked });
     setLikeCountMap({
       ...likeCountMap,
-      [videoId]: (likeCountMap[videoId] ?? 0) + (liked ? -1 : 1),
+      [id]: (likeCountMap[id] ?? 0) + (liked ? -1 : 1),
     });
   };
 
-  const toggleComments = (videoId: string) => {
-    setShowCommentsMap({
-      ...showCommentsMap,
-      [videoId]: !showCommentsMap[videoId],
-    });
+  const toggleComments = (id: string) => {
+    setShowCommentsMap({ ...showCommentsMap, [id]: !showCommentsMap[id] });
   };
 
-  const handleSwap = (videoId: string) => {
-    setSwapAnimMap((prev) => ({ ...prev, [videoId]: true }));
+  const handleSwap = (id: string) => {
+    setSwapAnimMap((prev) => ({ ...prev, [id]: true }));
     setTimeout(() => {
-      setSwapAnimMap((prev) => ({ ...prev, [videoId]: false }));
+      setSwapAnimMap((prev) => ({ ...prev, [id]: false }));
     }, 1200);
   };
 
-  const addComment = (videoId: string, text: string) => {
+  const addComment = (id: string, text: string) => {
     const newComment: CommentData = {
       // eslint-disable-next-line react-hooks/purity
       id: `own-${Date.now()}`,
-      videoId,
+      videoId: id,
       userId: loggedUser.id,
       text,
       date: new Date().toISOString(),
@@ -141,21 +146,19 @@ function Feed() {
     };
     setCommentsMap((prev) => ({
       ...prev,
-      [videoId]: [newComment, ...(prev[videoId] ?? [])],
+      [id]: [newComment, ...(prev[id] ?? [])],
     }));
   };
 
-  const deleteComment = (videoId: string, commentId: string) => {
+  const deleteComment = (id: string, commentId: string) => {
     setCommentsMap((prev) => ({
       ...prev,
-      [videoId]: (prev[videoId] ?? []).filter((c) => c.id !== commentId),
+      [id]: (prev[id] ?? []).filter((c) => c.id !== commentId),
     }));
   };
 
   return (
     <div className="layout">
-
-
       <NavBar />
 
       <div className="feed">
@@ -164,13 +167,15 @@ function Feed() {
           const learnTagNames = resolveTagNames(user.wantsToLearn);
           const videoTagNames = resolveTagNames(video.tags);
           const videoComments = commentsMap[video.id] ?? [];
-   
-         
-          return (
-            <div key={video.id} className="feed-item">
 
+          return (
+            <div
+              key={video.id}
+              className="feed-item"
+            
+              ref={(el) => { itemRefs.current[video.id] = el; }}
+            >
               <div className="user-panel">
-                
                 <Description
                   username={user.username}
                   bio={user.bio}
@@ -193,11 +198,7 @@ function Feed() {
                   </div>
                 </div>
 
-                <VideoSection
-                  id={video.id}
-                  title={video.title}
-                  url={video.url}
-                />
+                <VideoSection id={video.id} title={video.title} url={video.url} />
 
                 <div className="video-user-bottom">
                   <h3>{user.at}</h3>
@@ -238,7 +239,7 @@ function Feed() {
 
                 <SwapButton onSwap={() => handleSwap(video.id)} />
 
-                <ShareButton />
+                <ShareButton videoId={video.id} />
               </div>
 
             </div>
