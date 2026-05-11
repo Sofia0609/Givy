@@ -34,3 +34,7 @@
     transition: transform 0.2s;
     height: 100%;  /* ← agregar esto */
 }
+.videosContainer {
+    width: 100%;
+    max-width: 700px;
+}

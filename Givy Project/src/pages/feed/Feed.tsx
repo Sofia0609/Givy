@@ -51,21 +51,21 @@ interface FeedItem {
 const loggedUser = usersData[1];
 
 
-const buildFeedItems = (): FeedItem[] => {
+const buildFeedItems = (videoId?: string): FeedItem[] => {
   const wantsToLearn = loggedUser.wantsToLearn;
 
   const stored = localStorage.getItem('videos')
   const allVideos = stored ? JSON.parse(stored) : videosData
-  
+
   const relevant = allVideos.filter(
     (video) =>
-      video.userId !== loggedUser.id &&
+      (video.userId !== loggedUser.id || video.id === videoId) &&
       video.teaches.some((tag) => wantsToLearn.includes(tag))
   );
 
   const others = allVideos.filter(
     (video) =>
-      video.userId !== loggedUser.id &&
+      (video.userId !== loggedUser.id || video.id === videoId) &&
       !video.teaches.some((tag) => wantsToLearn.includes(tag))
   );
 
@@ -94,7 +94,7 @@ function Feed() {
   // Lee el videoId de la URL si existe (/Feed/v4)
   const { videoId } = useParams<{ videoId?: string }>();
 
-  const feedItems = buildFeedItems();
+  const feedItems = buildFeedItems(videoId);
 
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(

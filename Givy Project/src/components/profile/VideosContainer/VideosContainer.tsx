@@ -1,4 +1,4 @@
-import VideoCard from '../VideoCard/VideoCard'
+import VideoCard from "../VideoCard/VideoCard";
 import './VideosContainer.css'
 
 interface Video {

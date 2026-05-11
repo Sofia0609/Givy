@@ -1,23 +1,29 @@
+import { useNavigate } from 'react-router'
 import './VideoCard.css'
 
 interface VideoCardProps {
-    videourl ?: string
-    // views?: number
+    videourl?: string
+    videoId?: string
 }
 
-function VideoCard({ videourl }: VideoCardProps) {
+function VideoCard({ videourl, videoId }: VideoCardProps) {
+    const navigate = useNavigate()
+
+    function handleClick() {
+        if (videoId) {
+            navigate(`/Feed/${videoId}`)
+        }
+    }
+
     return (
-        <div className="videoCard">
+        <div className="videoCard" onClick={handleClick}>
             <div className="videoCardThumbnail">
-                {videourl 
-                    ? <video src={videourl } />
+                {videourl
+                    ? <video src={videourl} />
                     : <div className="videoCardPlaceholder" />
                 }
                 <div className="videoCardOverlay">
                     <span className="videoCardPlay">▶</span>
-                    {/* {views !== undefined && (
-                        <span className="videoCardViews">{views.toLocaleString()} views</span>
-                    )} */}
                 </div>
             </div>
         </div>
