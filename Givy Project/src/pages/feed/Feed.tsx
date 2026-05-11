@@ -1,163 +1,254 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router";
 import Description from "../../components/feed/description/description";
 import VideoSection from "../../components/feed/video/Video";
 import CircularButton from "../../components/feed/circularButton/CircularButton";
 import Comments from "../../components/feed/comments/comments";
 import ProfileButton from "../../components/feed/profileButton/ProfileButton";
 import Tags from "../../components/feed/tags/Tags";
+import ShareButton from "../../components/feed/shareButton/Sharebutton";
+import SwapButton from "../../components/feed/swapButton/Swapbutton";
+import SwapOverlay from "../../components/feed/swapOverlay/Swapoverlay";
 import likeIcon from "../../assets/like_icon.svg";
 import commentIcon from "../../assets/comment_icon.svg";
-import shareIcon from "../../assets/share_icon.svg";
-import swapIcon from "../../assets/swap_icon.svg";
+import usersData from "../../data/users.json";
+import videosData from "../../data/videos.json";
+import tagsData from "../../data/tags.json";
+import commentsData from "../../data/comments.json";
 import "./Feed.css";
 import NavBar from "../../components/navBar/navBar";
 
-interface UserData {
+const resolveTagNames = (tagIds: string[]): string[] =>
+  tagIds.map((id) => tagsData.find((t) => t.id === id)?.name ?? id);
+
+const getInitials = (username: string): string =>
+  username.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
+
+export interface ReplyData {
   id: string;
-  username: string;
-  initials: string;
-  teaches: string;
-  bio: string;
-  lookingFor: string;
-  wantsToTeach: string[];
-  swapTabs: string[];
+  parentCommentId: string;
+  userId: string;
+  text: string;
+  date: string;
 }
 
-interface VideoData {
+export interface CommentData {
   id: string;
-  title: string;
-  url: string;
+  videoId: string;
+  userId: string;
+  text: string;
+  date: string;
+  replies: ReplyData[];
+  isOwn?: boolean;
 }
 
-// Reemplaza con tu import desde JSON
-const users: UserData[] = [
-  {
-    id: "1",
-    username: "Emilio Álvarez",
-    initials: "EA",
-    teaches: "Math teacher",
-    bio: "Hi! I've been a teacher in this area for more than 5 years. I'm very hardworking and proactive. Today's lesson was about derivatives. Do you need a lesson on this or another topic?",
-    lookingFor: "Looking for...",
-    wantsToTeach: ["Bass teacher", "Music teacher", "Bass coach"],
-    swapTabs: ["Art", "Music"],
-  },
-  {
-    id: "2",
-    username: "Sara López",
-    initials: "SL",
-    teaches: "Music teacher",
-    bio: "Profesora de música con 3 años de experiencia. Enseño guitarra, piano y teoría musical.",
-    lookingFor: "Looking for...",
-    wantsToTeach: ["Math tutor", "English teacher"],
-    swapTabs: ["Math", "English"],
-  },
-];
+interface FeedItem {
+  user: (typeof usersData)[0];
+  video: (typeof videosData)[0];
+}
 
-const videos: VideoData[] = [
-  { id: "v1", title: "Derivadas", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
-  { id: "v2", title: "Guitarra",  url: "https://www.w3schools.com/html/mov_bbb.mp4" },
-];
+
+const loggedUser = usersData[1];
+
+
+const buildFeedItems = (): FeedItem[] => {
+  const wantsToLearn = loggedUser.wantsToLearn;
+
+  // Read LocalStorage
+  const stored = localStorage.getItem('videos')
+  const allVideos = stored ? JSON.parse(stored) : videosData
+  
+  const relevant = allVideos.filter(
+    (video) =>
+      video.userId !== loggedUser.id &&
+      video.teaches.some((tag) => wantsToLearn.includes(tag))
+  );
+
+  const others = allVideos.filter(
+    (video) =>
+      video.userId !== loggedUser.id &&
+      !video.teaches.some((tag) => wantsToLearn.includes(tag))
+  );
+
+  return [...relevant, ...others]
+    .map((video) => {
+      const user = usersData.find((u) => u.id === video.userId);
+      if (!user) return null;
+      return { user, video };
+    })
+    .filter((item): item is FeedItem => item !== null);
+};
+
+const buildInitialComments = (
+  items: FeedItem[]
+): Record<string, CommentData[]> => {
+  const map: Record<string, CommentData[]> = {};
+  items.forEach(({ video }) => {
+    map[video.id] = commentsData
+      .filter((c) => c.videoId === video.id)
+      .map((c) => ({ ...c, isOwn: false }));
+  });
+  return map;
+};
 
 function Feed() {
+  // Lee el videoId de la URL si existe (/Feed/v4)
+  const { videoId } = useParams<{ videoId?: string }>();
+
+  const feedItems = buildFeedItems();
+
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
-  const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>({});
+  const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(
+    Object.fromEntries(videosData.map((v) => [v.id, v.likes]))
+  );
   const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
+  const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>(
+    buildInitialComments(feedItems)
+  );
+  const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
+
+
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+
+  useEffect(() => {
+    if (videoId && itemRefs.current[videoId]) {
+      itemRefs.current[videoId]?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [videoId]);
 
   const toggleLike = (id: string) => {
-    const liked = likedMap[id];
+    const liked = likedMap[id] ?? false;
     setLikedMap({ ...likedMap, [id]: !liked });
-    setLikeCountMap({ ...likeCountMap, [id]: (likeCountMap[id] || 0) + (liked ? -1 : 1) });
+    setLikeCountMap({
+      ...likeCountMap,
+      [id]: (likeCountMap[id] ?? 0) + (liked ? -1 : 1),
+    });
   };
 
   const toggleComments = (id: string) => {
     setShowCommentsMap({ ...showCommentsMap, [id]: !showCommentsMap[id] });
   };
 
+  const handleSwap = (id: string) => {
+    setSwapAnimMap((prev) => ({ ...prev, [id]: true }));
+    setTimeout(() => {
+      setSwapAnimMap((prev) => ({ ...prev, [id]: false }));
+    }, 1200);
+  };
+
+  const addComment = (id: string, text: string) => {
+    const newComment: CommentData = {
+      // eslint-disable-next-line react-hooks/purity
+      id: `own-${Date.now()}`,
+      videoId: id,
+      userId: loggedUser.id,
+      text,
+      date: new Date().toISOString(),
+      replies: [],
+      isOwn: true,
+    };
+    setCommentsMap((prev) => ({
+      ...prev,
+      [id]: [newComment, ...(prev[id] ?? [])],
+    }));
+  };
+
+  const deleteComment = (id: string, commentId: string) => {
+    setCommentsMap((prev) => ({
+      ...prev,
+      [id]: (prev[id] ?? []).filter((c) => c.id !== commentId),
+    }));
+  };
+
   return (
     <div className="layout">
+      <NavBar />
 
-      <NavBar/>
-
-      {/* ── Scroll feed ── */}
       <div className="feed">
-        {users.map((user, index) => (
-          <div key={user.id} className="feed-item">
+        {feedItems.map(({ user, video }) => {
+          const teachTagNames = resolveTagNames(user.wantsToTeach);
+          const learnTagNames = resolveTagNames(user.wantsToLearn);
+          const videoTagNames = resolveTagNames(video.tags);
+          const videoComments = commentsMap[video.id] ?? [];
 
-            {/* Panel usuario — solo desktop */}
-            <div className="user-panel">
-              <Description
-                username={user.username}
-                bio={user.bio}
-                teaches={user.teaches}
-                lookingFor={user.lookingFor}
-              />
-              <Tags items={user.wantsToTeach} />
-            </div>
+          return (
+            <div
+              key={video.id}
+              className="feed-item"
+            
+              ref={(el) => { itemRefs.current[video.id] = el; }}
+            >
+              <div className="user-panel">
+                <Description
+                  username={user.username}
+                  bio={user.bio}
+                  teaches={teachTagNames}
+                  lookingFor={learnTagNames}
+                />
+                <Tags items={videoTagNames} />
+              </div>
 
-            {/* Video + overlays */}
-            <div className="video-section">
-
-              {/* Overlay top mobile */}
-              <div className="video-user-top">
-                <span className="video-username">{user.username}</span>
-                <div className="swap-tabs">
-                  {user.swapTabs.map((tab, i) => (
-                    <button key={i} className={`tab-btn ${i === 1 ? "active-tab" : ""}`}>
-                      {tab}
+              <div className="video-section">
+                <div className="video-user-top">
+                  <span className="video-username">{user.username}</span>
+                  <div className="swap-tabs">
+                    <button className="tab-btn active-tab">
+                      {teachTagNames[0] ?? "Enseña"}
                     </button>
-                  ))}
+                    <button className="tab-btn">
+                      {learnTagNames[0] ?? "Aprende"}
+                    </button>
+                  </div>
                 </div>
+
+                <VideoSection id={video.id} title={video.title} url={video.url} />
+
+                <div className="video-user-bottom">
+                  <h3>{user.at}</h3>
+                  <p>{video.description}</p>
+                </div>
+
+                <SwapOverlay visible={swapAnimMap[video.id] ?? false} />
+
+                {showCommentsMap[video.id] && (
+                  <div className="comments-overlay">
+                    <Comments
+                      comments={videoComments}
+                      onClose={() => toggleComments(video.id)}
+                      onAddComment={(text) => addComment(video.id, text)}
+                      onDeleteComment={(commentId) =>
+                        deleteComment(video.id, commentId)
+                      }
+                    />
+                  </div>
+                )}
               </div>
 
-              <VideoSection
-                id={videos[index]?.id ?? "v1"}
-                title={videos[index]?.title ?? ""}
-                url={videos[index]?.url ?? ""}
-              />
+              <div className="sidebar-right">
+                <ProfileButton initials={getInitials(user.username)} />
 
-              {/* Overlay bottom mobile */}
-              <div className="video-user-bottom">
-                <h3>@{user.username}</h3>
-                <p>{user.bio}</p>
+                <CircularButton
+                  icon={likeIcon}
+                  count={likeCountMap[video.id] ?? video.likes}
+                  onClick={() => toggleLike(video.id)}
+                  active={likedMap[video.id] ?? false}
+                />
+
+                <CircularButton
+                  icon={commentIcon}
+                  count={videoComments.length}
+                  onClick={() => toggleComments(video.id)}
+                />
+
+                <SwapButton onSwap={() => handleSwap(video.id)} />
+
+                <ShareButton videoId={video.id} />
               </div>
 
-              {/* Comentarios sobre el video */}
-              {showCommentsMap[user.id] && (
-                <div className="comments-overlay">
-                  <Comments onClose={() => toggleComments(user.id)} />
-                </div>
-              )}
             </div>
-
-            {/* ── Sidebar derecho: profile → like → comments → swap → share ── */}
-            <div className="sidebar-right">
-              <ProfileButton initials={user.initials} />
-
-              <CircularButton
-                icon={likeIcon}
-                count={likeCountMap[user.id] || 0}
-                onClick={() => toggleLike(user.id)}
-                active={likedMap[user.id]}
-              />
-
-              <CircularButton
-                icon={commentIcon}
-                onClick={() => toggleComments(user.id)}
-              />
-
-              <CircularButton
-                icon={swapIcon}
-                onClick={() => {}}
-              />
-
-              <CircularButton
-                icon={shareIcon}
-                onClick={() => {}}
-              />
-            </div>
-
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

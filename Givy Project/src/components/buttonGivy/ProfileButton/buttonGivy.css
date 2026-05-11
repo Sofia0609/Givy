@@ -1,0 +1,17 @@
+.buttonGivy {
+  background-color: var(--action-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.buttonGivy:hover {
+  background-color: var(--action-hover);
+  color: var(--text-main);
+}

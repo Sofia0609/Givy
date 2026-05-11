@@ -1,11 +1,11 @@
-.circular-button {
+.swap-button {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
 }
 
-.circular-button button {
+.swap-button button {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -19,30 +19,19 @@
   transition: background 0.2s, transform 0.15s;
 }
 
-.circular-button button:hover {
+.swap-button button:hover {
   background: rgba(38, 37, 61, 0.68);
   transform: scale(1.06);
 }
 
-.circular-button button.active {
-  background: #9873ff;
-}
-
-.circular-button img {
+.swap-button img {
   width: 36px;
   height: 36px;
   filter: brightness(0) invert(1);
   display: block;
 }
 
-.circular-button span {
-  font-size: 0.82em;
-  font-weight: 700;
-  color: #292d32;
-}
-
 @media (max-width: 768px) {
-  .circular-button button { width: 52px; height: 52px; }
-  .circular-button img { width: 30px; height: 30px; }
-  .circular-button span { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+  .swap-button button { width: 52px; height: 52px; }
+  .swap-button img { width: 30px; height: 30px; }
 }

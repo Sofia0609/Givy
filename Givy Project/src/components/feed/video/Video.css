@@ -1,8 +1,12 @@
 .video-wrapper {
-  width: 100%;
+  position: relative;
   height: 100%;
-  position: absolute;
-  inset: 0;
+  aspect-ratio: 9 / 16;
+  max-height: 100vh;
+  background: transparent;
+  border-radius: 0;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .video-wrapper video {
@@ -10,4 +14,12 @@
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+@media (max-width: 768px) {
+  .video-wrapper {
+    width: 100vw;
+    height: 100vh;
+    aspect-ratio: unset;
+  }
 }

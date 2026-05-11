@@ -2,9 +2,9 @@ import Tag from '../tag/tag';
 import './entityCard.css'
 
 interface EntityCard{
-    photo: string,
-    name: string
-    description?: string
+    photo: string | undefined,
+    name: string | undefined,
+    description?: string,
     content?: string
     content2? : string
     desicionButtons?: boolean
