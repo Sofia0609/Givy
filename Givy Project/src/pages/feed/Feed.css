@@ -31,6 +31,7 @@
   align-items: stretch;
 }
 
+/* ── Panel usuario ── */
 .user-panel {
   width: 270px;
   min-width: 220px;
@@ -44,6 +45,9 @@
   gap: 16px;
 }
 
+
+
+/* ── Video ── */
 .video-section {
   flex: 1;
   height: 100vh;
@@ -55,9 +59,10 @@
   background: transparent;
 }
 
-.video-user-top  { display: none; }
+.video-user-top    { display: none; }
 .video-user-bottom { display: none; }
 
+/* ── Sidebar derecho ── */
 .sidebar-right {
   width: 110px;
   flex-shrink: 0;
@@ -69,6 +74,7 @@
   padding: 0;
 }
 
+/* ── Comentarios overlay ── */
 .comments-overlay {
   position: absolute;
   bottom: 0;
@@ -89,6 +95,7 @@
   to   { transform: translateY(0); }
 }
 
+/* ── Swap tabs ── */
 .swap-tabs { display: flex; align-items: center; gap: 8px; }
 
 .tab-btn {
@@ -107,6 +114,7 @@
   border-color: #9873ff;
 }
 
+/* ── Mobile ── */
 @media (max-width: 768px) {
   .feed { margin-left: 0; width: 100%; }
   .feed-item { position: relative; }

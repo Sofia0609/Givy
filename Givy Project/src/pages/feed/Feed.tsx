@@ -17,12 +17,14 @@ import commentsData from "../../data/comments.json";
 import "./Feed.css";
 import NavBar from "../../components/navBar/navBar";
 
+// ── Helpers ──────────────────────────────────────────────
 const resolveTagNames = (tagIds: string[]): string[] =>
   tagIds.map((id) => tagsData.find((t) => t.id === id)?.name ?? id);
 
 const getInitials = (username: string): string =>
   username.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
+// ── Tipos ────────────────────────────────────────────────
 export interface ReplyData {
   id: string;
   parentCommentId: string;
@@ -46,17 +48,48 @@ interface FeedItem {
   video: (typeof videosData)[0];
 }
 
-const feedItems: FeedItem[] = videosData
-  .map((video) => {
-    const user = usersData.find((u) => u.id === video.userId);
-    if (!user) return null;
-    return { user, video };
-  })
-  .filter((item): item is FeedItem => item !== null);
+// ── Usuario logueado (simulado — reemplazar con auth real) ──
+const loggedUser = usersData[0]; // u1: Emilio Álvarez
 
-const buildInitialComments = (): Record<string, CommentData[]> => {
+// ── Algoritmo de filtrado ────────────────────────────────
+// Muestra videos de otros usuarios que enseñan lo que
+// el usuario logueado quiere aprender.
+// Primero los que coinciden, luego el resto (sin los propios).
+const buildFeedItems = (): FeedItem[] => {
+  const wantsToLearn = loggedUser.wantsToLearn; // ej: ["t3", "t5"]
+
+  // Videos que coinciden con lo que quiere aprender
+  const relevant = videosData.filter(
+    (video) =>
+      video.userId !== loggedUser.id &&
+      video.teaches.some((tag) => wantsToLearn.includes(tag))
+  );
+
+  // Resto de videos (de otros usuarios que no coinciden directamente)
+  const others = videosData.filter(
+    (video) =>
+      video.userId !== loggedUser.id &&
+      !video.teaches.some((tag) => wantsToLearn.includes(tag))
+  );
+
+  // Junta: primero los relevantes, luego el resto
+  const sorted = [...relevant, ...others];
+
+  return sorted
+    .map((video) => {
+      const user = usersData.find((u) => u.id === video.userId);
+      if (!user) return null;
+      return { user, video };
+    })
+    .filter((item): item is FeedItem => item !== null);
+};
+
+// ── Comentarios iniciales por video ──────────────────────
+const buildInitialComments = (
+  items: FeedItem[]
+): Record<string, CommentData[]> => {
   const map: Record<string, CommentData[]> = {};
-  feedItems.forEach(({ video }) => {
+  items.forEach(({ video }) => {
     map[video.id] = commentsData
       .filter((c) => c.videoId === video.id)
       .map((c) => ({ ...c, isOwn: false }));
@@ -64,14 +97,17 @@ const buildInitialComments = (): Record<string, CommentData[]> => {
   return map;
 };
 
+// ── Componente ────────────────────────────────────────────
 function Feed() {
+  const feedItems = buildFeedItems();
+
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(
     Object.fromEntries(videosData.map((v) => [v.id, v.likes]))
   );
   const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
   const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>(
-    buildInitialComments()
+    buildInitialComments(feedItems)
   );
   const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
 
@@ -85,7 +121,10 @@ function Feed() {
   };
 
   const toggleComments = (videoId: string) => {
-    setShowCommentsMap({ ...showCommentsMap, [videoId]: !showCommentsMap[videoId] });
+    setShowCommentsMap({
+      ...showCommentsMap,
+      [videoId]: !showCommentsMap[videoId],
+    });
   };
 
   const handleSwap = (videoId: string) => {
@@ -100,7 +139,7 @@ function Feed() {
       // eslint-disable-next-line react-hooks/purity
       id: `own-${Date.now()}`,
       videoId,
-      userId: "me",
+      userId: loggedUser.id,
       text,
       date: new Date().toISOString(),
       replies: [],
@@ -122,6 +161,7 @@ function Feed() {
   return (
     <div className="layout">
       <NavBar />
+
       <div className="feed">
         {feedItems.map(({ user, video }) => {
           const teachTagNames = resolveTagNames(user.wantsToTeach);
@@ -129,9 +169,14 @@ function Feed() {
           const videoTagNames = resolveTagNames(video.tags);
           const videoComments = commentsMap[video.id] ?? [];
 
+          // Indica si este video es relevante para el usuario logueado
+         
           return (
             <div key={video.id} className="feed-item">
+
+              {/* Panel usuario — desktop */}
               <div className="user-panel">
+                
                 <Description
                   username={user.username}
                   bio={user.bio}
@@ -141,16 +186,25 @@ function Feed() {
                 <Tags items={videoTagNames} />
               </div>
 
+              {/* Video + overlays */}
               <div className="video-section">
                 <div className="video-user-top">
                   <span className="video-username">{user.username}</span>
                   <div className="swap-tabs">
-                    <button className="tab-btn active-tab">{teachTagNames[0] ?? "Enseña"}</button>
-                    <button className="tab-btn">{learnTagNames[0] ?? "Aprende"}</button>
+                    <button className="tab-btn active-tab">
+                      {teachTagNames[0] ?? "Enseña"}
+                    </button>
+                    <button className="tab-btn">
+                      {learnTagNames[0] ?? "Aprende"}
+                    </button>
                   </div>
                 </div>
 
-                <VideoSection id={video.id} title={video.title} url={video.url} />
+                <VideoSection
+                  id={video.id}
+                  title={video.title}
+                  url={video.url}
+                />
 
                 <div className="video-user-bottom">
                   <h3>{user.at}</h3>
@@ -165,28 +219,36 @@ function Feed() {
                       comments={videoComments}
                       onClose={() => toggleComments(video.id)}
                       onAddComment={(text) => addComment(video.id, text)}
-                      onDeleteComment={(commentId) => deleteComment(video.id, commentId)}
+                      onDeleteComment={(commentId) =>
+                        deleteComment(video.id, commentId)
+                      }
                     />
                   </div>
                 )}
               </div>
 
+              {/* Sidebar derecho */}
               <div className="sidebar-right">
                 <ProfileButton initials={getInitials(user.username)} />
+
                 <CircularButton
                   icon={likeIcon}
                   count={likeCountMap[video.id] ?? video.likes}
                   onClick={() => toggleLike(video.id)}
                   active={likedMap[video.id] ?? false}
                 />
+
                 <CircularButton
                   icon={commentIcon}
                   count={videoComments.length}
                   onClick={() => toggleComments(video.id)}
                 />
+
                 <SwapButton onSwap={() => handleSwap(video.id)} />
+
                 <ShareButton />
               </div>
+
             </div>
           );
         })}
