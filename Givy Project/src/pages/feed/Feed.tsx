@@ -54,19 +54,21 @@ const loggedUser = usersData[1];
 const buildFeedItems = (videoId?: string): FeedItem[] => {
   const wantsToLearn = loggedUser.wantsToLearn;
 
-  const stored = localStorage.getItem('videos')
-  const allVideos = stored ? JSON.parse(stored) : videosData
+  const stored = localStorage.getItem('videos');
+  const allVideos: (typeof videosData)[0][] = stored
+    ? JSON.parse(stored)
+    : videosData;
 
   const relevant = allVideos.filter(
     (video) =>
       (video.userId !== loggedUser.id || video.id === videoId) &&
-      video.teaches.some((tag) => wantsToLearn.includes(tag))
+      video.teaches.some((tag: string) => wantsToLearn.includes(tag))
   );
 
   const others = allVideos.filter(
     (video) =>
       (video.userId !== loggedUser.id || video.id === videoId) &&
-      !video.teaches.some((tag) => wantsToLearn.includes(tag))
+      !video.teaches.some((tag: string) => wantsToLearn.includes(tag))
   );
 
   return [...relevant, ...others]
@@ -168,7 +170,6 @@ function Feed() {
         {feedItems.map(({ user, video }) => {
           const teachTagNames = resolveTagNames(video.teaches);
           const learnTagNames = resolveTagNames(video.wantsToLearnInReturn);
-          const videoTagNames = resolveTagNames(video.tags);
           const videoComments = commentsMap[video.id] ?? [];
 
           return (
