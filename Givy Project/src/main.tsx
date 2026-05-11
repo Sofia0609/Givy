@@ -10,11 +10,17 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router'
 import PossibleSwap from './pages/notificacions/possibleSwap/possibleSwap'
 import Match from './pages/notificacions/match/match'
 import Interactions from './pages/notificacions/interactions/interactions'
+import Login from './pages/login/login'
 
 let routes = createBrowserRouter([
+
   {
     path: "/",
-    element: <Navigate to="/Feed" />
+    element: <Navigate to="/login" />  
+  },
+  {
+  path: "/Login",
+  element: <Login></Login>
   },
   {
     path: "/Feed",
@@ -60,3 +66,6 @@ createRoot(document.getElementById('root')!).render(
     <RouterProvider router={routes} />
   </StrictMode>,
 )
+
+
+

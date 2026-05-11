@@ -9,10 +9,17 @@ import users from '../../../data/users.json'
 import tags from '../../../data/tags.json'
 import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
 import VideoScreen from '../../../components/create/videoScreen/videoScreen'
+import { Navigate } from 'react-router-dom'
+
 
 function Match() {
 
-  const userLogged = "u2"
+    const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
+    const userLogged = loggedUserData.id
+
+    if (!userLogged) {
+        return <Navigate to="/login" />
+    }
 
   const [selectedMatch, setSelectedMatch] = useState<string | null>(null)
   const [filteredMatches, setFilteredMatches] = useState<typeof matches>([])
