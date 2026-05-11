@@ -48,19 +48,23 @@ interface FeedItem {
 }
 
 
-const loggedUser = usersData[0];
+const loggedUser = usersData[1];
 
 
 const buildFeedItems = (): FeedItem[] => {
   const wantsToLearn = loggedUser.wantsToLearn;
 
-  const relevant = videosData.filter(
+  // Read LocalStorage
+  const stored = localStorage.getItem('videos')
+  const allVideos = stored ? JSON.parse(stored) : videosData
+  
+  const relevant = allVideos.filter(
     (video) =>
       video.userId !== loggedUser.id &&
       video.teaches.some((tag) => wantsToLearn.includes(tag))
   );
 
-  const others = videosData.filter(
+  const others = allVideos.filter(
     (video) =>
       video.userId !== loggedUser.id &&
       !video.teaches.some((tag) => wantsToLearn.includes(tag))
