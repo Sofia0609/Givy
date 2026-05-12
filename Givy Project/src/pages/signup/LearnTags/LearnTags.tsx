@@ -1,12 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import tags from '../../../data/tags.json'
 import './LearnTags.css'
 
-interface LearnTagsProps {
-    onNavigate: (page: string) => void
-}
-
-function LearnTags({ onNavigate }: LearnTagsProps) {
+function LearnTags() {
+    const navigate = useNavigate()
     const [selected, setSelected] = useState<string[]>([])
 
     function toggleTag(tagId: string) {
@@ -24,7 +22,7 @@ function LearnTags({ onNavigate }: LearnTagsProps) {
         }
         const signupData = JSON.parse(localStorage.getItem('signupData') || '{}')
         localStorage.setItem('signupData', JSON.stringify({ ...signupData, wantsToLearn: selected }))
-        onNavigate('teachTags')
+        navigate('/TeachTags')
     }
 
     return (

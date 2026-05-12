@@ -10,6 +10,11 @@ import {  createBrowserRouter, Navigate, RouterProvider } from 'react-router'
 import PossibleSwap from './pages/notificacions/possibleSwap/possibleSwap'
 import Match from './pages/notificacions/match/match'
 import Interactions from './pages/notificacions/interactions/interactions'
+import SignUp from './pages/signup/signUp/SignUp'
+import LearnTags from './pages/signup/LearnTags/LearnTags'
+import TeachTags from './pages/signup/TeachTags/TeachTags'
+import Login from './pages/login/Login'
+
 
 
 let routes = createBrowserRouter([
@@ -48,11 +53,28 @@ let routes = createBrowserRouter([
   {
     path: '/Interactions',
     element: <Interactions></Interactions>
+  },
+
+  {
+    path: '/SignUp',
+    element: <SignUp />
+  },
+  {
+    path: '/LearnTags',
+    element: <LearnTags />
+  },
+  {
+    path: '/TeachTags',
+    element: <TeachTags />
+  }, 
+  {
+    path: '/Login',
+    element: <Login />
   }
 ])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={routes}></RouterProvider>
+    <RouterProvider router={routes} />
   </StrictMode>,
 )

@@ -1,12 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import tags from '../../../data/tags.json'
 import './TeachTags.css'
 
-interface TeachTagsProps {
-    onNavigate: (page: string) => void
-}
-
-function TeachTags({ onNavigate }: TeachTagsProps) {
+function TeachTags() {
+    const navigate = useNavigate()
     const [selected, setSelected] = useState<string[]>([])
 
     function toggleTag(tagId: string) {
@@ -43,7 +41,7 @@ function TeachTags({ onNavigate }: TeachTagsProps) {
 
         localStorage.setItem('loggeduser', JSON.stringify(newUser))
         localStorage.removeItem('signupData')
-        onNavigate('feed')
+        navigate('/Login')
     }
 
     return (

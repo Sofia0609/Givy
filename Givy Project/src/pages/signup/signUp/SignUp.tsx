@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import './signup.css'
+import { useNavigate } from 'react-router'
 import users from '../../../data/users.json'
+import './SignUp.css'
 
-interface SignUpProps {
-    onNavigate: (page: string) => void
-}
-
-function SignUp({ onNavigate }: SignUpProps) {
+function SignUp() {
+    const navigate = useNavigate()
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -16,9 +14,15 @@ function SignUp({ onNavigate }: SignUpProps) {
             alert('Please fill in all fields')
             return
         }
-        // guarda los datos temporalmente
+
+        const existingUser = users.find(u => u.email === email)
+        if (existingUser) {
+            alert('An account with this email already exists')
+            return
+        }
+
         localStorage.setItem('signupData', JSON.stringify({ name, email, password }))
-        onNavigate('learnTags')
+        navigate('/LearnTags')
     }
 
     return (
@@ -63,14 +67,12 @@ function SignUp({ onNavigate }: SignUpProps) {
                     </button>
                     <p className="signup-footer">
                         Already have an account?{' '}
-                        <span onClick={() => onNavigate('login')}>Login</span>
+                        <span onClick={() => navigate('/Login')}>Login</span>
                     </p>
                 </div>
             </div>
         </div>
     )
-
 }
-
 
 export default SignUp

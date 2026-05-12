@@ -3,6 +3,7 @@ import SearchBar from '../../components/search/searchBar/SearchBar'
 import CategoryChip from '../../components/search/categoryChip/CategoryChip'
 import HistoryItem from '../../components/search/historyItem/HistoryItem'
 import RecommendedItem from '../../components/search/recommendedItem/RecommendedItem'
+
 import './Search.css'
 
 function Search() {
