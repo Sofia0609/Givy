@@ -2,8 +2,9 @@ import { useState, useRef } from "react";
 import "./Comments.css";
 import shareIcon from "../../../assets/share_icon.svg";
 import commentIconAsset from "../../../assets/comment_icon.svg";
+import backCommentIcon from "../../../assets/back_comment.svg";
 import usersData from "../../../data/users.json";
-import type { CommentData } from "../../../pages/feed/Feed";
+import type { CommentData, ReplyData } from "../../../pages/feed/Feed";
 
 const resolveUsername = (userId: string): string =>
   usersData.find((u) => u.id === userId)?.username ?? userId;
@@ -14,23 +15,29 @@ interface Props {
   onAddComment: (text: string) => void;
   onDeleteComment: (commentId: string) => void;
   onAddReply: (commentId: string, text: string) => void;
+  onDeleteReply: (commentId: string, replyId: string) => void;
   loggedUserId: string;
 }
 
-function Comments({ comments, onClose, onAddComment, onDeleteComment, onAddReply, loggedUserId }: Props) {
+function Comments({
+  comments,
+  onClose,
+  onAddComment,
+  onDeleteComment,
+  onAddReply,
+  onDeleteReply,
+  loggedUserId,
+}: Props) {
   const [inputText, setInputText] = useState("");
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const [expandedReplies, setExpandedReplies] = useState<Record<string, boolean>>({});
-  // null = comentando normal, string = respondiendo a ese commentId
   const [replyingToId, setReplyingToId] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Al hacer doble click en un comentario — cambia el modo del input
   const handleDoubleClick = (commentId: string) => {
     setReplyingToId(commentId);
     setInputText("");
-    // Foco al input
     setTimeout(() => inputRef.current?.focus(), 50);
   };
 
@@ -41,14 +48,11 @@ function Comments({ comments, onClose, onAddComment, onDeleteComment, onAddReply
 
   const handleSubmit = () => {
     if (!inputText.trim()) return;
-
     if (replyingToId) {
-      // Modo respuesta
       onAddReply(replyingToId, inputText.trim());
       setExpandedReplies((prev) => ({ ...prev, [replyingToId]: true }));
       setReplyingToId(null);
     } else {
-      // Modo comentario normal
       onAddComment(inputText.trim());
     }
     setInputText("");
@@ -58,9 +62,10 @@ function Comments({ comments, onClose, onAddComment, onDeleteComment, onAddReply
     setExpandedReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
   };
 
-  // Un comentario es propio si isOwn=true O si su userId es el del usuario logueado
   const isOwnComment = (c: CommentData) =>
     c.isOwn === true || c.userId === loggedUserId;
+
+  const isOwnReply = (r: ReplyData) => r.userId === loggedUserId;
 
   return (
     <div className="comments-sheet" onClick={() => setMenuOpenId(null)}>
@@ -84,26 +89,19 @@ function Comments({ comments, onClose, onAddComment, onDeleteComment, onAddReply
           comments.map((c) => (
             <div key={c.id} className="comment-block">
 
+              {/* Fila del comentario */}
               <div
                 className={`comment-row ${replyingToId === c.id ? "comment-row--replying" : ""}`}
                 onDoubleClick={() => handleDoubleClick(c.id)}
                 title="Doble click para responder"
               >
                 <div className="comment-avatar">
-                  <span>
-                    {resolveUsername(c.userId).charAt(0).toUpperCase()}
-                  </span>
+                  <span>{resolveUsername(c.userId).charAt(0).toUpperCase()}</span>
                 </div>
 
                 <div className="comment-body">
                   <h4 className="comment-user">{resolveUsername(c.userId)}</h4>
                   <p className="comment-text">{c.text}</p>
-
-                  {replyingToId === c.id && (
-                    <span className="reply-hint">
-                      Respondiendo... <button className="reply-cancel-inline" onClick={cancelReply}>Cancelar</button>
-                    </span>
-                  )}
 
                   {c.replies.length > 0 && (
                     <button
@@ -117,7 +115,7 @@ function Comments({ comments, onClose, onAddComment, onDeleteComment, onAddReply
                   )}
                 </div>
 
-                {/* Menú 3 puntos — solo para comentarios del usuario logueado */}
+                {/* Menú 3 puntos — solo comentarios propios */}
                 {isOwnComment(c) && (
                   <div
                     className="comment-menu-wrapper"
@@ -126,7 +124,7 @@ function Comments({ comments, onClose, onAddComment, onDeleteComment, onAddReply
                       setMenuOpenId(menuOpenId === c.id ? null : c.id);
                     }}
                   >
-                    <button className="comment-menu-btn" aria-label="opciones">···</button>
+                    <button className="comment-menu-btn">···</button>
                     {menuOpenId === c.id && (
                       <div className="comment-menu-dropdown">
                         <button
@@ -157,6 +155,33 @@ function Comments({ comments, onClose, onAddComment, onDeleteComment, onAddReply
                         <h4 className="reply-user">{resolveUsername(r.userId)}</h4>
                         <p className="reply-text">{r.text}</p>
                       </div>
+
+                      {/* Menú 3 puntos — solo respuestas propias */}
+                      {isOwnReply(r) && (
+                        <div
+                          className="comment-menu-wrapper"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setMenuOpenId(menuOpenId === r.id ? null : r.id);
+                          }}
+                        >
+                          <button className="comment-menu-btn">···</button>
+                          {menuOpenId === r.id && (
+                            <div className="comment-menu-dropdown">
+                              <button
+                                className="comment-menu-delete"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onDeleteReply(c.id, r.id);
+                                  setMenuOpenId(null);
+                                }}
+                              >
+                                Eliminar
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -167,16 +192,22 @@ function Comments({ comments, onClose, onAddComment, onDeleteComment, onAddReply
         )}
       </div>
 
-      {/* Input único — cambia entre modo comentario y modo respuesta */}
+      {/* Input único — modo comentario o respuesta */}
       <div className="comments-input-row">
+        {/* Botón back_comment — solo visible en modo respuesta */}
+        {replyingToId && (
+          <button className="reply-back-btn" onClick={cancelReply} aria-label="Cancelar respuesta">
+            <img src={backCommentIcon} alt="cancelar" />
+          </button>
+        )}
         <div className="comments-input-avatar" />
         <input
           ref={inputRef}
-          className="comments-input"
+          className={`comments-input ${replyingToId ? "comments-input--replying" : ""}`}
           type="text"
           placeholder={
             replyingToId
-              ? `Respondiendo a ${resolveUsername(comments.find(c => c.id === replyingToId)?.userId ?? "")}...`
+              ? `Respondiendo a ${resolveUsername(comments.find((c) => c.id === replyingToId)?.userId ?? "")}...`
               : "Agregar comentario..."
           }
           value={inputText}

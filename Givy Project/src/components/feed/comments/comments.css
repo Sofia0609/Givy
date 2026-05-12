@@ -85,7 +85,6 @@
 
 .comment-row:hover { background: #fafafa; }
 
-/* Resalta el comentario al que se está respondiendo */
 .comment-row--replying {
   background: #f5f0ff;
   border-left: 3px solid #9873ff;
@@ -109,30 +108,6 @@
 .comment-user { font-size: 13px; font-weight: 700; color: #292d32; margin: 0; }
 .comment-text { font-size: 13px; font-weight: 400; color: #292d32; line-height: 1.45; margin: 0; }
 
-/* Hint "Respondiendo..." inline */
-.reply-hint {
-  font-size: 11px;
-  font-weight: 600;
-  color: #9873ff;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 2px;
-}
-
-.reply-cancel-inline {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 11px;
-  font-weight: 700;
-  color: #aaa;
-  padding: 0;
-  font-family: poppins, sans-serif;
-}
-
-.reply-cancel-inline:hover { color: #e53935; }
-
 .comment-replies-btn {
   background: none;
   border: none;
@@ -149,6 +124,7 @@
 
 .comment-replies-btn:hover { color: #9873ff; }
 
+/* Menú 3 puntos */
 .comment-menu-wrapper { position: relative; flex-shrink: 0; }
 
 .comment-menu-btn {
@@ -199,7 +175,7 @@
 
 .comment-menu-delete:hover { background: #fff5f5; }
 
-/* Respuestas expandibles */
+/* Respuestas */
 .replies-list {
   padding: 0 16px 10px 68px;
   display: flex;
@@ -208,7 +184,11 @@
   animation: fadeIn 0.2s ease;
 }
 
-.reply-row { display: flex; gap: 10px; align-items: flex-start; }
+.reply-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
 
 .reply-avatar {
   width: 30px;
@@ -224,7 +204,7 @@
   font-size: 11px;
 }
 
-.reply-body { display: flex; flex-direction: column; gap: 2px; }
+.reply-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .reply-user { font-size: 12px; font-weight: 700; color: #292d32; margin: 0; }
 .reply-text { font-size: 12px; font-weight: 400; color: #555; line-height: 1.4; margin: 0; }
 
@@ -239,6 +219,26 @@
   flex-shrink: 0;
   position: sticky;
   bottom: 0;
+}
+
+/* Botón back_comment — aparece solo en modo respuesta */
+.reply-back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+
+.reply-back-btn:hover { transform: scale(1.1); }
+
+.reply-back-btn img {
+  width: 24px;
+  height: 24px;
 }
 
 .comments-input-avatar {
@@ -261,10 +261,12 @@
   transition: border-color 0.2s;
 }
 
+.comments-input:focus { border-color: #9873ff; background: #fff; }
+
 /* Input morado cuando está en modo respuesta */
-.comments-input:focus {
-  border-color: #9873ff;
-  background: #fff;
+.comments-input--replying {
+  border-color: #c4b5fd;
+  background: #faf5ff;
 }
 
 .comments-send-btn {
