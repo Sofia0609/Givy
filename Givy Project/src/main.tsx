@@ -10,24 +10,28 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router'
 import PossibleSwap from './pages/notificacions/possibleSwap/possibleSwap'
 import Match from './pages/notificacions/match/match'
 import Interactions from './pages/notificacions/interactions/interactions'
+import SignUp from './pages/signup/signUp/SignUp'
+import LearnTags from './pages/signup/LearnTags/LearnTags'
+import TeachTags from './pages/signup/TeachTags/TeachTags'
 import Login from './pages/login/login'
+import SearchResults from './pages/SearchResults/SearchResults'
+import EditProfile from './pages/profile/EditProfile'
+import ProfileView from './pages/profile/ProfileView'
 
 let routes = createBrowserRouter([
-
   {
     path: "/",
-    element: <Navigate to="/login" />  
+    element: <Navigate to="/Login" />  
   },
   {
-  path: "/Login",
-  element: <Login></Login>
+    path: "/Login",
+    element: <Login />
   },
   {
     path: "/Feed",
     element: <Feed />
   },
   {
-
     path: "/Feed/:videoId",
     element: <Feed />
   },
@@ -56,8 +60,36 @@ let routes = createBrowserRouter([
     element: <Match />
   },
   {
+    path: "/match/:matchId",
+    element: <Match />
+  },
+  {
     path: '/Interactions',
     element: <Interactions />
+  },
+  {
+    path: '/SignUp',
+    element: <SignUp />
+  },
+  {
+    path: '/LearnTags',
+    element: <LearnTags />
+  },
+  {
+    path: '/TeachTags',
+    element: <TeachTags />
+  },
+  {
+    path: '/Search/Results',
+    element: <SearchResults />
+  },
+  {
+    path: "/Profile/:userId",
+    element: <ProfileView />
+  },
+  {
+    path: "/EditProfile",
+    element: <EditProfile />
   }
 ])
 
@@ -66,6 +98,3 @@ createRoot(document.getElementById('root')!).render(
     <RouterProvider router={routes} />
   </StrictMode>,
 )
-
-
-

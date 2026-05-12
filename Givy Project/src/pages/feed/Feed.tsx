@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Navigate, useParams } from "react-router";
+import type { User, Video, CommentData, FeedItem } from '../../types/index'
 import Description from "../../components/feed/description/description";
 import VideoSection from "../../components/feed/video/Video";
 import CircularButton from "../../components/feed/circularButton/CircularButton";
 import Comments from "../../components/feed/comments/comments";
 import ProfileButton from "../../components/feed/profileButton/ProfileButton";
-import Tags from "../../components/feed/tags/Tags";
 import ShareButton from "../../components/feed/shareButton/Sharebutton";
 import SwapButton from "../../components/feed/swapButton/Swapbutton";
 import SwapOverlay from "../../components/feed/swapOverlay/Swapoverlay";
@@ -103,6 +103,78 @@ const buildInitialLikeCounts = (): Record<string, number> => {
 // ── Componente ────────────────────────────────────────────
 function Feed() {
   // ── Todos los hooks PRIMERO ──────────────────────────────
+function Feed() {
+const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
+
+
+    let loggedUser = (usersData as User[]).find(u => u.id === loggedUserData.id)
+
+
+    if (!loggedUser) {
+      const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
+      loggedUser = storedUsers.find(u => u.id === loggedUserData.id)
+    }
+
+    if (!loggedUser) {
+      return <Navigate to="/login" />
+    }
+    
+  const buildFeedItems = (): FeedItem[] => {
+    const wantsToLearn = loggedUser.wantsToLearn;
+
+    const stored = localStorage.getItem('videos')
+    const allVideos: Video[] = stored ? JSON.parse(stored) : (videosData as Video[])
+    
+    let videosToShow = allVideos;
+    
+    // If we have a specific videoId, only show that video
+    if (videoId) {
+      videosToShow = allVideos.filter(video => video.id === videoId);
+    } else {
+      // Otherwise, show the normal feed filtering
+      const relevant = allVideos.filter(
+        (video) =>
+          video.userId !== loggedUser.id &&
+          video.teaches.some((tag) => wantsToLearn.includes(tag))
+      );
+
+      const others = allVideos.filter(
+        (video) =>
+          video.userId !== loggedUser.id &&
+          !video.teaches.some((tag) => wantsToLearn.includes(tag))
+      );
+
+      videosToShow = [...relevant, ...others];
+    }
+
+    return videosToShow
+      .map((video) => {
+
+        let user = (usersData as User[]).find((u) => u.id === video.userId);
+        
+        if (!user) {
+          const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
+          user = storedUsers.find((u: any) => u.id === video.userId)
+        }
+        
+        if (!user) return null;
+        return { user, video };
+      })
+      .filter((item): item is FeedItem => item !== null);
+  };
+
+  const buildInitialComments = (
+    items: FeedItem[]
+  ): Record<string, CommentData[]> => {
+    const map: Record<string, CommentData[]> = {};
+    items.forEach(({ video }) => {
+      map[video.id] = (commentsData as any[])
+        .filter((c) => c.videoId === video.id)
+        .map((c) => ({ ...c, isOwn: false }));
+    });
+    return map;
+  };
+
   const { videoId } = useParams<{ videoId?: string }>();
 
   const loggedUserData = JSON.parse(localStorage.getItem("loggeduser") || "{}");
@@ -114,18 +186,25 @@ function Feed() {
 
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>(buildInitialLikes);
   const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(buildInitialLikeCounts);
+  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
+  const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(
+    Object.fromEntries((videosData as Video[]).map((v) => [v.id, v.likes]))
+  );
+  const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
   const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>(
     () => buildInitialComments(feedItems)
   );
   const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
   const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
+
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
-    if (videoId && itemRefs.current[videoId]) {
+    // Only scroll if we have multiple videos (normal feed), not for single video view
+    if (videoId && itemRefs.current[videoId] && feedItems.length > 1) {
       itemRefs.current[videoId]?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [videoId]);
+  }, [videoId, feedItems]);
 
   useEffect(() => {
     localStorage.setItem("likedMap", JSON.stringify(likedMap));
@@ -162,6 +241,8 @@ function Feed() {
     const newComment: CommentData = {
       id: `own-${new Date().getTime()}`,
       videoId,
+      id: `own-${Date.now()}`,
+      videoId: id,
       userId: loggedUser.id,
       text,
       date: new Date().toISOString(),
@@ -215,7 +296,6 @@ function Feed() {
         {feedItems.map(({ user, video }) => {
           const teachTagNames = resolveTagNames(video.teaches);
           const learnTagNames = resolveTagNames(video.wantsToLearnInReturn);
-          const videoTagNames = resolveTagNames(video.tags);
           const videoComments = commentsMap[video.id] ?? [];
 
           return (

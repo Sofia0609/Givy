@@ -11,17 +11,29 @@ function Login() {
   const navigate = useNavigate();
 
   function handleAuth() {
-    const userFound = users.find((user) => user.email === entryEmail);
+
+    let userFound = users.find((user) => user.email === entryEmail);
+    
+
     if (!userFound) {
-      alert("No existe una cuenta con ese email");
-      return;
+      const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
+      userFound = storedUsers.find(u => u.email === entryEmail)
     }
+
+    if (!userFound) {
+      alert('No existe una cuenta con ese email')
+      return
+    }
+
     if (userFound.password === entryPassword) {
-      alert("Login exitoso");
-      localStorage.setItem("loggeduser", JSON.stringify(userFound));
-      navigate("/Feed"); //cambia de pagina a feed
+
+      localStorage.setItem('loggeduser', JSON.stringify(userFound))
+
+      setTimeout(() => {
+        navigate('/Feed')
+      }, 100)
     } else {
-      alert("Contraseña incorrecta");
+      alert('Contraseña incorrecta')
     }
   }
 
@@ -50,7 +62,7 @@ function Login() {
           <ButtonGivy label="Log In" onClick={handleAuth} />
           <p className="login-footer">
             Don't have an account?{" "}
-            <span onClick={() => navigate("register")}>Sign up.</span>
+            <span onClick={() => navigate("/SignUp")}>Sign up.</span>
           </p>
         </div>
       </div>
@@ -58,6 +70,4 @@ function Login() {
   );
 }
 
-export default Login; 
-
-
+export default Login;
