@@ -61,7 +61,7 @@
     .profileMain {
     flex: 1;
     min-width: 0;
-    margin-left: 250px;    /* 👈 esto */
+    margin-left: 250px;    
     display: flex;
     flex-direction: column;
     align-items: center;
