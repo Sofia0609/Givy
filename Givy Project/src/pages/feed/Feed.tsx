@@ -18,12 +18,14 @@ import commentsData from "../../data/comments.json";
 import "./Feed.css";
 import NavBar from "../../components/navBar/navBar";
 
+// ── Helpers ──────────────────────────────────────────────
 const resolveTagNames = (tagIds: string[]): string[] =>
   tagIds.map((id) => tagsData.find((t) => t.id === id)?.name ?? id);
 
 const getInitials = (username: string): string =>
   username.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
+// ── Tipos ────────────────────────────────────────────────
 export interface ReplyData {
   id: string;
   parentCommentId: string;
@@ -47,94 +49,126 @@ interface FeedItem {
   video: (typeof videosData)[0];
 }
 
+// ── Feed items por usuario logueado ──────────────────────
+const buildFeedItems = (loggedUserId: string, wantsToLearn: string[]): FeedItem[] => {
+  const stored = localStorage.getItem("videos");
+  const allVideos = stored ? JSON.parse(stored) : videosData;
 
+  const relevant = allVideos.filter(
+    (video: typeof videosData[0]) =>
+      video.userId !== loggedUserId &&
+      video.teaches.some((tag: string) => wantsToLearn.includes(tag))
+  );
 
+  const others = allVideos.filter(
+    (video: typeof videosData[0]) =>
+      video.userId !== loggedUserId &&
+      !video.teaches.some((tag: string) => wantsToLearn.includes(tag))
+  );
 
+  return [...relevant, ...others]
+    .map((video: typeof videosData[0]) => {
+      const user = usersData.find((u) => u.id === video.userId);
+      if (!user) return null;
+      return { user, video };
+    })
+    .filter((item): item is FeedItem => item !== null);
+};
+
+// ── Comentarios iniciales desde JSON + localStorage ───────
+const buildInitialComments = (items: FeedItem[]): Record<string, CommentData[]> => {
+  const saved = localStorage.getItem("comments");
+  if (saved) return JSON.parse(saved);
+
+  const map: Record<string, CommentData[]> = {};
+  items.forEach(({ video }) => {
+    map[video.id] = commentsData
+      .filter((c) => c.videoId === video.id)
+      .map((c) => ({ ...c, isOwn: false }));
+  });
+  return map;
+};
+
+// ── Likes iniciales desde localStorage ───────────────────
+const buildInitialLikes = (): Record<string, boolean> => {
+  const saved = localStorage.getItem("likedMap");
+  return saved ? JSON.parse(saved) : {};
+};
+
+const buildInitialLikeCounts = (): Record<string, number> => {
+  const saved = localStorage.getItem("likeCountMap");
+  return saved
+    ? JSON.parse(saved)
+    : Object.fromEntries(videosData.map((v) => [v.id, v.likes]));
+};
+
+// ── Componente ────────────────────────────────────────────
 function Feed() {
+  // ── TODOS LOS HOOKS PRIMERO — antes de cualquier return ──
 
-      const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
-      const loggedUser = usersData.find(u => u.id === loggedUserData.id)
-
-      if (!loggedUser) {
-          return <Navigate to="/login" />
-      }
-
-
-      const buildFeedItems = (): FeedItem[] => {
-      const wantsToLearn = loggedUser.wantsToLearn;
-
-      const stored = localStorage.getItem('videos')
-      const allVideos = stored ? JSON.parse(stored) : videosData
-      
-      const relevant = allVideos.filter(
-        (video) =>
-          video.userId !== loggedUser.id &&
-          video.teaches.some((tag) => wantsToLearn.includes(tag))
-      );
-
-      const others = allVideos.filter(
-        (video) =>
-          video.userId !== loggedUser.id &&
-          !video.teaches.some((tag) => wantsToLearn.includes(tag))
-      );
-
-      return [...relevant, ...others]
-        .map((video) => {
-          const user = usersData.find((u) => u.id === video.userId);
-          if (!user) return null;
-          return { user, video };
-        })
-        .filter((item): item is FeedItem => item !== null);
-    };
-
-    const buildInitialComments = (
-      items: FeedItem[]
-    ): Record<string, CommentData[]> => {
-      const map: Record<string, CommentData[]> = {};
-      items.forEach(({ video }) => {
-        map[video.id] = commentsData
-          .filter((c) => c.videoId === video.id)
-          .map((c) => ({ ...c, isOwn: false }));
-      });
-      return map;
-    };
-
-  // Lee el videoId de la URL si existe (/Feed/v4)
   const { videoId } = useParams<{ videoId?: string }>();
 
-  const feedItems = buildFeedItems();
+  // Usuario logueado desde localStorage
+  const loggedUserData = JSON.parse(localStorage.getItem("loggeduser") || "{}");
+  const loggedUser = usersData.find((u) => u.id === loggedUserData.id);
 
-  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
-  const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(
-    Object.fromEntries(videosData.map((v) => [v.id, v.likes]))
-  );
-  const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
+  // feedItems depende de loggedUser pero se calcula siempre
+  const feedItems = loggedUser
+    ? buildFeedItems(loggedUser.id, loggedUser.wantsToLearn)
+    : [];
+
+  // Likes — se guardan en localStorage
+  const [likedMap, setLikedMap] = useState<Record<string, boolean>>(buildInitialLikes);
+  const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(buildInitialLikeCounts);
+
+  // Comentarios — se guardan en localStorage
   const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>(
-    buildInitialComments(feedItems)
+    () => buildInitialComments(feedItems)
   );
-  const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
 
+  const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
+  const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
 
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-
+  // Scroll al video del link
   useEffect(() => {
     if (videoId && itemRefs.current[videoId]) {
       itemRefs.current[videoId]?.scrollIntoView({ behavior: "smooth" });
     }
   }, [videoId]);
 
+  // Guardar likes en localStorage cuando cambian
+  useEffect(() => {
+    localStorage.setItem("likedMap", JSON.stringify(likedMap));
+  }, [likedMap]);
+
+  useEffect(() => {
+    localStorage.setItem("likeCountMap", JSON.stringify(likeCountMap));
+  }, [likeCountMap]);
+
+  // Guardar comentarios en localStorage cuando cambian
+  useEffect(() => {
+    localStorage.setItem("comments", JSON.stringify(commentsMap));
+  }, [commentsMap]);
+
+  // ── Return condicional DESPUÉS de todos los hooks ────────
+  if (!loggedUser) {
+    return <Navigate to="/login" />;
+  }
+
+  // ── Handlers ─────────────────────────────────────────────
   const toggleLike = (id: string) => {
     const liked = likedMap[id] ?? false;
-    setLikedMap({ ...likedMap, [id]: !liked });
-    setLikeCountMap({
-      ...likeCountMap,
-      [id]: (likeCountMap[id] ?? 0) + (liked ? -1 : 1),
-    });
+    setLikedMap((prev) => ({ ...prev, [id]: !liked }));
+    setLikeCountMap((prev) => ({
+      ...prev,
+      [id]: (prev[id] ?? 0) + (liked ? -1 : 1),
+    }));
   };
 
   const toggleComments = (id: string) => {
-    setShowCommentsMap({ ...showCommentsMap, [id]: !showCommentsMap[id] });
+    setShowCommentsMap((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const handleSwap = (id: string) => {
@@ -144,11 +178,10 @@ function Feed() {
     }, 1200);
   };
 
-  const addComment = (id: string, text: string) => {
+  const addComment = (videoId: string, text: string) => {
     const newComment: CommentData = {
-      // eslint-disable-next-line react-hooks/purity
-      id: `own-${Date.now()}`,
-      videoId: id,
+  id: `own-${new Date().getTime()}`,
+      videoId,
       userId: loggedUser.id,
       text,
       date: new Date().toISOString(),
@@ -157,14 +190,33 @@ function Feed() {
     };
     setCommentsMap((prev) => ({
       ...prev,
-      [id]: [newComment, ...(prev[id] ?? [])],
+      [videoId]: [newComment, ...(prev[videoId] ?? [])],
     }));
   };
 
-  const deleteComment = (id: string, commentId: string) => {
+  const deleteComment = (videoId: string, commentId: string) => {
     setCommentsMap((prev) => ({
       ...prev,
-      [id]: (prev[id] ?? []).filter((c) => c.id !== commentId),
+      [videoId]: (prev[videoId] ?? []).filter((c) => c.id !== commentId),
+    }));
+  };
+
+  // Agregar respuesta a un comentario (doble click)
+  const addReply = (videoId: string, commentId: string, text: string) => {
+    const newReply: ReplyData = {
+     id: `reply-${new Date().getTime()}`,
+      parentCommentId: commentId,
+      userId: loggedUser.id,
+      text,
+      date: new Date().toISOString(),
+    };
+    setCommentsMap((prev) => ({
+      ...prev,
+      [videoId]: (prev[videoId] ?? []).map((c) =>
+        c.id === commentId
+          ? { ...c, replies: [...c.replies, newReply] }
+          : c
+      ),
     }));
   };
 
@@ -183,7 +235,6 @@ function Feed() {
             <div
               key={video.id}
               className="feed-item"
-            
               ref={(el) => { itemRefs.current[video.id] = el; }}
             >
               <div className="user-panel">
@@ -193,6 +244,7 @@ function Feed() {
                   teaches={teachTagNames}
                   lookingFor={learnTagNames}
                 />
+                <Tags items={videoTagNames} />
               </div>
 
               <div className="video-section">
@@ -223,9 +275,9 @@ function Feed() {
                       comments={videoComments}
                       onClose={() => toggleComments(video.id)}
                       onAddComment={(text) => addComment(video.id, text)}
-                      onDeleteComment={(commentId) =>
-                        deleteComment(video.id, commentId)
-                      }
+                      onDeleteComment={(commentId) => deleteComment(video.id, commentId)}
+                      onAddReply={(commentId, text) => addReply(video.id, commentId, text)}
+                      loggedUserId={loggedUser.id}
                     />
                   </div>
                 )}
@@ -251,7 +303,6 @@ function Feed() {
 
                 <ShareButton videoId={video.id} />
               </div>
-
             </div>
           );
         })}
