@@ -1,25 +1,31 @@
 .historyItem {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 0;
-    font-style: italic;
-    color: #292D32;
-    width: 100%; 
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-style: italic;
+  color: #292D32;
+  width: 100%;
 }
 
 .historyItem span {
-    flex: 1;
-    white-space: nowrap;    
-    overflow: hidden;
-    text-overflow: ellipsis;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-
 .historyItem button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: #292D32;
-    margin-left: auto;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #292D32;
+  margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  .historyItem {
+    font-size: 14px;
+    gap: 10px;
+  }
 }
