@@ -30,7 +30,7 @@ function Login() {
     if (userFound.password === entryPassword) {
         alert('Login exitoso')
         localStorage.setItem('loggeduser', JSON.stringify(userFound))
-        onNavigate('feed')
+        navigate('/Feed')
     } else {
         alert('Contraseña incorrecta')
     }
