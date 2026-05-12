@@ -22,7 +22,7 @@ function Search() {
     })
     const [showAll, setShowAll] = useState(false)
     const [userChips, setUserChips] = useState<{ id: string, name: string }[]>([])
-    const [recommended, setRecommended] = useState<string[]>([])
+    const [recommended, setRecommended] = useState<{ id: string, title: string }[]>([])
 
     useEffect(() => {
         // Buscar usuario en JSON primero
@@ -43,7 +43,6 @@ function Search() {
             setUserChips(chips)
         }
 
-        // Recommended: videos que enseñan lo que el usuario quiere aprender
         if (user && user.wantsToLearn) {
             const stored = localStorage.getItem('videos')
             const allVideos = stored ? JSON.parse(stored) : videosData
@@ -51,9 +50,10 @@ function Search() {
             const rec = allVideos
                 .filter((v: any) => v.teaches.some((t: string) => user.wantsToLearn.includes(t)))
                 .slice(0, 4)
-                .map((v: any) => v.title)
+                .map((v: any) => ({ id: v.id, title: v.title }))  
             setRecommended(rec)
         }
+
     }, [userLoggedId])
 
     const handleSearch = (query: string) => {
@@ -61,7 +61,7 @@ function Search() {
         const newHistory = [query, ...history.filter(h => h !== query)]
         setHistory(newHistory)
         localStorage.setItem('searchHistory', JSON.stringify(newHistory))
-        navigate(`/Search/Results?q=${encodeURIComponent(query)}`)  // ← Arreglado
+        navigate(`/Search/Results?q=${encodeURIComponent(query)}`)  
     }
 
     const handleDelete = (item: string) => {
@@ -71,7 +71,7 @@ function Search() {
     }
 
     const handleChip = (tagId: string) => {
-        navigate(`/Search/Results?tag=${tagId}`)  // ← Arreglado
+        navigate(`/Search/Results?tag=${tagId}`)  
     }
 
     const visibleHistory = showAll ? history : history.slice(0, 3)
@@ -127,11 +127,12 @@ function Search() {
 
                 <h3 className="recommendedTitle">Recommended</h3>
                 <div className="recommendedList">
-                    {recommended.map((item, i) => (
+                    {recommended.map((item) => (
                         <RecommendedItem
-                            key={i}
-                            title={item}
-                            onClick={() => handleSearch(item)}
+                            key={item.id}
+                            title={item.title}
+                            videoId={item.id}
+                            onClick={() => navigate(`/Feed/${item.id}`)}
                         />
                     ))}
                 </div>
