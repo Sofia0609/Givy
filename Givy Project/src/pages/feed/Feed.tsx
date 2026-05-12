@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Navigate, useParams } from "react-router";
+import type { User, Video, CommentData, FeedItem } from '../../types/index'
 import Description from "../../components/feed/description/description";
 import VideoSection from "../../components/feed/video/Video";
 import CircularButton from "../../components/feed/circularButton/CircularButton";
 import Comments from "../../components/feed/comments/comments";
 import ProfileButton from "../../components/feed/profileButton/ProfileButton";
-import Tags from "../../components/feed/tags/Tags";
 import ShareButton from "../../components/feed/shareButton/Sharebutton";
 import SwapButton from "../../components/feed/swapButton/Swapbutton";
 import SwapOverlay from "../../components/feed/swapOverlay/Swapoverlay";
@@ -24,89 +24,61 @@ const resolveTagNames = (tagIds: string[]): string[] =>
 const getInitials = (username: string): string =>
   username.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
-export interface ReplyData {
-  id: string;
-  parentCommentId: string;
-  userId: string;
-  text: string;
-  date: string;
-}
-
-export interface CommentData {
-  id: string;
-  videoId: string;
-  userId: string;
-  text: string;
-  date: string;
-  replies: ReplyData[];
-  isOwn?: boolean;
-}
-
-interface FeedItem {
-  user: (typeof usersData)[0];
-  video: (typeof videosData)[0];
-}
-
-
-
-
 function Feed() {
 
-      const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
-      const loggedUser = usersData.find(u => u.id === loggedUserData.id)
+  const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
+  const loggedUser = (usersData as User[]).find(u => u.id === loggedUserData.id)
 
-      if (!loggedUser) {
-          return <Navigate to="/login" />
-      }
+  if (!loggedUser) {
+    return <Navigate to="/login" />
+  }
 
+  const buildFeedItems = (): FeedItem[] => {
+    const wantsToLearn = loggedUser.wantsToLearn;
 
-      const buildFeedItems = (): FeedItem[] => {
-      const wantsToLearn = loggedUser.wantsToLearn;
+    const stored = localStorage.getItem('videos')
+    const allVideos: Video[] = stored ? JSON.parse(stored) : (videosData as Video[])
+    
+    const relevant = allVideos.filter(
+      (video) =>
+        video.userId !== loggedUser.id &&
+        video.teaches.some((tag) => wantsToLearn.includes(tag))
+    );
 
-      const stored = localStorage.getItem('videos')
-      const allVideos = stored ? JSON.parse(stored) : videosData
-      
-      const relevant = allVideos.filter(
-        (video) =>
-          video.userId !== loggedUser.id &&
-          video.teaches.some((tag) => wantsToLearn.includes(tag))
-      );
+    const others = allVideos.filter(
+      (video) =>
+        video.userId !== loggedUser.id &&
+        !video.teaches.some((tag) => wantsToLearn.includes(tag))
+    );
 
-      const others = allVideos.filter(
-        (video) =>
-          video.userId !== loggedUser.id &&
-          !video.teaches.some((tag) => wantsToLearn.includes(tag))
-      );
+    return [...relevant, ...others]
+      .map((video) => {
+        const user = (usersData as User[]).find((u) => u.id === video.userId);
+        if (!user) return null;
+        return { user, video };
+      })
+      .filter((item): item is FeedItem => item !== null);
+  };
 
-      return [...relevant, ...others]
-        .map((video) => {
-          const user = usersData.find((u) => u.id === video.userId);
-          if (!user) return null;
-          return { user, video };
-        })
-        .filter((item): item is FeedItem => item !== null);
-    };
+  const buildInitialComments = (
+    items: FeedItem[]
+  ): Record<string, CommentData[]> => {
+    const map: Record<string, CommentData[]> = {};
+    items.forEach(({ video }) => {
+      map[video.id] = (commentsData as any[])
+        .filter((c) => c.videoId === video.id)
+        .map((c) => ({ ...c, isOwn: false }));
+    });
+    return map;
+  };
 
-    const buildInitialComments = (
-      items: FeedItem[]
-    ): Record<string, CommentData[]> => {
-      const map: Record<string, CommentData[]> = {};
-      items.forEach(({ video }) => {
-        map[video.id] = commentsData
-          .filter((c) => c.videoId === video.id)
-          .map((c) => ({ ...c, isOwn: false }));
-      });
-      return map;
-    };
-
-  // Lee el videoId de la URL si existe (/Feed/v4)
   const { videoId } = useParams<{ videoId?: string }>();
 
   const feedItems = buildFeedItems();
 
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>(
-    Object.fromEntries(videosData.map((v) => [v.id, v.likes]))
+    Object.fromEntries((videosData as Video[]).map((v) => [v.id, v.likes]))
   );
   const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
   const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>(
@@ -114,9 +86,7 @@ function Feed() {
   );
   const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
 
-
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
-
 
   useEffect(() => {
     if (videoId && itemRefs.current[videoId]) {
@@ -146,7 +116,6 @@ function Feed() {
 
   const addComment = (id: string, text: string) => {
     const newComment: CommentData = {
-      // eslint-disable-next-line react-hooks/purity
       id: `own-${Date.now()}`,
       videoId: id,
       userId: loggedUser.id,
@@ -176,14 +145,12 @@ function Feed() {
         {feedItems.map(({ user, video }) => {
           const teachTagNames = resolveTagNames(video.teaches);
           const learnTagNames = resolveTagNames(video.wantsToLearnInReturn);
-          const videoTagNames = resolveTagNames(video.tags);
           const videoComments = commentsMap[video.id] ?? [];
 
           return (
             <div
               key={video.id}
               className="feed-item"
-            
               ref={(el) => { itemRefs.current[video.id] = el; }}
             >
               <div className="user-panel">
@@ -251,7 +218,6 @@ function Feed() {
 
                 <ShareButton videoId={video.id} />
               </div>
-
             </div>
           );
         })}
