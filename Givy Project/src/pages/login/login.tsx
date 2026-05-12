@@ -11,30 +11,30 @@ function Login() {
   const navigate = useNavigate();
 
   function handleAuth() {
-    const userFound = users.find((user) => user.email === entryEmail);
+
+    let userFound = users.find((user) => user.email === entryEmail);
+    
+
     if (!userFound) {
-        const stored = localStorage.getItem('loggeduser')
-        if (stored) {
-            const localUser = JSON.parse(stored)
-            if (localUser.email === entryEmail) {
-                userFound = localUser
-            }
-        }
+      const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
+      userFound = storedUsers.find(u => u.email === entryEmail)
     }
 
     if (!userFound) {
-        alert('No existe una cuenta con ese email')
-        return
+      alert('No existe una cuenta con ese email')
+      return
     }
 
     if (userFound.password === entryPassword) {
-        alert('Login exitoso')
-        localStorage.setItem('loggeduser', JSON.stringify(userFound))
+
+      localStorage.setItem('loggeduser', JSON.stringify(userFound))
+
+      setTimeout(() => {
         navigate('/Feed')
+      }, 100)
     } else {
-        alert('Contraseña incorrecta')
+      alert('Contraseña incorrecta')
     }
-  
   }
 
   return (
@@ -70,6 +70,4 @@ function Login() {
   );
 }
 
-export default Login; 
-
-
+export default Login;

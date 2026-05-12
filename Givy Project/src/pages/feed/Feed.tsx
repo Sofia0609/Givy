@@ -25,14 +25,21 @@ const getInitials = (username: string): string =>
   username.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
 function Feed() {
+const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
 
-  const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
-  const loggedUser = (usersData as User[]).find(u => u.id === loggedUserData.id)
 
-  if (!loggedUser) {
-    return <Navigate to="/login" />
-  }
+    let loggedUser = (usersData as User[]).find(u => u.id === loggedUserData.id)
 
+
+    if (!loggedUser) {
+      const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
+      loggedUser = storedUsers.find(u => u.id === loggedUserData.id)
+    }
+
+    if (!loggedUser) {
+      return <Navigate to="/login" />
+    }
+    
   const buildFeedItems = (): FeedItem[] => {
     const wantsToLearn = loggedUser.wantsToLearn;
 
@@ -53,7 +60,14 @@ function Feed() {
 
     return [...relevant, ...others]
       .map((video) => {
-        const user = (usersData as User[]).find((u) => u.id === video.userId);
+
+        let user = (usersData as User[]).find((u) => u.id === video.userId);
+        
+        if (!user) {
+          const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
+          user = storedUsers.find(u => u.id === video.userId)
+        }
+        
         if (!user) return null;
         return { user, video };
       })

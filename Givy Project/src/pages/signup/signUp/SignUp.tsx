@@ -21,7 +21,33 @@ function SignUp() {
             return
         }
 
+        const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
+        const localUserExists = storedUsers.find(u => u.email === email)
+        if (localUserExists) {
+            alert('An account with this email already exists')
+            return
+        }
+  
+        const newUser = {
+            id: `u${Date.now()}`, 
+            username: name,
+            at: `@${name.toLowerCase().replace(/\s/g, '')}`,
+            email,
+            password,
+            bio: '',
+            profilePicture: '../src/assets/profile_picture.png',
+            followers: 0,
+            following: 0,
+            reputationAverage: 0,
+            videoCount: 0,
+            wantsToLearn: [],
+            wantsToTeach: []
+        }
+
+        storedUsers.push(newUser)
+        localStorage.setItem('signupUsers', JSON.stringify(storedUsers))
         localStorage.setItem('signupData', JSON.stringify({ name, email, password }))
+        
         navigate('/LearnTags')
     }
 

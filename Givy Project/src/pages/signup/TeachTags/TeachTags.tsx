@@ -15,6 +15,7 @@ function TeachTags() {
         )
     }
 
+
     function handleCreateAccount() {
         if (selected.length === 0) {
             alert('Please select at least one topic')
@@ -30,7 +31,7 @@ function TeachTags() {
             email: signupData.email,
             password: signupData.password,
             bio: '',
-            profilePicture: '',
+            profilePicture: '../src/assets/profile_picture.png',
             followers: 0,
             following: 0,
             reputationAverage: 0,
@@ -39,9 +40,13 @@ function TeachTags() {
             wantsToTeach: selected
         }
 
+        const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
+        storedUsers.push(newUser)
+        localStorage.setItem('signupUsers', JSON.stringify(storedUsers))
         localStorage.setItem('loggeduser', JSON.stringify(newUser))
         localStorage.removeItem('signupData')
-        navigate('/Login')
+        
+        navigate('/Feed')
     }
 
     return (

@@ -21,7 +21,7 @@ let routes = createBrowserRouter([
 
   {
     path: "/",
-    element: <Navigate to="/login" />  
+    element: <Navigate to="/Login" />  
   },
   {
     path: "/Feed",
