@@ -57,6 +57,10 @@ let routes = createBrowserRouter([
     element: <Match />
   },
   {
+    path: "/match/:matchId",
+    element: <Match />
+  },
+  {
     path: '/Interactions',
     element: <Interactions />
   },

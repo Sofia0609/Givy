@@ -23,7 +23,7 @@
     flex-direction: column;
     gap: 15px;
     padding: 30px;
-    width: 45%; /* ← aumentar de 30% a 45% */
+    width: 45%;
     overflow-y: auto;
     overflow-x: hidden;
     border-right: 1px solid #e0e0e0;
@@ -47,9 +47,9 @@
 }
 
 .matchTitle {
-        font-weight: 700;
-
+    font-weight: 700;
     flex-shrink: 0;
+    margin-bottom: 10px;
 }
 
 .noMatchSelected {
@@ -97,4 +97,57 @@
     margin: 0;
     font-size: 0.95rem;
     font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .matchContent {
+        margin-left: 0;
+        margin-bottom: 80px;
+    }
+
+    .matchSectionsContainer {
+        flex-direction: column;
+    }
+
+    .match {
+        width: 100%;
+        padding: 20px;
+        border-right: none;
+    }
+
+    .divider {
+        display: none;
+    }
+
+    .chatSection {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .matchTitle {
+        font-size: 1.1rem;
+    }
+
+    .videoContainer video {
+        max-width: 100%;
+    }
+
+    .surveySection {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .match {
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .chatSection {
+        padding: 15px;
+    }
+
+    .matchTitle {
+        font-size: 1rem;
+    }
 }
