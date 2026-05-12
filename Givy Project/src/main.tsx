@@ -13,19 +13,14 @@ import Interactions from './pages/notificacions/interactions/interactions'
 import SignUp from './pages/signup/signUp/SignUp'
 import LearnTags from './pages/signup/LearnTags/LearnTags'
 import TeachTags from './pages/signup/TeachTags/TeachTags'
-import Login from './pages/login/Login'
-
 import Login from './pages/login/login'
+
 
 let routes = createBrowserRouter([
 
   {
     path: "/",
     element: <Navigate to="/login" />  
-  },
-  {
-  path: "/Login",
-  element: <Login></Login>
   },
   {
     path: "/Feed",
