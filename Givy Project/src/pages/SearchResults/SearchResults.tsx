@@ -64,7 +64,7 @@ function SearchResults() {
 
                 <div className="resultsHeader">
                     <button className="backButton" onClick={() => navigate('/Search')}>
-                        ◀
+                        <img src={arrowLeft} alt="Back" />
                     </button>
                     <SearchBar
                         placeholder={searchLabel}
