@@ -1,0 +1,160 @@
+.editLayout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.editMain {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 40px 40px 40px;
+    gap: 24px;
+    overflow-y: auto;
+}
+
+.editHeader {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    position: relative;
+}
+
+.editBack {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--color-text-primary);
+    position: absolute;
+    left: 0;
+}
+
+.editTitle {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: poppins, sans-serif;
+    color: var(--color-text-primary);
+}
+
+.editPhoto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.editPhotoCircle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.editPhotoIcon {
+    font-size: 1.8rem;
+}
+
+.editPhotoLabel {
+    font-size: 0.85rem;
+    color: var(--color-purple-active);
+    font-family: poppins, sans-serif;
+    cursor: pointer;
+}
+
+.editFields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.editField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.editField label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: poppins, sans-serif;
+    color: var(--color-text-primary);
+}
+
+.editField input,
+.editField textarea,
+.editField select {
+    background-color: var(--color-bg-secondary, #f0eef8);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 0.9rem;
+    font-family: poppins, sans-serif;
+    color: var(--color-text-primary);
+    outline: none;
+    width: 100%;
+}
+
+.editField textarea {
+    height: 80px;
+    resize: none;
+}
+
+.editField select {
+    appearance: none;
+    cursor: pointer;
+}
+
+.editConfirmBtn {
+    background-color: var(--color-purple-active);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 14px 60px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: poppins, sans-serif;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.editConfirmBtn:hover {
+    opacity: 0.85;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .editLayout {
+        flex-direction: column;
+    }
+
+   .editMain {
+    flex: 1;
+    min-width: 0;
+    margin-left: 250px;    /* 👈 esto */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 40px 40px 40px;
+    gap: 24px;
+    overflow-y: auto;
+}
+
+    .editFields {
+        max-width: 100%;
+    }
+
+    .editConfirmBtn {
+        width: 100%;
+        padding: 14px 0;
+    }
+}

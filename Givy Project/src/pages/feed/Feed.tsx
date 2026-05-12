@@ -154,7 +154,6 @@ const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
   return (
     <div className="layout">
       <NavBar />
-
       <div className="feed">
         {feedItems.map(({ user, video }) => {
           const teachTagNames = resolveTagNames(video.teaches);

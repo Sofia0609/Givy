@@ -8,6 +8,7 @@ import matchesData from '../../../data/matches.json'
 import usersData from '../../../data/users.json'
 import tagsData from '../../../data/tags.json'
 import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
+import { Navigate } from 'react-router-dom'
 import InputGivy from '../../../components/inputGivy/inputGivy'
 import Dropdown from '../../../components/create/dropDown/dropDown'
 import MediumButton from '../../../components/buttonsGivy/mediumButtons/mediumButton'
@@ -52,7 +53,7 @@ function Match() {
     alert('Rating submitted!')
     setLikeVideo('')
     setRating('')
-  }
+  }  // 👈 llave que faltaba
 
   useEffect(() => {
     function getMatchesbyUser(user: string) {
@@ -98,8 +99,31 @@ function Match() {
       return m
     })
     localStorage.setItem('matches', JSON.stringify(updatedMatches))
-    setFilteredMatches(updatedMatches.filter(m => m.user1Id === userLogged || m.user2Id === userLogged))
+    setFilteredMatches(updatedMatches.filter((m: typeof matches[0]) => m.user1Id === userLogged || m.user2Id === userLogged))
   }
+
+  function handleSelectMatch(id: string) {
+    const isMobile = window.innerWidth <= 768
+    if (isMobile) {
+      navigate(`/match/${id}`)
+    }
+    setSelectedMatch(id)
+  }
+
+  function handleBackToList() {
+    navigate('/match')
+    setSelectedMatch(null)
+  }
+
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
+
+    useEffect(() => {
+      const handleResize = () => setIsMobile(window.innerWidth <= 768)
+      window.addEventListener('resize', handleResize)
+      return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    const showOnlyChat = matchId && isMobile
 
   function handleSelectMatch(id: string) {
     const isMobile = window.innerWidth <= 768
