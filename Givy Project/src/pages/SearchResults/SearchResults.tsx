@@ -16,14 +16,25 @@ function SearchResults() {
     const query = searchParams.get('q')?.toLowerCase() || ''
     const tagId = searchParams.get('tag') || ''
 
+
+    const loggedData = localStorage.getItem('loggeduser')
+    const loggedUser = loggedData ? JSON.parse(loggedData) : null
+    const myInterests = loggedUser?.wantsToLearn || []
+
     const filtered = videos.filter(video => {
+        
+
+        const teachesWhatIWant = video.teaches.some(tId => myInterests.includes(tId))
+        
+        if (!teachesWhatIWant) return false
+
+        
         if (tagId) {
             return video.teaches.includes(tagId) ||
                 video.wantsToLearnInReturn.includes(tagId)
         }
         if (query) {
-            const user = users.find(u => u.id === video.userId)
-            
+            const videoOwner = users.find(u => u.id === video.userId)
             
             const normalize = (str: string) =>
                 str.toLowerCase()
@@ -32,7 +43,6 @@ function SearchResults() {
 
             const q = normalize(query)
 
-            
             const matchesTag = tags.some(tag =>
                 normalize(tag.name).includes(q) &&
                 (video.teaches.includes(tag.id) || video.wantsToLearnInReturn.includes(tag.id))
@@ -41,8 +51,8 @@ function SearchResults() {
             return (
                 normalize(video.title).includes(q) ||
                 normalize(video.description).includes(q) ||
-                normalize(user?.username || '').includes(q) ||
-                normalize(user?.at || '').includes(q) ||
+                normalize(videoOwner?.username || '').includes(q) ||
+                normalize(videoOwner?.at || '').includes(q) ||
                 matchesTag
             )
         }
@@ -74,7 +84,7 @@ function SearchResults() {
                 </div>
 
                 <div className="videosGrid">
-                    {filtered.length === 0 && <p className="noResults">No results found</p>}
+                    {filtered.length === 0 && <p className="noResults">No results found for your interests</p>}
                     {filtered.map(video => {
                         const user = getUserById(video.userId)
                         return (

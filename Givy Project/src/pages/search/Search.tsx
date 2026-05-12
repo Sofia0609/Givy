@@ -12,7 +12,10 @@ import './Search.css'
 
 function Search() {
     const navigate = useNavigate()
-    const userLogged = "u1" 
+
+
+    const loggedData = localStorage.getItem('loggeduser')
+    const userLoggedId = loggedData ? JSON.parse(loggedData).id : null
 
     const [history, setHistory] = useState<string[]>(() => {
         const saved = localStorage.getItem('searchHistory')
@@ -23,8 +26,8 @@ function Search() {
     const [recommended, setRecommended] = useState<string[]>([])
 
     useEffect(() => {
-        // obtiene el usuario logueado
-        const user = users.find(u => u.id === userLogged)
+        
+        const user = users.find(u => u.id === userLoggedId)
 
         // categorías: primeros 3 tags que el usuario quiere aprender
         if (user) {
@@ -43,7 +46,7 @@ function Search() {
                 .map(v => v.title)
             setRecommended(rec)
         }
-    }, [])
+    }, [userLoggedId])
 
     const handleSearch = (query: string) => {
         if (!query.trim()) return
