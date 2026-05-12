@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
 import './match.css'
 import NavBar from '../../../components/navBar/navBar'
@@ -11,7 +11,7 @@ import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch
 import InputGivy from '../../../components/inputGivy/inputGivy'
 import Dropdown from '../../../components/create/dropDown/dropDown'
 import MediumButton from '../../../components/buttonsGivy/mediumButtons/mediumButton'
-import type { Match, User, Tag, MatchVideo } from '../../../types/index'
+import  { type Match as MatchType, type User, type Tag, type MatchVideo } from '../../../types/index'
 
 function Match() {
 
@@ -25,7 +25,7 @@ function Match() {
   }
 
   const [selectedMatch, setSelectedMatch] = useState<string | null>(matchId || null)
-  const [filteredMatches, setFilteredMatches] = useState<Match[]>([])
+  const [filteredMatches, setFilteredMatches] = useState<MatchType[]>([])
   const [likeVideo, setLikeVideo] = useState('')
   const [rating, setRating] = useState('')
 
@@ -34,7 +34,7 @@ function Match() {
     { id: 'no', name: 'No' }
   ]
 
-  const currentMatch: Match | undefined = filteredMatches.find(m => m.id === selectedMatch)
+  const currentMatch: MatchType | undefined = filteredMatches.find(m => m.id === selectedMatch)
 
   function getMatchVideo(): MatchVideo | undefined {
     const stored = localStorage.getItem('matchVideos')
@@ -52,12 +52,12 @@ function Match() {
     alert('Rating submitted!')
     setLikeVideo('')
     setRating('')
-  }  // 👈 llave que faltaba
+  }  
 
   useEffect(() => {
     function getMatchesbyUser(user: string) {
       const stored = localStorage.getItem('matches')
-      const allMatches: Match[] = stored ? JSON.parse(stored) : (matchesData as Match[])
+      const allMatches: MatchType[] = stored ? JSON.parse(stored) : (matchesData as MatchType[])
       const userMatches = allMatches.filter((match) => match.user1Id === user || match.user2Id === user)
       setFilteredMatches(userMatches)
     } 
@@ -85,9 +85,9 @@ function Match() {
     localStorage.setItem('matchVideos', JSON.stringify([...allVideos, newVideo]))
 
     const storedMatches = localStorage.getItem('matches')
-    const allMatches: Match[] = storedMatches ? JSON.parse(storedMatches) : (matchesData as Match[])
+    const allMatches: MatchType[] = storedMatches ? JSON.parse(storedMatches) : (matchesData as MatchType[])
 
-    const updatedMatches: Match[] = allMatches.map(m => {
+    const updatedMatches: MatchType[] = allMatches.map(m => {
       if (m.id === selectedMatch) {
         return {
           ...m,
@@ -98,7 +98,7 @@ function Match() {
       return m
     })
     localStorage.setItem('matches', JSON.stringify(updatedMatches))
-    setFilteredMatches(updatedMatches.filter((m: typeof matches[0]) => m.user1Id === userLogged || m.user2Id === userLogged))
+    setFilteredMatches(updatedMatches.filter((m: MatchType) => m.user1Id === userLogged || m.user2Id === userLogged))
   }
 
   function handleSelectMatch(id: string) {

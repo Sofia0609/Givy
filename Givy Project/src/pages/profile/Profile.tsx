@@ -7,7 +7,7 @@ import ProfileButton from '../../components/buttonGivy/ProfileButton/buttonGivy'
 import UserInfo from '../../components/profile/UserInfo/UserInfo'
 import TagsContainer from '../../components/profile/TagsContainer/TagsContainer'
 import VideosContainer from '../../components/profile/VideosContainer/VideosContainer'
-import './ProfileStyles.css'
+import './ProfileStyle.css'
 import videos from '../../data/videos.json'
 import tags from '../../data/tags.json'
 import reputations from '../../data/reputations.json'
@@ -17,7 +17,6 @@ const getTagNames = (tagIds: string[]) =>
 
 function Profile() {
   const navigate = useNavigate()
-
   const [user, setUser] = useState(() => {
     const stored = JSON.parse(localStorage.getItem('loggeduser') || '{}')
 
@@ -89,7 +88,7 @@ function Profile() {
           <UserInfo label="Reputation" count={user.reputationAverage} />
         </div>
         <p className="profileBio">{user.bio ?? 'no bio yet.'}</p>
-        <ProfileButton label="Edit profile" />
+        <ProfileButton label="Edit profile" onClick={() => navigate('/EditProfile')} />
         <div className="profileTags">
           <TagsContainer
             title="TEACHING"
@@ -108,7 +107,7 @@ function Profile() {
             onRemoveTag={handleRemoveLearning}
           />
         </div>
-        <VideosContainer videos={videos} />
+        <VideosContainer videos={profileVideos} />
       </main>
     </div>
   )

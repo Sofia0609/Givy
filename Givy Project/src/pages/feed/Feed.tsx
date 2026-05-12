@@ -46,26 +46,36 @@ const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
     const stored = localStorage.getItem('videos')
     const allVideos: Video[] = stored ? JSON.parse(stored) : (videosData as Video[])
     
-    const relevant = allVideos.filter(
-      (video) =>
-        video.userId !== loggedUser.id &&
-        video.teaches.some((tag) => wantsToLearn.includes(tag))
-    );
+    let videosToShow = allVideos;
+    
+    // If we have a specific videoId, only show that video
+    if (videoId) {
+      videosToShow = allVideos.filter(video => video.id === videoId);
+    } else {
+      // Otherwise, show the normal feed filtering
+      const relevant = allVideos.filter(
+        (video) =>
+          video.userId !== loggedUser.id &&
+          video.teaches.some((tag) => wantsToLearn.includes(tag))
+      );
 
-    const others = allVideos.filter(
-      (video) =>
-        video.userId !== loggedUser.id &&
-        !video.teaches.some((tag) => wantsToLearn.includes(tag))
-    );
+      const others = allVideos.filter(
+        (video) =>
+          video.userId !== loggedUser.id &&
+          !video.teaches.some((tag) => wantsToLearn.includes(tag))
+      );
 
-    return [...relevant, ...others]
+      videosToShow = [...relevant, ...others];
+    }
+
+    return videosToShow
       .map((video) => {
 
         let user = (usersData as User[]).find((u) => u.id === video.userId);
         
         if (!user) {
           const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
-          user = storedUsers.find(u => u.id === video.userId)
+          user = storedUsers.find((u: any) => u.id === video.userId)
         }
         
         if (!user) return null;
@@ -103,10 +113,11 @@ const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
-    if (videoId && itemRefs.current[videoId]) {
+    // Only scroll if we have multiple videos (normal feed), not for single video view
+    if (videoId && itemRefs.current[videoId] && feedItems.length > 1) {
       itemRefs.current[videoId]?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [videoId]);
+  }, [videoId, feedItems]);
 
   const toggleLike = (id: string) => {
     const liked = likedMap[id] ?? false;

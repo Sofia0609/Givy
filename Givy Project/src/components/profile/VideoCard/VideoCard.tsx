@@ -1,13 +1,23 @@
+import { useNavigate } from 'react-router'
 import './VideoCard.css'
 
 interface VideoCardProps {
     videourl ?: string
+    videoId?: string
     // views?: number
 }
 
-function VideoCard({ videourl }: VideoCardProps) {
+function VideoCard({ videourl, videoId }: VideoCardProps) {
+    const navigate = useNavigate()
+
+    const handleClick = () => {
+        if (videoId) {
+            navigate(`/Feed/${videoId}`)
+        }
+    }
+
     return (
-        <div className="videoCard">
+        <div className="videoCard" onClick={handleClick} style={{ cursor: videoId ? 'pointer' : 'default' }}>
             <div className="videoCardThumbnail">
                 {videourl 
                     ? <video src={videourl } />

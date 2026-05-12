@@ -34,6 +34,7 @@ function VideosContainer({ videos  }: VideosContainerProps) {
                     <VideoCard
                         key={video.id}
                         videourl={video.url}
+                        videoId={video.id}
                     />
                 ))
                 
