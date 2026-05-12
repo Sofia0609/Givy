@@ -99,19 +99,7 @@
     font-weight: 600;
 }
 
-@media (max-width: 1024px) {
-    .match {
-        width: 50%;
-        padding: 20px;
-    }
-
-    .chatSection {
-        padding: 30px 20px;
-    }
-}
-
 @media (max-width: 768px) {
-
     .matchContent {
         margin-left: 0;
         margin-bottom: 80px;
@@ -125,7 +113,6 @@
         width: 100%;
         padding: 20px;
         border-right: none;
-        border-bottom: 1px solid #e0e0e0;
     }
 
     .divider {
@@ -133,11 +120,20 @@
     }
 
     .chatSection {
-        display: none; 
+        width: 100%;
+        padding: 20px;
     }
 
     .matchTitle {
         font-size: 1.1rem;
+    }
+
+    .videoContainer video {
+        max-width: 100%;
+    }
+
+    .surveySection {
+        max-width: 100%;
     }
 }
 
@@ -145,6 +141,10 @@
     .match {
         padding: 15px;
         gap: 10px;
+    }
+
+    .chatSection {
+        padding: 15px;
     }
 
     .matchTitle {
