@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import users from '../../../data/users.json'
 import './SignUp.css'
+import logo from '../../../assets/Logotype.png'
 
 function SignUp() {
     const navigate = useNavigate()
@@ -29,7 +30,7 @@ function SignUp() {
         <div className="signup-wrapper">
             <div className="signup-card">
                 <div className="signup-logo">
-                    <img src="/src/assets/logo.png" alt="Givy" />
+                    <img src={logo} alt="Givy" />
                 </div>
                 <h1 className="signup-title">Create Account</h1>
                 <p className="signup-subtitle">Join the skill exchange community</p>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import tags from '../../../data/tags.json'
 import './TeachTags.css'
+import logo from '../../../assets/Logotype.png'
 
 function TeachTags() {
     const navigate = useNavigate()
@@ -48,7 +49,7 @@ function TeachTags() {
         <div className="tags-wrapper">
             <div className="tags-card">
                 <div className="tags-logo">
-                    <img src="/src/assets/logo.png" alt="Givy" />
+                    <img src={logo} alt="Givy" />
                 </div>
                 <h1 className="tags-title">What would you like to teach?</h1>
                 <p className="tags-subtitle">Choose your favorites</p>
