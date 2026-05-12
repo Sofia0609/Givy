@@ -116,9 +116,10 @@
 
 
 @media (max-width: 768px) {
-  .feed { margin-left: 0; width: 100%; }
+  .layout {margin-bottom: 80px;}
+  .feed { margin-left: 0; width: 100%; margin-bottom: 80px; }
   .feed-item { position: relative; }
-  .user-panel { display: none; }
+  .user-panel { display: none;}
   .video-section { width: 100%; flex: unset; }
 
   .video-user-top {
@@ -143,7 +144,7 @@
   .video-user-bottom {
     display: block;
     position: absolute;
-    bottom: 20px;
+    bottom: 100px;
     left: 12px;
     right: 80px;
     background: rgba(60, 55, 100, 0.65);
