@@ -6,15 +6,18 @@ import EntityCard from '../../../components/notifications/entityCard/entityCard'
 import swapRequests from '../../../data/swapRequests.json'
 import users from '../../../data/users.json'
 import tags from '../../../data/tags.json'
+import { Navigate } from 'react-router-dom'
 
 
 function PossibleSwap() {
 
 
-  const userLogged = localStorage.getItem('loggeduser')
-  console.log(JSON.parse(userLogged));
-  
+    const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
+    const userLogged = loggedUserData.id
 
+    if (!userLogged) {
+        return <Navigate to="/login" />
+    }
 
     const [filteredSwap, setSwapRequest] = useState<typeof swapRequests>([])
     const [filteredSwapStatus, setSwapStatusUser] = useState<typeof swapRequests>([])

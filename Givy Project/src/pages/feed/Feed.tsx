@@ -5,7 +5,6 @@ import VideoSection from "../../components/feed/video/Video";
 import CircularButton from "../../components/feed/circularButton/CircularButton";
 import Comments from "../../components/feed/comments/comments";
 import ProfileButton from "../../components/feed/profileButton/ProfileButton";
-import Tags from "../../components/feed/tags/Tags";
 import ShareButton from "../../components/feed/shareButton/Sharebutton";
 import SwapButton from "../../components/feed/swapButton/Swapbutton";
 import SwapOverlay from "../../components/feed/swapOverlay/Swapoverlay";
@@ -47,11 +46,9 @@ interface FeedItem {
   video: (typeof videosData)[0];
 }
 
-
 const loggedUser = usersData[1];
 
-
-const buildFeedItems = (videoId?: string): FeedItem[] => {
+const buildFeedItems = (targetVideoId?: string): FeedItem[] => {
   const wantsToLearn = loggedUser.wantsToLearn;
 
   const stored = localStorage.getItem('videos');
@@ -61,13 +58,13 @@ const buildFeedItems = (videoId?: string): FeedItem[] => {
 
   const relevant = allVideos.filter(
     (video) =>
-      (video.userId !== loggedUser.id || video.id === videoId) &&
+      (video.userId !== loggedUser.id || video.id === targetVideoId) &&
       video.teaches.some((tag: string) => wantsToLearn.includes(tag))
   );
 
   const others = allVideos.filter(
     (video) =>
-      (video.userId !== loggedUser.id || video.id === videoId) &&
+      (video.userId !== loggedUser.id || video.id === targetVideoId) &&
       !video.teaches.some((tag: string) => wantsToLearn.includes(tag))
   );
 
@@ -93,7 +90,6 @@ const buildInitialComments = (
 };
 
 function Feed() {
-  // Lee el videoId de la URL si existe (/Feed/v4)
   const { videoId } = useParams<{ videoId?: string }>();
 
   const feedItems = buildFeedItems(videoId);
@@ -108,9 +104,7 @@ function Feed() {
   );
   const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
 
-
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
-
 
   useEffect(() => {
     if (videoId && itemRefs.current[videoId]) {
@@ -140,7 +134,6 @@ function Feed() {
 
   const addComment = (id: string, text: string) => {
     const newComment: CommentData = {
-      // eslint-disable-next-line react-hooks/purity
       id: `own-${Date.now()}`,
       videoId: id,
       userId: loggedUser.id,
@@ -165,7 +158,6 @@ function Feed() {
   return (
     <div className="layout">
       <NavBar />
-
       <div className="feed">
         {feedItems.map(({ user, video }) => {
           const teachTagNames = resolveTagNames(video.teaches);
@@ -176,7 +168,6 @@ function Feed() {
             <div
               key={video.id}
               className="feed-item"
-            
               ref={(el) => { itemRefs.current[video.id] = el; }}
             >
               <div className="user-panel">
@@ -244,7 +235,6 @@ function Feed() {
 
                 <ShareButton videoId={video.id} />
               </div>
-
             </div>
           );
         })}

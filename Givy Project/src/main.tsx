@@ -16,9 +16,14 @@ import Login from './pages/login/login'
 
 
 let routes = createBrowserRouter([
+
   {
     path: "/",
-    element: <Navigate to="/Feed" />
+    element: <Navigate to="/login" />  
+  },
+  {
+  path: "/Login",
+  element: <Login></Login>
   },
   {
     path: "/Feed",
@@ -78,3 +83,6 @@ createRoot(document.getElementById('root')!).render(
     <RouterProvider router={routes} />
   </StrictMode>,
 )
+
+
+
