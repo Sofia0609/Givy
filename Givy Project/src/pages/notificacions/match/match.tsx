@@ -8,7 +8,6 @@ import matchesData from '../../../data/matches.json'
 import usersData from '../../../data/users.json'
 import tagsData from '../../../data/tags.json'
 import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
-import { Navigate } from 'react-router-dom'
 import InputGivy from '../../../components/inputGivy/inputGivy'
 import Dropdown from '../../../components/create/dropDown/dropDown'
 import MediumButton from '../../../components/buttonsGivy/mediumButtons/mediumButton'
@@ -115,28 +114,12 @@ function Match() {
     setSelectedMatch(null)
   }
 
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
-
     useEffect(() => {
       const handleResize = () => setIsMobile(window.innerWidth <= 768)
       window.addEventListener('resize', handleResize)
       return () => window.removeEventListener('resize', handleResize)
     }, [])
 
-    const showOnlyChat = matchId && isMobile
-
-  function handleSelectMatch(id: string) {
-    const isMobile = window.innerWidth <= 768
-    if (isMobile) {
-      navigate(`/match/${id}`)
-    }
-    setSelectedMatch(id)
-  }
-
-  function handleBackToList() {
-    navigate('/match')
-    setSelectedMatch(null)
-  }
 
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
 
