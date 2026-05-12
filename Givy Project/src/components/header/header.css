@@ -1,5 +1,6 @@
 .header {
     width: calc(100% - 250px);
+    width: 100%;
     height: 10vh;
     padding: 20px 40px;
     background-color: var(--color-purple-light);
@@ -22,43 +23,6 @@
     width: 20px;
     height: 20px;
     position: absolute;
-    left: 40px;
-    cursor: pointer;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .header {
-        width: 100%;
-        height: 8vh;
-        padding: 15px 20px;
-        border-radius: 0px;
-        margin-bottom: 10px;
-    }
-
-    .headerTitle {
-        font-size: 1.2rem;
-    }
-
-    .returnIcon {
-        width: 18px;
-        height: 18px;
-        left: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .header {
-        height: 7vh;
-        padding: 10px 15px;
-    }
-
-    .headerTitle {
-        font-size: 1rem;
-    }
-
-    .returnIcon {
-        width: 16px;
-        height: 16px;
-    }
+    left: 40px; 
+    cursor: pointer; 
 }
