@@ -50,7 +50,7 @@ function Login() {
           <ButtonGivy label="Log In" onClick={handleAuth} />
           <p className="login-footer">
             Don't have an account?{" "}
-            <span onClick={() => navigate("register")}>Sign up.</span>
+            <span onClick={() => navigate("/SignUp")}>Sign up.</span>
           </p>
         </div>
       </div>
