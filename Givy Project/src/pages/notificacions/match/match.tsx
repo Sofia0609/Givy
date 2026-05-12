@@ -4,37 +4,44 @@ import './match.css'
 import NavBar from '../../../components/navBar/navBar'
 import Header from '../../../components/header/header'
 import EntityCard from '../../../components/notifications/entityCard/entityCard'
-import matches from '../../../data/matches.json'
-import users from '../../../data/users.json'
-import tags from '../../../data/tags.json'
+import matchesData from '../../../data/matches.json'
+import usersData from '../../../data/users.json'
+import tagsData from '../../../data/tags.json'
 import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
-import VideoScreen from '../../../components/create/videoScreen/videoScreen'
 import { Navigate } from 'react-router-dom'
 import InputGivy from '../../../components/inputGivy/inputGivy'
 import Dropdown from '../../../components/create/dropDown/dropDown'
-import BigButton from '../../../components/buttonsGivy/bigButton/bigButton'
 import MediumButton from '../../../components/buttonsGivy/mediumButtons/mediumButton'
-
+import type { Match, User, Tag, MatchVideo } from '../../../types/index'
 
 function Match() {
 
-    const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
-    const userLogged = loggedUserData.id
+  const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
+  const userLogged = loggedUserData.id
 
-    if (!userLogged) {
-        return <Navigate to="/login" />
-    }
+  if (!userLogged) {
+    return <Navigate to="/login" />
+  }
 
   const [selectedMatch, setSelectedMatch] = useState<string | null>(null)
-  const [filteredMatches, setFilteredMatches] = useState<typeof matches>([])
+  const [filteredMatches, setFilteredMatches] = useState<Match[]>([])
   const [likeVideo, setLikeVideo] = useState('')
   const [rating, setRating] = useState('')
-
 
   const likeOptions = [
     { id: 'yes', name: 'Yes' },
     { id: 'no', name: 'No' }
   ]
+  
+  const currentMatch: Match | undefined = filteredMatches.find(m => m.id === selectedMatch)
+
+  function getMatchVideo(): MatchVideo | undefined {
+    const stored = localStorage.getItem('matchVideos')
+    const allVideos: MatchVideo[] = stored ? JSON.parse(stored) : []
+    return allVideos.find(v => v.matchId === selectedMatch && v.userId !== userLogged)
+  }
+
+  const otherUserVideo: MatchVideo | undefined = getMatchVideo()
 
   function handleSubmitRating() {
     if (!likeVideo || !rating) {
@@ -49,26 +56,17 @@ function Match() {
   useEffect(() => {
     function getMatchesbyUser(user: string) {
       const stored = localStorage.getItem('matches')
-      const allMatches = stored ? JSON.parse(stored) : matches
+      const allMatches: Match[] = stored ? JSON.parse(stored) : (matchesData as Match[])
       const userMatches = allMatches.filter((match) => match.user1Id === user || match.user2Id === user)
       setFilteredMatches(userMatches)
     } 
 
     getMatchesbyUser(userLogged);
-  }, []);
+  }, [userLogged]);
 
-  const currentMatch = filteredMatches.find(match => match.id === selectedMatch)
   const soyUser1 = currentMatch?.user1Id === userLogged
   const iSentVideo = soyUser1 ? currentMatch?.videoSentByUser1 : currentMatch?.videoSentByUser2
   const otherSentVideo = soyUser1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
-
-  function getMatchVideo() {
-    const stored = localStorage.getItem('matchVideos')
-    const allVideos = stored ? JSON.parse(stored) : []
-    return allVideos.find(v => v.matchId === selectedMatch && v.userId !== userLogged)
-  }
-
-  const otherUserVideo = getMatchVideo()
 
   function handleUploadVideo(file: File) {
     if (!selectedMatch) return
@@ -76,8 +74,8 @@ function Match() {
     const videoUrl = URL.createObjectURL(file)
 
     const storedVideos = localStorage.getItem('matchVideos')
-    const allVideos = storedVideos ? JSON.parse(storedVideos) : []
-    const newVideo = {
+    const allVideos: MatchVideo[] = storedVideos ? JSON.parse(storedVideos) : []
+    const newVideo: MatchVideo = {
       matchId: selectedMatch,
       userId: userLogged,
       videoUrl: videoUrl,
@@ -86,9 +84,9 @@ function Match() {
     localStorage.setItem('matchVideos', JSON.stringify([...allVideos, newVideo]))
 
     const storedMatches = localStorage.getItem('matches')
-    const allMatches = storedMatches ? JSON.parse(storedMatches) : matches
+    const allMatches: Match[] = storedMatches ? JSON.parse(storedMatches) : (matchesData as Match[])
 
-    const updatedMatches = allMatches.map(m => {
+    const updatedMatches: Match[] = allMatches.map(m => {
       if (m.id === selectedMatch) {
         return {
           ...m,
@@ -119,9 +117,9 @@ function Match() {
               ) : (
                 filteredMatches.map((match, key) => {
                   const otherUserId = userLogged === match.user1Id ? match.user2Id : match.user1Id
-                  const otherUser = users.find(u => u.id === otherUserId)
-                  const tagOffered = tags.find(tag => tag.id === match.tagOffered)
-                  const tagRequested = tags.find(tag => tag.id === match.tagRequested)
+                  const otherUser = (usersData as User[]).find(u => u.id === otherUserId)
+                  const tagOffered = (tagsData as Tag[]).find(tag => tag.id === match.tagOffered)
+                  const tagRequested = (tagsData as Tag[]).find(tag => tag.id === match.tagRequested)
                   const noStarted = !match.videoSentByUser1 && !match.videoSentByUser2
                   const otherHasSent = soyUser1 ? match.videoSentByUser2 : match.videoSentByUser1
 
@@ -181,41 +179,41 @@ function Match() {
 
               ) : (
 
-                    <div className='videoContainer'>
-                        <h2>{currentMatch ? users.find(u => u.id !== userLogged && (u.id === currentMatch.user1Id || u.id === currentMatch.user2Id))?.username : 'User'} just Dropped a Video!</h2>
-                        {otherUserVideo ? (
-                            <video
-                                src={otherUserVideo.videoUrl}
-                                controls
-                            />
-                        ) : (
-                            <p>Loading video...</p>
-                        )}
+                <div className='videoContainer'>
+                  <h2>{currentMatch ? (usersData as User[]).find(u => u.id !== userLogged && (u.id === currentMatch.user1Id || u.id === currentMatch.user2Id))?.username : 'User'} just Dropped a Video!</h2>
+                  {otherUserVideo ? (
+                    <video
+                      src={otherUserVideo.videoUrl}
+                      controls
+                    />
+                  ) : (
+                    <p>Loading video...</p>
+                  )}
 
-                    <div className='surveySection'>
-                        <p>Did you like the educative Video?</p>
-                        <Dropdown
-                            label=""
-                            options={likeOptions}
-                            value={likeVideo}
-                            onChange={setLikeVideo}
-                        />
+                  <div className='surveySection'>
+                    <p>Did you like the educative Video?</p>
+                    <Dropdown
+                      label=""
+                      options={likeOptions}
+                      value={likeVideo}
+                      onChange={setLikeVideo}
+                    />
 
-                        <p>Rate {currentMatch ? users.find(u => u.id !== userLogged && (u.id === currentMatch.user1Id || u.id === currentMatch.user2Id))?.username : 'User'} (1-10)</p>
-                        <InputGivy
-                            label=""
-                            type="number"
-                            value={rating}
-                            placeholder="Type here"
-                            onChange={(e) => {
-                                const value = e.target.value
-                                if (value === '' || (Number(value) >= 1 && Number(value) <= 10)) {
-                                    setRating(value)
-                                }
-                            }}
-                        />
-                        <MediumButton content="SEND" onClick={handleSubmitRating} />
-                    </div>
+                    <p>Rate {currentMatch ? (usersData as User[]).find(u => u.id !== userLogged && (u.id === currentMatch.user1Id || u.id === currentMatch.user2Id))?.username : 'User'} (1-10)</p>
+                    <InputGivy
+                      label=""
+                      type="number"
+                      value={rating}
+                      placeholder="Type here"
+                      onChange={(e) => {
+                        const value = e.target.value
+                        if (value === '' || (Number(value) >= 1 && Number(value) <= 10)) {
+                          setRating(value)
+                        }
+                      }}
+                    />
+                    <MediumButton content="SEND" onClick={handleSubmitRating} />
+                  </div>
                 </div>
               )}
             </div>
