@@ -1,23 +1,23 @@
 import './VideoCard.css'
 
 interface VideoCardProps {
-    thumbnail?: string
-    views?: number
+    videourl ?: string
+    // views?: number
 }
 
-function VideoCard({ thumbnail, views }: VideoCardProps) {
+function VideoCard({ videourl }: VideoCardProps) {
     return (
         <div className="videoCard">
             <div className="videoCardThumbnail">
-                {thumbnail
-                    ? <img src={thumbnail} alt="video" />
+                {videourl 
+                    ? <video src={videourl } />
                     : <div className="videoCardPlaceholder" />
                 }
                 <div className="videoCardOverlay">
                     <span className="videoCardPlay">▶</span>
-                    {views !== undefined && (
+                    {/* {views !== undefined && (
                         <span className="videoCardViews">{views.toLocaleString()} views</span>
-                    )}
+                    )} */}
                 </div>
             </div>
         </div>

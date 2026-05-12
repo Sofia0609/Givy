@@ -1,0 +1,118 @@
+.login-wrapper {
+  min-height: 100vh;
+  background-color: var(--color-bg-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: poppins, sans-serif;
+  padding: 24px;
+}
+
+.login-card {
+  background-color: var(--color-bg-main);
+  border-radius: 20px;
+  padding: 48px 52px;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.login-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-brand {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent-highlight);
+}
+
+.login-tagline {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-low-contrast);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-field label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.login-field input {
+  background-color: var(--action-focus);
+  border: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 14px;
+  color: var(--text-main);
+  outline: none;
+  transition: background-color 0.2s;
+}
+
+.login-field input:focus {
+  background-color: var(--action-hover);
+}
+
+.login-field input::placeholder {
+  color: var(--text-low-contrast);
+}
+
+.login-field input::placeholder {
+  color: var(--text-low-contrast);
+}
+
+.login-btn {
+  background-color: var(--action-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background-color 0.2s;
+}
+
+.login-btn:hover {
+  background-color: var(--action-hover);
+  color: var(--text-main);
+}
+
+.login-footer {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-low-contrast);
+  margin: 0;
+}
+
+.login-footer span {
+  color: var(--action-primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+
+
+

@@ -1,7 +1,6 @@
 .matchLayout {
     display: flex;
     min-height: 100vh;
-    justify-content: center;
 }
 
 .matchContent {
@@ -9,45 +8,93 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    height: 100vh;
 }
 
 .matchSectionsContainer {
     display: flex;
     flex-direction: row;
-    height: 100%;
+    flex: 1;
+    overflow: hidden;
 }
 
 .match {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    padding: 40px;
-    width: 40%;
+    padding: 30px;
+    width: 45%; /* ← aumentar de 30% a 45% */
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-right: 1px solid #e0e0e0;
+    max-height: 100%;
 }
 
 .divider {
-    width: 2px;
-    background-color: #000000;
-    height: 90%;
-    align-self: center;
+    width: 1px;
+    background-color: #d0d0d0;
 }
 
 .chatSection {
     flex: 1;
-    padding: 40px;
+    padding: 40px 30px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     flex-direction: column;
-}
-
-.chatSection h1{
-    font-weight: 600;
+    gap: 20px;
+    overflow-y: auto;
 }
 
 .matchTitle {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 10px;
+        font-weight: 700;
+
+    flex-shrink: 0;
 }
 
+.noMatchSelected {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #999;
+    margin: 0;
+    text-align: center;
+    width: 100%;
+    margin-top: 80px;
+}
+
+.videoContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.videoContainer h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.videoContainer video {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+}
+
+.surveySection {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+.surveySection p {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+}

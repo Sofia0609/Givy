@@ -6,41 +6,49 @@ import EntityCard from '../../../components/notifications/entityCard/entityCard'
 import swapRequests from '../../../data/swapRequests.json'
 import users from '../../../data/users.json'
 import tags from '../../../data/tags.json'
+import { Navigate } from 'react-router-dom'
 
 
 function PossibleSwap() {
-  const userLogged = "u3"
 
-  const [filteredSwap, setSwapRequest] = useState<typeof swapRequests>([])
-  const [filteredSwapStatus, setSwapStatusUser] = useState<typeof swapRequests>([])
-  const [filteredUser,setUser] = useState<any>({})
 
-  useEffect(() => {
-  
-  function getUserbyID(id:string){
-    const user = users.find((user)=> user.id === id)
-    setUser(user)
-    console.log(user)
-  }
+    const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
+    const userLogged = loggedUserData.id
 
-  function getSwapbyUser(user:string){
+    if (!userLogged) {
+        return <Navigate to="/login" />
+    }
 
-    const stored = localStorage.getItem('swapRequests')
-    const allSwaps = stored ? JSON.parse(stored) : swapRequests
-    const swapUser = allSwaps.filter((request)=> request.toUserId === user && request.status === "pending")
-    setSwapRequest(swapUser)
-  } 
+    const [filteredSwap, setSwapRequest] = useState<typeof swapRequests>([])
+    const [filteredSwapStatus, setSwapStatusUser] = useState<typeof swapRequests>([])
+    const [filteredUser,setUser] = useState<any>({})
 
-  function getStatusStatusbyUser(user:string){
-    const stored = localStorage.getItem('swapRequests')
-    const allSwaps = stored ? JSON.parse(stored) : swapRequests
-    const swapStatusUser = allSwaps.filter((swapStatus)=> swapStatus.fromUserId === user && swapStatus.status !== "pending")
-    setSwapStatusUser(swapStatusUser)
-  }
+    useEffect(() => {
+    
+        function getUserbyID(id:string){
+            const user = users.find((user)=> user.id === id)
+            setUser(user)
+            console.log(user)
+        }
 
-  getUserbyID(userLogged);
-  getSwapbyUser(userLogged);
-  getStatusStatusbyUser(userLogged);
+        function getSwapbyUser(user:string){
+
+            const stored = localStorage.getItem('swapRequests')
+            const allSwaps = stored ? JSON.parse(stored) : swapRequests
+            const swapUser = allSwaps.filter((request)=> request.toUserId === user && request.status === "pending")
+            setSwapRequest(swapUser)
+        } 
+
+        function getStatusStatusbyUser(user:string){
+            const stored = localStorage.getItem('swapRequests')
+            const allSwaps = stored ? JSON.parse(stored) : swapRequests
+            const swapStatusUser = allSwaps.filter((swapStatus)=> swapStatus.fromUserId === user && swapStatus.status !== "pending")
+            setSwapStatusUser(swapStatusUser)
+        }
+
+  getUserbyID(userLogged?.id || "u3");
+  getSwapbyUser(userLogged?.id || "u3");
+  getStatusStatusbyUser(userLogged?.id || "u3");
 }, []);
 
 

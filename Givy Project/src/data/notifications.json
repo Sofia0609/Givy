@@ -1,74 +1,22 @@
 [
-  {
-    "id": "n1",
-    "targetUserId": "u1",
-    "type": "like",
-    "videoId": "v1",
-    "commentId": null,
-    "read": false,
-    "date": "2026-04-02T10:00:00Z"
-  },
-  {
-    "id": "n2",
-    "targetUserId": "u1",
-    "type": "like",
-    "videoId": "v1",
-    "commentId": null,
-    "read": true,
-    "date": "2026-04-03T08:00:00Z"
-  },
-  {
-    "id": "n3",
-    "targetUserId": "u1",
-    "type": "comment",
-    "videoId": "v1",
-    "commentId": "c1",
-    "read": true,
-    "date": "2026-04-02T08:00:00Z"
-  },
-  {
-    "id": "n4",
-    "targetUserId": "u1",
-    "type": "comment",
-    "videoId": "v1",
-    "commentId": "c2",
-    "read": false,
-    "date": "2026-04-03T12:00:00Z"
-  },
-  {
-    "id": "n5",
-    "targetUserId": "u2",
-    "type": "reply",
-    "videoId": "v1",
-    "commentId": "r1",
-    "read": false,
-    "date": "2026-04-02T09:00:00Z"
-  },
-  {
-    "id": "n6",
-    "targetUserId": "u3",
-    "type": "like",
-    "videoId": "v4",
-    "commentId": null,
-    "read": false,
-    "date": "2026-04-09T07:00:00Z"
-  },
-  {
-    "id": "n7",
-    "targetUserId": "u3",
-    "type": "comment",
-    "videoId": "v4",
-    "commentId": "c3",
-    "read": true,
-    "date": "2026-04-09T08:00:00Z"
-  },
-  {
-    "id": "n8",
-    "targetUserId": "u5",
-    "type": "like",
-    "videoId": "v6",
-    "commentId": null,
-    "read": false,
-    "date": "2026-04-13T06:00:00Z"
-  }
+  { "id": "n1", "targetUserId": "u1", "type": "like", "fromUserId": "u2", "videoId": "v1", "commentId": null, "read": false, "date": "2026-04-02T10:00:00Z" },
+  { "id": "n2", "targetUserId": "u1", "type": "like", "fromUserId": "u4", "videoId": "v1", "commentId": null, "read": true, "date": "2026-04-03T08:00:00Z" },
+  { "id": "n3", "targetUserId": "u1", "type": "comment", "fromUserId": "u2", "videoId": "v1", "commentId": "c1", "read": true, "date": "2026-04-02T08:00:00Z" },
+  { "id": "n4", "targetUserId": "u1", "type": "comment", "fromUserId": "u4", "videoId": "v1", "commentId": "c2", "read": false, "date": "2026-04-03T12:00:00Z" },
+  { "id": "n5", "targetUserId": "u2", "type": "reply", "fromUserId": "u1", "videoId": "v1", "commentId": "r1", "read": false, "date": "2026-04-02T09:00:00Z" },
+  { "id": "n6", "targetUserId": "u3", "type": "like", "fromUserId": "u1", "videoId": "v6", "commentId": null, "read": false, "date": "2026-04-09T07:00:00Z" },
+  { "id": "n7", "targetUserId": "u3", "type": "comment", "fromUserId": "u1", "videoId": "v6", "commentId": "c5", "read": true, "date": "2026-04-09T08:00:00Z" },
+  { "id": "n8", "targetUserId": "u5", "type": "like", "fromUserId": "u2", "videoId": "v10", "commentId": null, "read": false, "date": "2026-04-13T06:00:00Z" },
+  { "id": "n9", "targetUserId": "u1", "type": "like", "fromUserId": "u5", "videoId": "v2", "commentId": null, "read": false, "date": "2026-04-07T09:00:00Z" },
+  { "id": "n10", "targetUserId": "u5", "type": "comment", "fromUserId": "u1", "videoId": "v10", "commentId": "c7", "read": true, "date": "2026-04-13T07:00:00Z" },
+  { "id": "n11", "targetUserId": "u6", "type": "like", "fromUserId": "u1", "videoId": "v12", "commentId": null, "read": false, "date": "2026-04-05T10:00:00Z" },
+  { "id": "n12", "targetUserId": "u6", "type": "comment", "fromUserId": "u1", "videoId": "v12", "commentId": "c8", "read": true, "date": "2026-04-04T12:00:00Z" },
+  { "id": "n13", "targetUserId": "u1", "type": "reply", "fromUserId": "u6", "videoId": "v12", "commentId": "r5", "read": false, "date": "2026-04-04T13:00:00Z" },
+  { "id": "n14", "targetUserId": "u7", "type": "like", "fromUserId": "u3", "videoId": "v15", "commentId": null, "read": false, "date": "2026-04-06T16:00:00Z" },
+  { "id": "n15", "targetUserId": "u8", "type": "like", "fromUserId": "u1", "videoId": "v18", "commentId": null, "read": false, "date": "2026-04-09T14:00:00Z" },
+  { "id": "n16", "targetUserId": "u8", "type": "comment", "fromUserId": "u3", "videoId": "v18", "commentId": "c11", "read": true, "date": "2026-04-08T14:00:00Z" },
+  { "id": "n17", "targetUserId": "u10", "type": "like", "fromUserId": "u16", "videoId": "v20", "commentId": null, "read": false, "date": "2026-04-08T11:00:00Z" },
+  { "id": "n18", "targetUserId": "u10", "type": "comment", "fromUserId": "u16", "videoId": "v20", "commentId": "c12", "read": true, "date": "2026-04-07T11:00:00Z" },
+  { "id": "n19", "targetUserId": "u11", "type": "like", "fromUserId": "u6", "videoId": "v23", "commentId": null, "read": false, "date": "2026-04-11T09:00:00Z" },
+  { "id": "n20", "targetUserId": "u13", "type": "comment", "fromUserId": "u9", "videoId": "v24", "commentId": "c14", "read": true, "date": "2026-04-11T11:00:00Z" }
 ]
