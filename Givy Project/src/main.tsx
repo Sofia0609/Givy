@@ -14,6 +14,7 @@ import SignUp from './pages/signup/signUp/SignUp'
 import LearnTags from './pages/signup/LearnTags/LearnTags'
 import TeachTags from './pages/signup/TeachTags/TeachTags'
 import Login from './pages/login/login'
+import SearchResults from './pages/SearchResults/SearchResults'
 
 
 let routes = createBrowserRouter([
@@ -75,6 +76,10 @@ let routes = createBrowserRouter([
   {
     path: '/Login',
     element: <Login />
+  },
+  {
+    path: '/Search/Results',
+    element: <SearchResults />
   }
 ])
 

@@ -13,16 +13,28 @@ function Login() {
   function handleAuth() {
     const userFound = users.find((user) => user.email === entryEmail);
     if (!userFound) {
-      alert("No existe una cuenta con ese email");
-      return;
+        const stored = localStorage.getItem('loggeduser')
+        if (stored) {
+            const localUser = JSON.parse(stored)
+            if (localUser.email === entryEmail) {
+                userFound = localUser
+            }
+        }
     }
+
+    if (!userFound) {
+        alert('No existe una cuenta con ese email')
+        return
+    }
+
     if (userFound.password === entryPassword) {
-      alert("Login exitoso");
-      localStorage.setItem("loggeduser", JSON.stringify(userFound));
-      navigate("/Feed"); //cambia de pagina a feed
+        alert('Login exitoso')
+        localStorage.setItem('loggeduser', JSON.stringify(userFound))
+        onNavigate('feed')
     } else {
-      alert("Contraseña incorrecta");
+        alert('Contraseña incorrecta')
     }
+  
   }
 
   return (
