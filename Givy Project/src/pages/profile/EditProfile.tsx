@@ -11,8 +11,6 @@ function EditProfile() {
   const [name, setName] = useState(user.username || '')
   const [username, setUsername] = useState(user.at || '')
   const [description, setDescription] = useState(user.bio || '')
-  const [teaches, setTeaches] = useState(user.wantsToTeach?.[0] || '')
-  const [learns, setLearns] = useState(user.wantsToLearn?.[0] || '')
 
   function handleConfirm() {
     const updated = {
@@ -20,8 +18,8 @@ function EditProfile() {
       username: name,
       at: username,
       bio: description,
-      wantsToTeach: teaches ? [teaches] : user.wantsToTeach,
-      wantsToLearn: learns ? [learns] : user.wantsToLearn,
+     wantsToTeach: user.wantsToTeach,
+     wantsToLearn: user.wantsToLearn,
     }
     localStorage.setItem('loggeduser', JSON.stringify(updated))
     navigate('/Profile')
@@ -73,25 +71,6 @@ function EditProfile() {
             />
           </div>
 
-          <div className="editField">
-            <label>Skill I Can Teach </label>
-            <select value={teaches} onChange={(e) => setTeaches(e.target.value)}>
-              <option value="">Select a skill</option>
-              {tags.map(tag => (
-                <option key={tag.id} value={tag.id}>{tag.name}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="editField">
-            <label>Skill I Can Learn </label>
-            <select value={learns} onChange={(e) => setLearns(e.target.value)}>
-              <option value="">Select a skill</option>
-              {tags.map(tag => (
-                <option key={tag.id} value={tag.id}>{tag.name}</option>
-              ))}
-            </select>
-          </div>
         </div>
 
         <button className="editConfirmBtn" onClick={handleConfirm}>

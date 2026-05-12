@@ -8,7 +8,6 @@ import matches from '../../../data/matches.json'
 import users from '../../../data/users.json'
 import tags from '../../../data/tags.json'
 import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
-import VideoScreen from '../../../components/create/videoScreen/videoScreen'
 import { Navigate } from 'react-router-dom'
 import InputGivy from '../../../components/inputGivy/inputGivy'
 import Dropdown from '../../../components/create/dropDown/dropDown'
@@ -19,7 +18,7 @@ function Match() {
 
     const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
     const userLogged = loggedUserData.id
-
+ 
     if (!userLogged) {
         return <Navigate to="/login" />
     }
@@ -28,7 +27,6 @@ function Match() {
   const [filteredMatches, setFilteredMatches] = useState<typeof matches>([])
   const [likeVideo, setLikeVideo] = useState('')
   const [rating, setRating] = useState('')
-
 
   const likeOptions = [
     { id: 'yes', name: 'Yes' },
@@ -43,13 +41,13 @@ function Match() {
     alert('Rating submitted!')
     setLikeVideo('')
     setRating('')
-  }
+  }  // 👈 llave que faltaba
 
   useEffect(() => {
     function getMatchesbyUser(user: string) {
       const stored = localStorage.getItem('matches')
       const allMatches = stored ? JSON.parse(stored) : matches
-      const userMatches = allMatches.filter((match) => match.user1Id === user || match.user2Id === user)
+      const userMatches = allMatches.filter((match: typeof matches[0]) => match.user1Id === user || match.user2Id === user)
       setFilteredMatches(userMatches)
     } 
 
@@ -64,7 +62,7 @@ function Match() {
   function getMatchVideo() {
     const stored = localStorage.getItem('matchVideos')
     const allVideos = stored ? JSON.parse(stored) : []
-    return allVideos.find(v => v.matchId === selectedMatch && v.userId !== userLogged)
+    return allVideos.find((v: any) => v.matchId === selectedMatch && v.userId !== userLogged)
   }
 
   const otherUserVideo = getMatchVideo()
@@ -87,7 +85,7 @@ function Match() {
     const storedMatches = localStorage.getItem('matches')
     const allMatches = storedMatches ? JSON.parse(storedMatches) : matches
 
-    const updatedMatches = allMatches.map(m => {
+    const updatedMatches = allMatches.map((m: typeof matches[0]) => {
       if (m.id === selectedMatch) {
         return {
           ...m,
@@ -98,7 +96,7 @@ function Match() {
       return m
     })
     localStorage.setItem('matches', JSON.stringify(updatedMatches))
-    setFilteredMatches(updatedMatches.filter(m => m.user1Id === userLogged || m.user2Id === userLogged))
+    setFilteredMatches(updatedMatches.filter((m: typeof matches[0]) => m.user1Id === userLogged || m.user2Id === userLogged))
   }
 
   return (

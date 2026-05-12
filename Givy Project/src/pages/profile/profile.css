@@ -55,3 +55,28 @@
 .profileFollowBtn:hover {
     opacity: 0.85;
 }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .profileMain {
+    flex: 1;
+    min-width: 0;
+    margin-left: 250px;    /* 👈 esto */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    gap: 20px;
+    overflow-y: auto;
+}
+    .profileStats {
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .profileTags {
+        flex-direction: column;
+        max-width: 100%;
+    }
+}

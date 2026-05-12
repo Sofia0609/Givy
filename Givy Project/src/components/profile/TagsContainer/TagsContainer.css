@@ -1,40 +1,215 @@
 .tagsContainer {
-    flex: 1;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 16px;
+    background: white;
+    border-radius: 16px;
+    padding: 16px 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    flex: 1;
+}
+
+.tagsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .tagsTitle {
-    font-size: 12px;
-    font-weight: 600;
-    color: #888;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: var(--color-text-primary);
+    font-family: poppins, sans-serif;
     margin: 0;
-    letter-spacing: 0.05em;
+}
+
+/* Botón + al lado del título */
+.tagsAddBtn {
+    background: #ede9ff;
+    border: 2px solid #9873FF;
+    border-radius: 20px;
+    padding: 3px 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #9873FF;
+    cursor: pointer;
+    line-height: 1.4;
+    transition: background 0.2s, color 0.2s;
+}
+
+.tagsAddBtn:hover {
+    background: #9873FF;
+    color: white;
 }
 
 .tagsList {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     gap: 8px;
 }
 
 .tag {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 13px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-family: poppins, sans-serif;
     font-weight: 500;
 }
 
 .tag--teaching {
     background-color: #fde8d8;
-    color: #c0622a;
+    color: #c46a3a;
+    border: 1.5px solid #e8956b;
 }
 
 .tag--learning {
-    background-color: #eefad4;
-    color: #5a7a1e;
+    background-color: #f0fce3;
+    color: #576f3c;
+    border: 1.5px solid #c0d889;
+}
+/* ── Popup ── */
+.tagsPopupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.tagsPopup {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 320px;
+}
+
+.tagsPopupTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: poppins, sans-serif;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.tagsPopupInput {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    font-family: poppins, sans-serif;
+    background-color: #f0eef8;
+    outline: none;
+}
+
+.tagsPopupButtons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.tagsPopupCancel {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 2px solid #ccc;
+    background: transparent;
+    cursor: pointer;
+    font-family: poppins, sans-serif;
+    font-weight: 600;
+}
+
+.tagsPopupConfirm {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: none;
+    background: #9873FF;
+    color: white;
+    cursor: pointer;
+    font-family: poppins, sans-serif;
+    font-weight: 600;
+}
+
+.tagsPopupConfirm:hover {
+    opacity: 0.85;
+}
+
+.tagsPopupSubtitle {
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: poppins, sans-serif;
+    color: #555;
+    margin: 0;
+}
+
+.tagsPopupDelete {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: none;
+    background: #ff6b6b;
+    color: white;
+    cursor: pointer;
+    font-family: poppins, sans-serif;
+    font-weight: 600;
+}
+
+.tagsPopupDelete:hover {
+    opacity: 0.85;
+}
+
+.tagsDropdownWrapper {
+    position: relative;
+}
+
+.tagsDropdownTrigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background-color: #f0eef8;
+    cursor: pointer;
+    font-family: poppins, sans-serif;
+    font-size: 0.9rem;
+}
+
+.tagsDropdownArrow {
+    font-size: 0.7rem;
+    color: #9873FF;
+}
+
+.tagsDropdownMenu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    z-index: 200;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.tagsDropdownOption {
+    padding: 10px 16px;
+    font-family: poppins, sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.tagsDropdownOption:hover {
+    background-color: #f0eef8;
+}
+
+.tagsDropdownOption.active {
+    color: #9873FF;
+    font-weight: 600;
 }
