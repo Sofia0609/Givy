@@ -8,7 +8,7 @@ import UserInfo from '../../components/profile/UserInfo/UserInfo'
 import TagsContainer from '../../components/profile/TagsContainer/TagsContainer'
 import VideosContainer from '../../components/profile/VideosContainer/VideosContainer'
 import './ProfileStyle.css'
-import videos from '../../data/videos.json'
+import videosData from '../../data/videos.json'
 import tags from '../../data/tags.json'
 import reputations from '../../data/reputations.json'
 
@@ -37,7 +37,9 @@ function Profile() {
   const teachingTags = getTagNames(user.wantsToTeach || [])
   const learningTags = getTagNames(user.wantsToLearn || [])
 
-  const profileVideos = videos.filter((v) => v.userId === user.id)
+  const stored = localStorage.getItem('videos')
+  const allVideos = stored ? JSON.parse(stored) : videosData
+  const profileVideos = allVideos.filter((v: any) => v.userId === user.id)
 
   function handleAddTeaching(tag: string) {
     const updated = {
@@ -75,10 +77,20 @@ function Profile() {
     localStorage.setItem('loggeduser', JSON.stringify(updated))
   }
 
+  function handleLogout() {
+    localStorage.removeItem('loggeduser')
+    navigate('/Login')
+  }
+
   return (
     <div className="profileLayout">
       <NavBar />
       <main className="profileMain">
+        {/* BOTÓN LOGOUT ARRIBA A LA DERECHA */}
+        <button className="logoutButton" onClick={handleLogout}>
+          Logout
+        </button>
+
         <ProfilePicture src="https://placehold.co/150" size="large" />
         <ProfileName name={user.username} username={user.at} />
         <div className="profileStats">
