@@ -4,7 +4,6 @@ import './VideoCard.css'
 interface VideoCardProps {
     videourl ?: string
     videoId?: string
-    // views?: number
 }
 
 function VideoCard({ videourl, videoId }: VideoCardProps) {
@@ -25,9 +24,6 @@ function VideoCard({ videourl, videoId }: VideoCardProps) {
                 }
                 <div className="videoCardOverlay">
                     <span className="videoCardPlay">▶</span>
-                    {/* {views !== undefined && (
-                        <span className="videoCardViews">{views.toLocaleString()} views</span>
-                    )} */}
                 </div>
             </div>
         </div>

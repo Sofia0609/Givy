@@ -9,16 +9,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px;
+    padding: 40px 20px;
     gap: 20px;
     overflow-y: auto;
-    width: calc(100% - 250px);  /* ← Solo esto */
 }
 
 .profileStats {
     display: flex;
     flex-direction: row;
     gap: 32px;
+    justify-content: center;
 }
 
 .profileBio {
@@ -26,6 +26,7 @@
     color: var(--color-text-muted);
     font-family: poppins, sans-serif;
     text-align: center;
+    max-width: 600px;
 }
 
 .profileTags {
@@ -33,7 +34,8 @@
     flex-direction: row;
     gap: 16px;
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
+    justify-content: center;
 }
 
 .profileFollowBtn {
@@ -77,12 +79,11 @@
 }
 
 /* RESPONSIVE */
-
 @media (max-width: 768px) {
     .profileMain {
-        margin-left: 0;  /* ← Resetear en mobile */
-        margin-bottom: 80px;  /* ← Espacio para navbar abajo */
-        padding: 20px;
+        margin-left: 0;
+        margin-bottom: 80px;
+        padding: 20px 15px;
     }
 
     .profileStats {
@@ -95,10 +96,27 @@
         flex-direction: column;
         max-width: 100%;
     }
-        .logoutButton {
+
+    .logoutButton {
         top: 15px;
         right: 15px;
         padding: 6px 12px;
         font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profileMain {
+        padding: 15px 10px;
+        gap: 15px;
+    }
+
+    .profileStats {
+        gap: 12px;
+    }
+
+    .logoutButton {
+        padding: 5px 10px;
+        font-size: 0.8rem;
     }
 }
