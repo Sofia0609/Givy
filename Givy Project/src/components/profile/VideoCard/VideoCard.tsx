@@ -16,14 +16,14 @@ function VideoCard({ videourl, videoId }: VideoCardProps) {
     }
 
     return (
-        <div className="videoCard" onClick={handleClick} style={{ cursor: videoId ? 'pointer' : 'default' }}>
-            <div className="videoCardThumbnail">
+        <div className="profileVideoCard" onClick={handleClick} style={{ cursor: videoId ? 'pointer' : 'default' }}>
+            <div className="profileVideoCardThumbnail">
                 {videourl 
                     ? <video src={videourl } />
-                    : <div className="videoCardPlaceholder" />
+                    : <div className="profileVideoCardPlaceholder" />
                 }
-                <div className="videoCardOverlay">
-                    <span className="videoCardPlay">▶</span>
+                <div className="profileVideoCardOverlay">
+                    <span className="profileVideoCardPlay">▶</span>
                 </div>
             </div>
         </div>

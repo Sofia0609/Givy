@@ -1,36 +1,31 @@
-.videosContainer {
+.profileVideosContainer {
     width: 100%;
-    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.videosHeader {
+.profileVideosHeader {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 12px;
     justify-content: center;
+    width: 100%;
 }
 
-.videosTitle {
+.profileVideosTitle {
     font-size: 0.85rem;
     font-weight: 600;
     color: #555;
     letter-spacing: 0.05em;
 }
 
-.videosGrid {
+.profileVideosGrid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
     gap: 12px;
-}
-
-.videoCard {
-    display: flex;
-    flex-direction: column;
-    border-radius: 12px;
-    overflow: hidden;
-    background-color: #fff;
-    cursor: pointer;
-    transition: transform 0.2s;
-    height: 100%; 
+    justify-content: center;
+    width: min(100%, 980px);
+    margin: 0 auto;
 }
