@@ -2,7 +2,7 @@ import { useState } from "react";
 import users from "../../data/users.json";
 import "./login.css";
 import InputGivy from "../../components/inputGivy/inputGivy";
-import ButtonGivy from "../../components/buttonGivy/ProfileButton/buttonGivy";
+import ButtonGivy from "../../components/buttonsGivy/buttonGivy/buttonGivy";
 import { useNavigate } from 'react-router'
 
 function Login() {
@@ -11,9 +11,7 @@ function Login() {
   const navigate = useNavigate();
 
   function handleAuth() {
-
     let userFound = users.find((user) => user.email === entryEmail);
-    
 
     if (!userFound) {
       const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
@@ -26,9 +24,7 @@ function Login() {
     }
 
     if (userFound.password === entryPassword) {
-
       localStorage.setItem('loggeduser', JSON.stringify(userFound))
-
       setTimeout(() => {
         navigate('/Feed')
       }, 100)
