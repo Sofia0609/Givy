@@ -1,33 +1,34 @@
-import Tag from '../tag/tag';
+import SmallTag from '../smallTag/smallTag';
 import './entityCard.css'
 
 interface EntityCard{
-    photo: string,
-    name: string
-    description?: string
+    photo: string | undefined,
+    name: string | undefined,
+    description?: string,
     content?: string
     content2? : string
     desicionButtons?: boolean
     button?: string
     id?:string
+    onClick?: () => void
     onAccept?: () => void  
     onReject?: () => void
 }
 
-function EntityCard({name,photo, description, content, content2, desicionButtons, button,id, onAccept, onReject}:EntityCard){
+function EntityCard({name,photo, description, content, content2, desicionButtons, button,id, onClick, onAccept, onReject}:EntityCard){
 
     return(
         <>
-            <div className='entityCardContainer'>
+            <div className='entityCardContainer' onClick={onClick}>
                 <img className='photo' src={photo} alt="" />
                 <div className='entityCardContent'>
                     <div className='entityCardLeft'>
                         <h3 className='nameEntityCard'>  {name} </h3>
                         {description && <p className='description'>{description}</p>}
-                        <div className='tags'>
-                            {content && <Tag content={content} gradient="var(--color-purple-light-buttons)" ></Tag>}
+                        <div className='SmallTags'>
+                            {content && <SmallTag content={content} gradient="var(--color-purple-light-buttons)" ></SmallTag>}
                             {content && content2 && <img src="./src/assets/tag_swap_icon.svg" alt="" />}
-                            {content2 &&<Tag content={content2} gradient="var(--color-bg-main)" ></Tag>}
+                            {content2 &&<SmallTag content={content2} gradient="var(--color-bg-main)" ></SmallTag>}
                         </div>
                     </div>
                     {desicionButtons &&(

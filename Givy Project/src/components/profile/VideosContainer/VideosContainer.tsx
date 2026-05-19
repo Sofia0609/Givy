@@ -2,37 +2,43 @@ import VideoCard from '../VideoCard/VideoCard'
 import './VideosContainer.css'
 
 interface Video {
-    id: number
-    views: number
-    thumbnail?: string
+    
+  
+    id: string,
+    userId: string,
+    matchId: string | null,
+    url: string,
+    thumbnail: string,
+    title: string,
+    description: string,
+    tags: string[],
+    likes: number,
+    uploadDate: string,
+    teaches: string[],
+    wantsToLearnInReturn: string[]
 }
 
 interface VideosContainerProps {
     videos?: Video[]
 }
 
-const placeholderVideos: Video[] = [
-    { id: 1, views: 1240 },
-    { id: 2, views: 856 },
-    { id: 3, views: 3421 },
-    { id: 4, views: 512 },
-]
-
-function VideosContainer({ videos = placeholderVideos }: VideosContainerProps) {
+function VideosContainer({ videos  }: VideosContainerProps) {
     return (
-        <div className="videosContainer">
-            <div className="videosHeader">
-                <span className="videosIcon">⊞</span>
-                <span className="videosTitle">VIDEOS</span>
+        <div className="profileVideosContainer">
+            <div className="profileVideosHeader">
+                <span className="profileVideosIcon">⊞</span>
+                <span className="profileVideosTitle">VIDEOS</span>
             </div>
-            <div className="videosGrid">
-                {videos.map((video) => (
+            <div className="profileVideosGrid">
+                {videos?.map((video) => (
                     <VideoCard
                         key={video.id}
-                        views={video.views}
-                        thumbnail={video.thumbnail}
+                        videourl={video.url}
+                        videoId={video.id}
                     />
-                ))}
+                ))
+                
+                }
             </div>
         </div>
     )

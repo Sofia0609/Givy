@@ -1,13 +1,14 @@
 import './RecommendedItem.css'
 
-interface RecommendedItem {
+interface RecommendedItemProps {
     title: string
+    videoId: string
     onClick: () => void
 }
 
-function RecommendedItem({ title, onClick }: RecommendedItem) {
+function RecommendedItem({ title, onClick }: RecommendedItemProps) {
     return (
-        <div className="recommendedItem" onClick={onClick}>
+        <div className="recommendedItem" onClick={onClick} style={{ cursor: 'pointer' }}>
             <span className="dot">●</span>
             <span>{title}</span>
         </div>

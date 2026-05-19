@@ -1,0 +1,43 @@
+:root {
+    /* --- Color Palette --- */
+    --color-purple-active: #9873ff;      /* */
+    --color-purple-light: #E9E7F4;       /* */
+    --color-purple-light-buttons: #CAB9F9; /* */
+    --color-purple-sections-focus: #D6D3E3;
+    --color-brand-coral: #ff7a59;        /* */
+    --color-brand-teal: #1fbf8f;         /* */
+    --color-brand-lime: #d1d84e;         /* */
+    
+    /* --- Neutral --- */
+    --color-text-primary: #292D32;       /* */
+    --color-text-muted: #73848C;         
+    --color-bg-main: #F6F6FE;           
+
+    
+    /* Background and Layout */
+    --bg-app: var(--color-bg-main);
+    --bg-sidebar: var(--color-purple-light);
+    
+    /* States */
+    --action-primary: var(--color-purple-active);
+    --action-hover: var(--color-purple-light-buttons);
+    --action-focus: var(--color-purple-sections-focus);
+    
+    /* Navigation */
+    --nav-item-active-bg: var(--color-purple-light-buttons);
+    --nav-item-text: var(--color-text-primary);              
+    
+    /* Text */
+    --text-main: var(--color-text-primary);
+    --text-low-contrast: var(--color-text-muted);
+    
+    /* Acents and Categories */
+    --accent-coral: var(--color-brand-coral);
+    --accent-success: var(--color-brand-teal);
+    --accent-highlight: var(--color-brand-lime);
+}
+
+:root{
+    background-color: var(--color-bg-main);
+    color: var(--color-text-primary);
+}

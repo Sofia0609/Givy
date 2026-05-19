@@ -11,7 +11,7 @@ function ProfileName({ name, username }: ProfileName) {
             <div className="profileNameRow">
                 <span className="profileNameText">{name}</span>
             </div>
-            <span className="profileNameUsername">@{username}</span>
+            <span className="profileNameUsername">{username}</span>
         </div>
     )
 }
