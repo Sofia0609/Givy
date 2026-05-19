@@ -37,3 +37,44 @@
     width: 37%;
     gap: 10px;
 }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .createContent {
+        margin-left: 0;
+        margin-bottom: 80px;
+    }
+
+    .uploadVideoContainer {
+        margin-top: 50px;
+        gap: 30px;
+        padding: 0 20px;
+    }
+
+    .publishVideoContainer {
+        margin-top: 20px;
+        gap: 20px;
+        padding: 0 20px;
+    }
+
+    .videoInformation {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .uploadVideoContainer {
+        margin-top: 30px;
+        gap: 20px;
+        padding: 0 15px;
+    }
+
+    .publishVideoContainer {
+        gap: 15px;
+        padding: 0 15px;
+    }
+
+    .videoInformation {
+        width: 95%;
+    }
+}

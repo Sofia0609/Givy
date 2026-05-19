@@ -2,7 +2,7 @@ import { useState } from "react";
 import users from "../../data/users.json";
 import "./login.css";
 import InputGivy from "../../components/inputGivy/inputGivy";
-import ButtonGivy from "../../components/buttonGivy/ProfileButton/buttonGivy";
+import ButtonGivy from "../../components/buttonsGivy/buttonGivy/buttonGivy";
 import { useNavigate } from 'react-router'
 
 function Login() {
@@ -11,17 +11,25 @@ function Login() {
   const navigate = useNavigate();
 
   function handleAuth() {
-    const userFound = users.find((user) => user.email === entryEmail);
+    let userFound = users.find((user) => user.email === entryEmail);
+
     if (!userFound) {
-      alert("No existe una cuenta con ese email");
-      return;
+      const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
+      userFound = storedUsers.find(u => u.email === entryEmail)
     }
+
+    if (!userFound) {
+      alert('No existe una cuenta con ese email')
+      return
+    }
+
     if (userFound.password === entryPassword) {
-      alert("Login exitoso");
-      localStorage.setItem("loggeduser", JSON.stringify(userFound));
-      navigate("/Feed"); //cambia de pagina a feed
+      localStorage.setItem('loggeduser', JSON.stringify(userFound))
+      setTimeout(() => {
+        navigate('/Feed')
+      }, 100)
     } else {
-      alert("Contraseña incorrecta");
+      alert('Contraseña incorrecta')
     }
   }
 
@@ -58,6 +66,4 @@ function Login() {
   );
 }
 
-export default Login; 
-
-
+export default Login;

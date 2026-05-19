@@ -1,0 +1,122 @@
+.profileLayout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.profileMain {
+    margin-left: 250px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.profileStats {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    justify-content: center;
+}
+
+.profileBio {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    font-family: poppins, sans-serif;
+    text-align: center;
+    max-width: 600px;
+}
+
+.profileTags {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    width: 100%;
+    max-width: 800px;
+    justify-content: center;
+}
+
+.profileFollowBtn {
+    padding: 8px 32px;
+    border-radius: 20px;
+    border: 2px solid var(--color-purple-active);
+    background-color: var(--color-purple-active);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: poppins, sans-serif;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.profileFollowBtn--following {
+    background-color: transparent;
+    color: var(--color-text-primary);
+}
+
+.profileFollowBtn:hover {
+    opacity: 0.85;
+}
+
+.logoutButton {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--color-brand-coral);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.logoutButton:hover {
+    opacity: 0.85;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .profileMain {
+        margin-left: 0;
+        margin-bottom: 80px;
+        padding: 20px 15px;
+    }
+
+    .profileStats {
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .profileTags {
+        flex-direction: column;
+        max-width: 100%;
+    }
+
+    .logoutButton {
+        top: 15px;
+        right: 15px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profileMain {
+        padding: 15px 10px;
+        gap: 15px;
+    }
+
+    .profileStats {
+        gap: 12px;
+    }
+
+    .logoutButton {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+}
