@@ -12,10 +12,23 @@ import videosData from '../../data/videos.json'
 import tags from '../../data/tags.json'
 import reputations from '../../data/reputations.json'
 
+  import { useEffect } from 'react'
+  import { getAllUsers } from '../../services/userService'
+
+
+
 const getTagNames = (tagIds: string[]) =>
   tagIds.map(id => tags.find(t => t.id === id)?.name || id)
 
 function Profile() {
+
+    useEffect(() => {
+    getAllUsers().then(users => {
+      console.log('Usuarios desde Supabase:', users)
+    })
+  }, [])
+
+
   const navigate = useNavigate()
   const [user, setUser] = useState(() => {
     const stored = JSON.parse(localStorage.getItem('loggeduser') || '{}')
@@ -81,6 +94,8 @@ function Profile() {
     localStorage.removeItem('loggeduser')
     navigate('/Login')
   }
+
+
 
   return (
     <div className="profileLayout">
