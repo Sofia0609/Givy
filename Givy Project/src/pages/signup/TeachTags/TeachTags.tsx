@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import tags from '../../../data/tags.json'
 import './TeachTags.css'
+import logo from '../../../assets/Logotype.png'
 
 function TeachTags() {
     const navigate = useNavigate()
@@ -14,6 +15,7 @@ function TeachTags() {
                 : [...prev, tagId]
         )
     }
+
 
     function handleCreateAccount() {
         if (selected.length === 0) {
@@ -30,7 +32,7 @@ function TeachTags() {
             email: signupData.email,
             password: signupData.password,
             bio: '',
-            profilePicture: '',
+            profilePicture: '../src/assets/profile_picture.png',
             followers: 0,
             following: 0,
             reputationAverage: 0,
@@ -39,16 +41,20 @@ function TeachTags() {
             wantsToTeach: selected
         }
 
+        const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
+        storedUsers.push(newUser)
+        localStorage.setItem('signupUsers', JSON.stringify(storedUsers))
         localStorage.setItem('loggeduser', JSON.stringify(newUser))
         localStorage.removeItem('signupData')
-        navigate('/Login')
+        
+        navigate('/Feed')
     }
 
     return (
         <div className="tags-wrapper">
             <div className="tags-card">
                 <div className="tags-logo">
-                    <img src="/src/assets/logo.png" alt="Givy" />
+                    <img src={logo} alt="Givy" />
                 </div>
                 <h1 className="tags-title">What would you like to teach?</h1>
                 <p className="tags-subtitle">Choose your favorites</p>

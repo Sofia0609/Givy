@@ -1,17 +1,22 @@
 .swap-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 30;
+  /* Fijo en toda la pantalla excepto la navbar */
+  position: fixed;
+  top: 0;
+  /* Empieza después del ancho de la navbar (250px) */
+  left: 250px;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  background: rgba(30, 27, 60, 0.35);
+  background: rgba(30, 27, 60, 0.55);
 }
 
 .swap-overlay-img {
-  width: 260px;
-  height: 260px;
+  width: 320px;
+  height: 320px;
   object-fit: contain;
   animation: swapPopIn 1.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
 }
@@ -23,4 +28,11 @@
   85%  { transform: scale(1.03) rotate(1deg);  opacity: 1; }
   95%  { transform: scale(1)    rotate(0deg);  opacity: 1; }
   100% { transform: scale(0.85) rotate(0deg);  opacity: 0; }
+}
+
+/* Mobile: ocupa toda la pantalla */
+@media (max-width: 768px) {
+  .swap-overlay {
+    left: 0;
+  }
 }

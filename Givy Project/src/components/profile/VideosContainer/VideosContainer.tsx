@@ -24,16 +24,17 @@ interface VideosContainerProps {
 
 function VideosContainer({ videos  }: VideosContainerProps) {
     return (
-        <div className="videosContainer">
-            <div className="videosHeader">
-                <span className="videosIcon">⊞</span>
-                <span className="videosTitle">VIDEOS</span>
+        <div className="profileVideosContainer">
+            <div className="profileVideosHeader">
+                <span className="profileVideosIcon">⊞</span>
+                <span className="profileVideosTitle">VIDEOS</span>
             </div>
-            <div className="videosGrid">
+            <div className="profileVideosGrid">
                 {videos?.map((video) => (
                     <VideoCard
                         key={video.id}
                         videourl={video.url}
+                        videoId={video.id}
                     />
                 ))
                 
