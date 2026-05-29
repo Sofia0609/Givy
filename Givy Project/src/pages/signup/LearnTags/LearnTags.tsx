@@ -21,8 +21,8 @@ function LearnTags() {
             alert('Please select at least one topic')
             return
         }
-        const signupData = JSON.parse(localStorage.getItem('signupData') || '{}')
-        localStorage.setItem('signupData', JSON.stringify({ ...signupData, wantsToLearn: selected }))
+        const signupData = JSON.parse(sessionStorage.getItem('signupData') || '{}')
+        sessionStorage.setItem('signupData', JSON.stringify({ ...signupData, wantsToLearn: selected }))
         navigate('/TeachTags')
     }
 
