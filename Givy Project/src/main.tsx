@@ -17,6 +17,8 @@ import Login from './pages/login/login'
 import SearchResults from './pages/SearchResults/SearchResults'
 import EditProfile from './pages/profile/EditProfile'
 import ProfileView from './pages/profile/ProfileView'
+import { Provider } from 'react-redux'
+import { store } from './store'
 
 let routes = createBrowserRouter([
   {
@@ -95,6 +97,8 @@ let routes = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={routes} />
-  </StrictMode>,
+    <Provider store={store}>
+      <RouterProvider router={routes} />
+    </Provider>
+  </StrictMode>
 )
