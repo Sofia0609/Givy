@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
+import { useDispatch } from 'react-redux'
 import tags from '../../../data/tags.json'
 import './TeachTags.css'
 import logo from '../../../assets/Logotype.png'
+import { signUpUser } from '../../../services/authService'
+import { setUser } from '../../../store/userSlice'
 
 function TeachTags() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [selected, setSelected] = useState<string[]>([])
+    const [loading, setLoading] = useState(false)
 
     function toggleTag(tagId: string) {
         setSelected(prev =>
@@ -16,38 +21,46 @@ function TeachTags() {
         )
     }
 
-
-    function handleCreateAccount() {
+    async function handleCreateAccount() {
         if (selected.length === 0) {
             alert('Please select at least one topic')
             return
         }
 
-        const signupData = JSON.parse(localStorage.getItem('signupData') || '{}')
+        const signupData = JSON.parse(sessionStorage.getItem('signupData') || '{}')
 
-        const newUser = {
-            id: `u${Date.now()}`,
-            username: signupData.name,
-            at: `@${signupData.name.toLowerCase().replace(/\s/g, '')}`,
-            email: signupData.email,
-            password: signupData.password,
-            bio: '',
-            profilePicture: '../src/assets/profile_picture.png',
-            followers: 0,
-            following: 0,
-            reputationAverage: 0,
-            videoCount: 0,
-            wantsToLearn: signupData.wantsToLearn || [],
-            wantsToTeach: selected
+        if (!signupData.name || !signupData.email || !signupData.password) {
+            alert('Missing signup information. Please start over.')
+            navigate('/SignUp')
+            return
         }
 
-        const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
-        storedUsers.push(newUser)
-        localStorage.setItem('signupUsers', JSON.stringify(storedUsers))
-        localStorage.setItem('loggeduser', JSON.stringify(newUser))
-        localStorage.removeItem('signupData')
-        
-        navigate('/Feed')
+        try {
+            setLoading(true)
+
+            // Llama a Supabase: crea cuenta + perfil
+            const newUser = await signUpUser({
+                name: signupData.name,
+                email: signupData.email,
+                password: signupData.password,
+                wantsToLearn: signupData.wantsToLearn || [],
+                wantsToTeach: selected
+            })
+
+            // Guarda el usuario en Redux
+            dispatch(setUser(newUser))
+
+            // Limpia el sessionStorage
+            sessionStorage.removeItem('signupData')
+
+            // Al feed!
+            navigate('/Feed')
+
+        } catch (error: any) {
+            alert('Error creating account: ' + error.message)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -71,8 +84,12 @@ function TeachTags() {
                     ))}
                 </div>
 
-                <button className="tags-btn" onClick={handleCreateAccount}>
-                    Create Account
+                <button 
+                    className="tags-btn" 
+                    onClick={handleCreateAccount}
+                    disabled={loading}
+                >
+                    {loading ? 'Creating account...' : 'Create Account'}
                 </button>
             </div>
         </div>
