@@ -1,5 +1,12 @@
 import ChipNavBar from "./chipNavBar";
 import './navBar.css'
+import logotype from '../../assets/Logotype.png'
+import homeIcon from '../../assets/home_icon.svg'
+import searchIcon from '../../assets/search_icon.svg'
+import notificationIcon from '../../assets/notification_icon.svg'
+import userIcon from '../../assets/user_icon.svg'
+import createIcon from '../../assets/create_icon.svg'
+
 
 function NavBar({}){
 
@@ -7,18 +14,18 @@ function NavBar({}){
         <>
         <div id="navBarContainer">
             <div className="presentation">
-                <img className="Logotype" src="src/assets/Logotype.png" alt="logotype" /> 
+                <img className="Logotype" src={logotype} alt="logotype" /> 
                 <span>Welcome to Givy!</span>
                 <span id="namePresentation">Anonimo123</span>
             </div>
             <div>
                 <nav>
                     <ul className="navBar">
-                        <ChipNavBar icon = "src/assets/home_icon.svg" chip = "Feed" to="/Feed"></ChipNavBar>
-                        <ChipNavBar icon = "src/assets/search_icon.svg" chip = "Search" to="/Search"></ChipNavBar>
-                        <ChipNavBar icon = "src/assets/notification_icon.svg" chip = "Notifications" to="/Notifications"></ChipNavBar>
-                        <ChipNavBar icon = "src/assets/user_icon.svg" chip = "Profile" to="/Profile"></ChipNavBar>
-                        <ChipNavBar icon = "src/assets/create_icon.svg" chip = "Create" to="/Create"></ChipNavBar>
+                        <ChipNavBar icon={homeIcon} chip="Feed" to="/Feed" />
+                        <ChipNavBar icon={searchIcon} chip="Search" to="/Search" />
+                        <ChipNavBar icon={notificationIcon} chip="Notifications" to="/Notifications" />
+                        <ChipNavBar icon={userIcon} chip="Profile" to="/Profile" />
+                        <ChipNavBar icon={createIcon} chip="Create" to="/Create" />
                     </ul>
                 </nav>
             </div>

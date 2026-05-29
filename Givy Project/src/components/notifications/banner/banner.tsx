@@ -1,19 +1,15 @@
-import './section.css'
+import './banner.css'
 
 interface Banner{
-    img : string
     title: string
 }
 
-function Banner({img, title}:Banner){
+function Banner({title}:Banner){
 
     return(
         <>
-            <div>
-                <img src={img} alt="" />
-            </div>
-            <div>
-                <h1>  {title} </h1>
+            <div className='banner'>
+                <h1 className='titleBanner'>  {title} </h1>
             </div>
         </>
     )

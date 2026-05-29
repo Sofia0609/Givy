@@ -1,0 +1,21 @@
+.banner {
+    background-color: var(--color-purple-light);
+    padding: 30px 40px;
+    margin: 20px 40px;
+    border-radius: 20px;
+    text-align: left;
+}
+
+.bannerTitle {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .banner {
+        display: none; 
+    }
+}

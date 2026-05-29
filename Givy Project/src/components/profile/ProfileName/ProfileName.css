@@ -1,0 +1,31 @@
+.profileNameWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.profileNameRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profileNameText {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    font-family: poppins, sans-serif;
+}
+
+.profileNameEdit {
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.profileNameUsername {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    font-family: poppins, sans-serif;
+}

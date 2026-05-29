@@ -1,20 +1,22 @@
+import { useNavigate } from 'react-router'
 import './section.css'
 
 interface Section{
     img : string
     title: string
+    gradient: string
+    to: string
 }
 
-function Section({img, title}:Section){
+function Section({img, title, gradient, to}:Section){
+    const navigate = useNavigate()
 
     return(
-        <>
-            <div>
+        <>  
+        <div className='sectionContainer' style={{ background: gradient }} onClick={() => navigate(to)}>
                 <img src={img} alt="" />
-            </div>
-            <div>
-                <h1>  {title} </h1>
-            </div>
+                <h2>  {title} </h2>
+         </div>
         </>
     )
 }

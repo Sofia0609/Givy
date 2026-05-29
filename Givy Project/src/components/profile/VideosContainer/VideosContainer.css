@@ -1,0 +1,31 @@
+.profileVideosContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profileVideosHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    justify-content: center;
+    width: 100%;
+}
+
+.profileVideosTitle {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+    letter-spacing: 0.05em;
+}
+
+.profileVideosGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    gap: 12px;
+    justify-content: center;
+    width: min(100%, 980px);
+    margin: 0 auto;
+}

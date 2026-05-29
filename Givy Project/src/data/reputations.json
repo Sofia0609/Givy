@@ -1,18 +1,9 @@
 [
-  {
-    "id": "rep1",
-    "fromUserId": "u3",
-    "toUserId": "u1",
-    "matchId": "m1",
-    "rating": 5,
-    "likedVideo": true
-  },
-  {
-    "id": "rep2",
-    "fromUserId": "u1",
-    "toUserId": "u3",
-    "matchId": "m1",
-    "rating": 4,
-    "likedVideo": true
-  }
+  { "id": "rep1", "fromUserId": "u3", "toUserId": "u1", "matchId": "m1", "rating": 5, "likedVideo": true },
+  { "id": "rep2", "fromUserId": "u1", "toUserId": "u3", "matchId": "m1", "rating": 4, "likedVideo": true },
+  { "id": "rep3", "fromUserId": "u5", "toUserId": "u10", "matchId": "m2", "rating": 5, "likedVideo": true },
+  { "id": "rep4", "fromUserId": "u10", "toUserId": "u5", "matchId": "m2", "rating": 4, "likedVideo": true },
+  { "id": "rep5", "fromUserId": "u9", "toUserId": "u13", "matchId": null, "rating": 5, "likedVideo": true },
+  { "id": "rep6", "fromUserId": "u14", "toUserId": "u19", "matchId": null, "rating": 5, "likedVideo": true },
+  { "id": "rep7", "fromUserId": "u23", "toUserId": "u17", "matchId": null, "rating": 4, "likedVideo": true }
 ]
