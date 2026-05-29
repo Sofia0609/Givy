@@ -1,35 +1,41 @@
 import { useState } from "react";
-import users from "../../data/users.json";
+import { useNavigate } from 'react-router'
+import { useDispatch } from 'react-redux'
 import "./login.css";
 import InputGivy from "../../components/inputGivy/inputGivy";
 import ButtonGivy from "../../components/buttonsGivy/buttonGivy/buttonGivy";
-import { useNavigate } from 'react-router'
+import { loginUser } from '../../services/userService'
+import { setUser } from '../../store/userSlice'
 
 function Login() {
   const [entryEmail, setEntryEmail] = useState("");
   const [entryPassword, setEntryPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  function handleAuth() {
-    let userFound = users.find((user) => user.email === entryEmail);
-
-    if (!userFound) {
-      const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
-      userFound = storedUsers.find(u => u.email === entryEmail)
-    }
-
-    if (!userFound) {
-      alert('No existe una cuenta con ese email')
+  async function handleAuth() {
+    if (!entryEmail.trim() || !entryPassword.trim()) {
+      alert('Please fill in all fields')
       return
     }
 
-    if (userFound.password === entryPassword) {
-      localStorage.setItem('loggeduser', JSON.stringify(userFound))
-      setTimeout(() => {
-        navigate('/Feed')
-      }, 100)
-    } else {
-      alert('Contraseña incorrecta')
+    try {
+      setLoading(true)
+
+      // Llama a Supabase, autentica y trae el perfil
+      const user = await loginUser(entryEmail, entryPassword)
+
+      // Guarda el usuario en Redux
+      dispatch(setUser(user))
+
+      // Va al Feed
+      navigate('/Feed')
+
+    } catch (error: any) {
+      alert('Login failed: ' + error.message)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -55,7 +61,10 @@ function Login() {
             value={entryPassword}
             onChange={(e) => setEntryPassword(e.target.value)}
           />
-          <ButtonGivy label="Log In" onClick={handleAuth} />
+          <ButtonGivy 
+            label={loading ? "Logging in..." : "Log In"} 
+            onClick={handleAuth} 
+          />
           <p className="login-footer">
             Don't have an account?{" "}
             <span onClick={() => navigate("/SignUp")}>Sign up.</span>

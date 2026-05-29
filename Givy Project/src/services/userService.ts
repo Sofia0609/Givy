@@ -30,3 +30,25 @@ export async function getAllUsers(): Promise<User[]> {
   
   return data as User[]
 }
+
+//Usuario Loogeado
+
+export async function loginUser(email: string, password: string) {
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password
+    })
+
+    if (authError) throw new Error(authError.message)
+    if (!authData.user) throw new Error('Could not log in')
+
+    const { data: profileData, error: profileError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', authData.user.id)
+        .single()
+
+    if (profileError) throw new Error(profileError.message)
+
+    return profileData
+}
