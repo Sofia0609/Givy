@@ -25,4 +25,45 @@ export const fetchFeed = createAsyncThunk(
       getAllUsers()
     ])
 
-    
+    // Excluye los videos del usuario logueado
+    const filtered = videos.filter(v => v.userId !== loggedUserId)
+
+    const items: FeedItem[] = filtered
+      .map(video => {
+        const user = users.find(u => u.id === video.userId)
+        if (!user) return null
+        return { video, user }
+      })
+      .filter((item): item is FeedItem => item !== null)
+
+    return items
+  }
+)
+
+const videoSlice = createSlice({
+  name: 'videos',
+  initialState,
+  reducers: {
+    clearFeed: (state) => {
+      state.feedItems = []
+    }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchFeed.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchFeed.fulfilled, (state, action: PayloadAction<FeedItem[]>) => {
+        state.loading = false
+        state.feedItems = action.payload
+      })
+      .addCase(fetchFeed.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.error.message ?? 'Error loading feed'
+      })
+  }
+})
+
+export const { clearFeed } = videoSlice.actions
+export default videoSlice.reducer
