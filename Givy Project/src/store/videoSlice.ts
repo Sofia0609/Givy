@@ -16,7 +16,7 @@ const initialState: VideoState = {
   error: null
 }
 
-// Thunk: trae videos + usuarios y arma los FeedItems
+// Thunk: bring videos and users set up the FeedItems
 export const fetchFeed = createAsyncThunk(
   'videos/fetchFeed',
   async (loggedUserId: string) => {
@@ -25,7 +25,7 @@ export const fetchFeed = createAsyncThunk(
       getAllUsers()
     ])
 
-    // Excluye los videos del usuario logueado
+    // Exclude the videos user logged in has uploaded
     const filtered = videos.filter(v => v.userId !== loggedUserId)
 
     const items: FeedItem[] = filtered
