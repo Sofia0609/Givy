@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef} from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Navigate, useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchFeed } from '../../store/videoSlice';
 import type { RootState, AppDispatch } from '../../store/store';
-import type { CommentData, ReplyData } from '../../types/index'
+import type { CommentData} from '../../types/index'
 import Description from '../../components/feed/description/description';
 import VideoSection from '../../components/feed/video/Video';
 import CircularButton from '../../components/feed/circularButton/CircularButton';
@@ -16,6 +16,7 @@ import likeIcon from '../../assets/like_icon.svg';
 import commentIcon from '../../assets/comment_icon.svg';
 import tagsData from '../../data/tags.json';
 import { updateLike } from '../../services/videoService';
+import { getCommentsByVideoId, addComment as addCommentDB, deleteComment as deleteCommentDB, addReply as addReplyDB, deleteReply as deleteReplyDB } from '../../services/commentService';
 import './Feed.css';
 import NavBar from '../../components/navBar/navBar';
 
@@ -48,13 +49,25 @@ function Feed() {
     }
   }, [loggedUser?.id, dispatch])
 
-  // -- states ----------------------------------------------
+  // -- States ----------------------------------------------
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [likeCountMap, setLikeCountMap] = useState<Record<string, number>>({});
   const [showCommentsMap, setShowCommentsMap] = useState<Record<string, boolean>>({});
   const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>({});
   const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  useEffect(() => {
+    const loadComments = async () => {
+      const map: Record<string, CommentData[]> = {}
+      for (const { video } of feedItems) {
+        const comments = await getCommentsByVideoId(video.id)
+        map[video.id] = comments
+      }
+      setCommentsMap(map)
+    }
+    if (feedItems.length > 0) loadComments()
+  }, [feedItems])
 
   useEffect(() => {
     if (videoId && itemRefs.current[videoId] && feedItems.length > 1) {
@@ -96,64 +109,66 @@ function Feed() {
     const video = feedItems.find(item => item.video.id === videoId)?.video;
     if (!video) return;
 
-    //conected to swap logic here, for now just anim
+    // conected to backend to create match and swap request would go here
     setSwapAnimMap((prev) => ({ ...prev, [videoId]: true }));
     setTimeout(() => {
       setSwapAnimMap((prev) => ({ ...prev, [videoId]: false }));
     }, 1200);
   };
 
-  const addComment = (id: string, text: string) => {
-    const newComment: CommentData = {
-      // eslint-disable-next-line react-hooks/purity
-      id: `own-${Date.now()}`,
-      videoId: id,
-      userId: loggedUser.id,
-      text,
-      date: new Date().toISOString(),
-      replies: [],
-      isOwn: true,
-    };
-    setCommentsMap((prev) => ({
-      ...prev,
-      [id]: [newComment, ...(prev[id] ?? [])],
-    }));
-  };
+  const addComment = async (id: string, text: string) => {
+    try {
+      const newComment = await addCommentDB(id, loggedUser.id, text)
+      setCommentsMap((prev) => ({
+        ...prev,
+        [id]: [newComment, ...(prev[id] ?? [])],
+      }))
+    } catch (error) {
+      console.error('Error adding comment:', error)
+    }
+  }
 
-  const deleteComment = (id: string, commentId: string) => {
-    setCommentsMap((prev) => ({
-      ...prev,
-      [id]: (prev[id] ?? []).filter((c) => c.id !== commentId),
-    }));
-  };
+  const deleteComment = async (id: string, commentId: string) => {
+    try {
+      await deleteCommentDB(commentId)
+      setCommentsMap((prev) => ({
+        ...prev,
+        [id]: (prev[id] ?? []).filter((c) => c.id !== commentId),
+      }))
+    } catch (error) {
+      console.error('Error deleting comment:', error)
+    }
+  }
 
-  const addReply = (videoId: string, commentId: string, text: string) => {
-    const newReply: ReplyData = {
-      // eslint-disable-next-line react-hooks/purity
-      id: `reply-${Date.now()}`,
-      parentCommentId: commentId,
-      userId: loggedUser.id,
-      text,
-      date: new Date().toISOString(),
-    };
-    setCommentsMap((prev) => ({
-      ...prev,
-      [videoId]: (prev[videoId] ?? []).map((c) =>
-        c.id === commentId ? { ...c, replies: [...c.replies, newReply] } : c
-      ),
-    }));
-  };
+  const addReply = async (videoId: string, commentId: string, text: string) => {
+    try {
+      const newReply = await addReplyDB(commentId, loggedUser.id, text)
+      setCommentsMap((prev) => ({
+        ...prev,
+        [videoId]: (prev[videoId] ?? []).map((c) =>
+          c.id === commentId ? { ...c, replies: [...c.replies, newReply] } : c
+        ),
+      }))
+    } catch (error) {
+      console.error('Error adding reply:', error)
+    }
+  }
 
-  const deleteReply = (videoId: string, commentId: string, replyId: string) => {
-    setCommentsMap((prev) => ({
-      ...prev,
-      [videoId]: (prev[videoId] ?? []).map((c) =>
-        c.id === commentId
-          ? { ...c, replies: c.replies.filter((r) => r.id !== replyId) }
-          : c
-      ),
-    }));
-  };
+  const deleteReply = async (videoId: string, commentId: string, replyId: string) => {
+    try {
+      await deleteReplyDB(replyId)
+      setCommentsMap((prev) => ({
+        ...prev,
+        [videoId]: (prev[videoId] ?? []).map((c) =>
+          c.id === commentId
+            ? { ...c, replies: c.replies.filter((r) => r.id !== replyId) }
+            : c
+        ),
+      }))
+    } catch (error) {
+      console.error('Error deleting reply:', error)
+    }
+  }
 
   // -- Render -----------------------------------------------
   return (
