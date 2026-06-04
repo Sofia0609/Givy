@@ -33,3 +33,59 @@ export async function getCommentsByVideoId(videoId: string): Promise<CommentData
       }))
   }))
 }
+
+export async function addComment(videoId: string, userId: string, text: string): Promise<CommentData> {
+  const { data, error } = await supabase
+    .from('comments')
+    .insert({ videoId, userId, text })
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+
+  return {
+    id: data.id,
+    videoId: data.videoId,
+    userId: data.userId,
+    text: data.text,
+    date: data.created_at,
+    replies: [],
+    isOwn: true
+  }
+}
+
+export async function deleteComment(commentId: string): Promise<void> {
+  const { error } = await supabase
+    .from('comments')
+    .delete()
+    .eq('id', commentId)
+
+  if (error) throw new Error(error.message)
+}
+
+export async function addReply(commentId: string, userId: string, text: string): Promise<ReplyData> {
+  const { data, error } = await supabase
+    .from('replies')
+    .insert({ commentId, userId, text })
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+
+  return {
+    id: data.id,
+    parentCommentId: data.commentId,
+    userId: data.userId,
+    text: data.text,
+    date: data.created_at
+  }
+}
+
+export async function deleteReply(replyId: string): Promise<void> {
+  const { error } = await supabase
+    .from('replies')
+    .delete()
+    .eq('id', replyId)
+
+  if (error) throw new Error(error.message)
+}
