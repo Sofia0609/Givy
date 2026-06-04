@@ -24,5 +24,12 @@ export async function getAllVideos(): Promise<Video[]> {
     uploadDate: v.upload_date as string
   }))
 }
+export async function updateLike(videoId: string, newCount: number): Promise<void> {
+  const { error } = await supabase
+    .from('videos')
+    .update({ likes: newCount })
+    .eq('id', videoId)
 
+  if (error) throw new Error(error.message)
+}
     
