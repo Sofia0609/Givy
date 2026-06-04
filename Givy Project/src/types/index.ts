@@ -10,8 +10,8 @@ export interface User {
   following: number
   reputationAverage: number
   videoCount: number
-  wantsToLearn: string[]
-  wantsToTeach: string[]
+  teaches: string
+wantsToLearn: string
 }
 
 export interface Video {
@@ -26,7 +26,7 @@ export interface Video {
   likes: number
   uploadDate: string
   teaches: string[]
-  wantsToLearnInReturn: string[]
+ wantsToLearn: string[]
 }
 
 export interface ReplyData {
