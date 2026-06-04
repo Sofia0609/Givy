@@ -1,10 +1,15 @@
 import { supabase } from '../lib/supabase'
 import type { Video } from '../types/index'
 
+develop
+
+// Trae TODOS los videos
+feature-search
 export async function getAllVideos(): Promise<Video[]> {
   const { data, error } = await supabase
     .from('videos')
     .select('*')
+develop
     .order('created_at', { ascending: false })
 
   if (error) throw new Error(error.message)
@@ -32,4 +37,28 @@ export async function updateLike(videoId: string, newCount: number): Promise<voi
 
   if (error) throw new Error(error.message)
 }
-    
+ 
+
+  if (error) {
+    console.error('Error fetching videos:', error)
+    return []
+  }
+
+  return data as Video[]
+}
+
+// Trae videos por tag
+export async function getVideosByTag(tagId: string): Promise<Video[]> {
+  const { data, error } = await supabase
+    .from('videos')
+    .select('*')
+    .contains('teaches', [tagId])
+
+  if (error) {
+    console.error('Error fetching videos by tag:', error)
+    return []
+  }
+
+  return data as Video[]
+}
+feature-search
