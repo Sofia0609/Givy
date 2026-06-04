@@ -9,14 +9,20 @@ export async function getAllVideos(): Promise<Video[]> {
 
   if (error) throw new Error(error.message)
 
-  return (data ?? []).map((v: any): Video => ({
-    id: v.id,
-    userId: v.user_id,
-    matchId: v.match_id ?? null,
-    url: v.URL,
-    description: v.description,
-    likes: v.likes ?? 0,
-    teaches: v.teaches ?? '',
-    wantsToLearn: v.wantsToLearn ?? ''
+  return (data ?? []).map((v: Record<string, unknown>): Video => ({
+    id: v.id as string,
+    userId: v.user_id as string,
+    matchId: (v.match_id as string) ?? null,
+    url: v.URL as string,
+    description: v.description as string,
+    likes: (v.likes as number) ?? 0,
+    teaches: ((v.teaches as string) ?? '').split(',').filter(Boolean),
+    wantsToLearn: ((v.wants_to_learn as string) ?? '').split(',').filter(Boolean),
+    thumbnail: (v.thumbnail as string) ?? null,
+    title: v.title as string,
+    tags: ((v.tags as string) ?? '').split(',').filter(Boolean),
+    uploadDate: v.upload_date as string
   }))
 }
+
+    

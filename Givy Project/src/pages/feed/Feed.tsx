@@ -3,7 +3,7 @@ import { Navigate, useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';           
 import { fetchFeed } from '../../store/videoSlice';               
 import type { RootState, AppDispatch } from '../../store/store';  
-import type { CommentData, ReplyData, SwapRequest } from '../../types/index'
+import type { CommentData, ReplyData } from '../../types/index'
 import Description from '../../components/feed/description/description';
 import VideoSection from '../../components/feed/video/Video';
 import CircularButton from '../../components/feed/circularButton/CircularButton';
@@ -57,7 +57,10 @@ function Feed() {
     feedItems.forEach(({ video }) => {
       initial[video.id] = video.likes ?? 0;
     });
-    setLikeCountMap(initial);
+    // Defer setting state to avoid synchronous setState inside effect which can
+    // cause cascading renders. Scheduling allows the current render to finish.
+    const t = setTimeout(() => setLikeCountMap(initial), 0);
+    return () => clearTimeout(t);
   }, [feedItems]);
 
   // -- Scroll  -----------------------------
@@ -162,8 +165,8 @@ function Feed() {
         {itemsToShow.map(({ user, video }) => {
 
           //  teaches and wantsToLearn 
-          const teachTagName = resolveTagName(video.teaches);
-          const learnTagName = resolveTagName(video.wantsToLearn);
+          const teachTagName = resolveTagName(Array.isArray(video.teaches) ? video.teaches[0] : video.teaches);
+          const learnTagName = resolveTagName(Array.isArray(video.wantsToLearn) ? video.wantsToLearn[0] : video.wantsToLearn);
           const videoComments = commentsMap[video.id] ?? [];
 
           return (
