@@ -1,4 +1,3 @@
- develop
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { getAllVideos } from '../services/videoService'
@@ -7,29 +6,16 @@ import type { FeedItem } from '../types/index'
 
 interface VideoState {
   feedItems: FeedItem[]
-
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { Video } from '../types/index'
-
-interface VideoState {
-  videos: Video[]
-feature-search
   loading: boolean
   error: string | null
 }
 
 const initialState: VideoState = {
- develop
   feedItems: [],
-
-  videos: [],
- feature-search
   loading: false,
   error: null
 }
 
- develop
-// Thunk: bring videos and users set up the FeedItems
 export const fetchFeed = createAsyncThunk(
   'videos/fetchFeed',
   async (loggedUserId: string) => {
@@ -37,10 +23,7 @@ export const fetchFeed = createAsyncThunk(
       getAllVideos(),
       getAllUsers()
     ])
-
-    // Exclude the videos user logged in has uploaded
     const filtered = videos.filter(v => v.userId !== loggedUserId)
-
     const items: FeedItem[] = filtered
       .map(video => {
         const user = users.find(u => u.id === video.userId)
@@ -48,7 +31,6 @@ export const fetchFeed = createAsyncThunk(
         return { video, user }
       })
       .filter((item): item is FeedItem => item !== null)
-
     return items
   }
 )
@@ -79,23 +61,4 @@ const videoSlice = createSlice({
 })
 
 export const { clearFeed } = videoSlice.actions
-
-const videoSlice = createSlice({
-  name: 'video',
-  initialState,
-  reducers: {
-    setVideos: (state, action: PayloadAction<Video[]>) => {
-      state.videos = action.payload
-    },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload
-    },
-    setError: (state, action: PayloadAction<string>) => {
-      state.error = action.payload
-    }
-  }
-})
-
-export const { setVideos, setLoading, setError } = videoSlice.actions
- feature-search
 export default videoSlice.reducer
