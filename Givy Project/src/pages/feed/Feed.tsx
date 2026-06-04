@@ -19,6 +19,7 @@ import { updateLike } from '../../services/videoService';
 import { getCommentsByVideoId, addComment as addCommentDB, deleteComment as deleteCommentDB, addReply as addReplyDB, deleteReply as deleteReplyDB } from '../../services/commentService';
 import './Feed.css';
 import NavBar from '../../components/navBar/navBar';
+import { createSwapRequest } from '../../services/swapService'
 
 // -- Helpers ----------------------------------------------
 const resolveTagName = (tagId: string | string[]): string => {
@@ -105,16 +106,27 @@ function Feed() {
     setShowCommentsMap({ ...showCommentsMap, [id]: !showCommentsMap[id] });
   };
 
-  const handleSwap = (videoId: string) => {
-    const video = feedItems.find(item => item.video.id === videoId)?.video;
-    if (!video) return;
+  const handleSwap = async (videoId: string) => {
+  const video = feedItems.find(item => item.video.id === videoId)?.video;
+  if (!video) return;
 
-    // conected to backend to create match and swap request would go here
+  try {
+    await createSwapRequest(
+      loggedUser.id,
+      video.userId,
+      loggedUser.wantsToTeach?.[0] ?? '',
+      video.teaches[0] ?? ''
+    )
+
     setSwapAnimMap((prev) => ({ ...prev, [videoId]: true }));
     setTimeout(() => {
       setSwapAnimMap((prev) => ({ ...prev, [videoId]: false }));
     }, 1200);
-  };
+
+  } catch (error) {
+    console.error('Error creating swap request:', error)
+  }
+};
 
   const addComment = async (id: string, text: string) => {
     try {
