@@ -19,8 +19,6 @@ import Login from './pages/login/login'
 import SearchResults from './pages/SearchResults/SearchResults'
 import EditProfile from './pages/profile/EditProfile'
 import ProfileView from './pages/profile/ProfileView'
-import { Provider } from 'react-redux'
-import { store } from './store'
 
 const routes = createBrowserRouter([
   {
