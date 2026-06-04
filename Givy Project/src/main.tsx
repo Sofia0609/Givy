@@ -1,6 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import { Provider } from 'react-redux'        
+import { store } from './store/store'  
 import Feed from './pages/feed/Feed'
 import Notifications from './pages/notificacions/Notifications'
 import Search from './pages/search/Search'
@@ -18,7 +20,7 @@ import SearchResults from './pages/SearchResults/SearchResults'
 import EditProfile from './pages/profile/EditProfile'
 import ProfileView from './pages/profile/ProfileView'
 
-let routes = createBrowserRouter([
+const routes = createBrowserRouter([
   {
     path: "/",
     element: <Navigate to="/Login" />  
@@ -95,6 +97,8 @@ let routes = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={routes} />
+    <Provider store={store}>                  
+      <RouterProvider router={routes} />
+    </Provider>                              
   </StrictMode>,
 )
