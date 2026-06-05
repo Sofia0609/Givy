@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Navigate, useParams } from 'react-router';
+import { Navigate, useParams, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchFeed } from '../../store/videoSlice';
 import type { RootState, AppDispatch } from '../../store/store';
@@ -38,6 +38,7 @@ const getInitials = (username: string): string =>
 function Feed() {
   const { videoId } = useParams<{ videoId?: string }>();
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate() 
 
   // Solo Redux, sin localStorage
   const loggedUser = useSelector((state: RootState) => state.user.currentUser)
@@ -122,7 +123,7 @@ function Feed() {
       await createSwapRequest(
         loggedUser.id,
         video.userId,
-        loggedUser.teaches?.[0] ?? '',
+        loggedUser.wantsToTeach?.[0] ?? '',
         video.teaches[0] ?? ''
       )
       setSwapAnimMap((prev) => ({ ...prev, [videoId]: true }));
@@ -247,7 +248,9 @@ function Feed() {
               </div>
 
               <div className='sidebar-right'>
-                <ProfileButton initials={getInitials(user.username)} />
+                <div onClick={() => navigate(`/Profile/${user.id}`)} style={{ cursor: 'pointer' }}>
+                  <ProfileButton initials={getInitials(user.username)} />
+                </div>
 
                 <CircularButton
                   icon={likeIcon}
