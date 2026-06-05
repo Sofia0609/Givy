@@ -188,3 +188,20 @@ export interface UploadVideoMatchProps {
 export interface SwapOverlayProps {
   visible: boolean
 }
+
+export interface User {
+  id: string
+  username: string
+  at: string
+  email: string
+  password: string
+  bio: string
+  profilePicture: string
+  followers: number
+  following: number
+  reputationAverage: number
+  videoCount: number
+  wantsToLearn: string[]
+  wantsToTeach: string[]
+  followingList?: string[]  // ← agrega esta línea
+}
