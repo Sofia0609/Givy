@@ -11,7 +11,7 @@ import './ProfileStyle.css'
 import tags from '../../data/tags.json'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { logoutThunk, updateProfileThunk } from '../../store/userSlice'
-import { fetchProfileVideosThunk } from '../../store/slices/profileSlice'
+import { fetchProfileVideosThunk } from '../../store/profileSlice'
 import LoadingScreen from '../../components/guards/LoadingScreen'
 import ErrorScreen from '../../components/guards/ErrorScreen'
 

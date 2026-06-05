@@ -9,7 +9,7 @@ import VideosContainer from '../../components/profile/VideosContainer/VideosCont
 import tags from '../../data/tags.json'
 import './ProfileStyle.css'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { fetchProfileThunk, fetchProfileVideosThunk, followThunk, unfollowThunk, clearProfile } from '../../store/slices/profileSlice'
+import { fetchProfileThunk, fetchProfileVideosThunk, followThunk, unfollowThunk, clearProfile } from '../../store/profileSlice'
 import LoadingScreen from '../../components/guards/LoadingScreen'
 import ErrorScreen from '../../components/guards/ErrorScreen'
 

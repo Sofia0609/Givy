@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { getUserById, getVideosByUserId, followUser, unfollowUser } from '../../services/userService'
-import type { User, Video } from '../../types/index'
+import { getUserById, getVideosByUserId, followUser, unfollowUser } from '../services/userService'
+import type { User, Video } from '../types/index'
 
 // --- Thunks ---
 export const fetchProfileThunk = createAsyncThunk(
