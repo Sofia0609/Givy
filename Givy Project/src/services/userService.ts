@@ -77,3 +77,22 @@ export async function unfollowUser(followerId: string, targetId: string) {
   await supabase.from('users').update({ following: follower.following - 1 }).eq('id', followerId)
   await supabase.from('users').update({ followers: target.followers - 1 }).eq('id', targetId)
 }
+
+export async function uploadAvatar(userId: string, file: File): Promise<string> {
+  const fileExt = file.name.split('.').pop()
+  const filePath = `${userId}.${fileExt}`
+
+  const { error: uploadError } = await supabase.storage
+    .from('avatars')
+    .upload(filePath, file, { upsert: true })
+
+  if (uploadError) throw uploadError
+
+  const { data } = supabase.storage
+    .from('avatars')
+    .getPublicUrl(filePath)
+
+  await updateUser(userId, { profilePicture: data.publicUrl })
+
+  return data.publicUrl
+}
