@@ -33,7 +33,7 @@ function Create() {
     setLoading(true)
 
     try {
-      // 1. Upload the video to the "videos" bucket in Supabase Storage
+      // 1. Subir el video al bucket "videos"
       const fileName = `${currentUser.id}_${Date.now()}.mp4`
       const { error: uploadError } = await supabase.storage
         .from('videos')
@@ -41,28 +41,30 @@ function Create() {
 
       if (uploadError) throw uploadError
 
-      // 2. Get the public URL of the video
+      // 2. Obtener la URL pública
       const { data: publicUrlData } = supabase.storage
         .from('videos')
         .getPublicUrl(fileName)
 
       const publicUrl = publicUrlData.publicUrl
 
-      // 3. Save the video in the "videos" table of Supabase
-      const { error: dbError } = await supabase
+      // 3. Guardar en la tabla "videos"
+      const { error: dbError, data: dbData } = await supabase
         .from('videos')
         .insert({
+          id: crypto.randomUUID(),
           user_id: currentUser.id,
           match_id: null,
           URL: publicUrl,
-          title: description || 'Sin título',
           description: description,
-          tags: tagToTeach,
           teaches: tagToTeach,
-          wants_to_learn: tagToLearn,
-          likes: 0,
-          upload_date: new Date().toISOString()
+          wantsToLearn: tagToLearn,
+          likes: 0
         })
+
+      console.log('dbError:', JSON.stringify(dbError))
+      console.log('dbData:', dbData)
+
 
       if (dbError) throw dbError
 
@@ -74,10 +76,8 @@ function Create() {
       setTagToLearn('')
 
     } catch (error) {
-      console.error('Error publicando video:', error)
+      console.error('Error publicando video:', JSON.stringify(error))
       alert('Error al publicar el video, intenta de nuevo')
-    } finally {
-      setLoading(false)
     }
   }
 
