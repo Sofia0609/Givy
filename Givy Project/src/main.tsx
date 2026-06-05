@@ -20,8 +20,6 @@ import SearchResults from './pages/SearchResults/SearchResults'
 import EditProfile from './pages/profile/EditProfile'
 import ProfileView from './pages/profile/ProfileView'
 
-
-
 const routes = createBrowserRouter([
   {
     path: "/",
