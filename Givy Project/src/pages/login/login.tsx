@@ -1,35 +1,30 @@
 import { useState } from "react";
-import users from "../../data/users.json";
 import "./login.css";
 import InputGivy from "../../components/inputGivy/inputGivy";
 import ButtonGivy from "../../components/buttonsGivy/buttonGivy/buttonGivy";
 import { useNavigate } from 'react-router'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { loginThunk } from '../../store/userSlice'
 
 function Login() {
-  const [entryEmail, setEntryEmail] = useState("");
-  const [entryPassword, setEntryPassword] = useState("");
-  const navigate = useNavigate();
+  const [entryEmail, setEntryEmail] = useState("")
+  const [entryPassword, setEntryPassword] = useState("")
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const { loading, error } = useAppSelector(state => state.user)
 
-  function handleAuth() {
-    let userFound = users.find((user) => user.email === entryEmail);
-
-    if (!userFound) {
-      const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
-      userFound = storedUsers.find(u => u.email === entryEmail)
-    }
-
-    if (!userFound) {
-      alert('No existe una cuenta con ese email')
+  async function handleAuth() {
+    if (!entryEmail || !entryPassword) {
+      alert('Por favor ingresa tu email y contraseña')
       return
     }
 
-    if (userFound.password === entryPassword) {
-      localStorage.setItem('loggeduser', JSON.stringify(userFound))
-      setTimeout(() => {
-        navigate('/Feed')
-      }, 100)
+    const result = await dispatch(loginThunk({ email: entryEmail, password: entryPassword }))
+
+    if (loginThunk.fulfilled.match(result)) {
+      navigate('/Feed')
     } else {
-      alert('Contraseña incorrecta')
+      alert('Email o contraseña incorrectos')
     }
   }
 
@@ -55,7 +50,8 @@ function Login() {
             value={entryPassword}
             onChange={(e) => setEntryPassword(e.target.value)}
           />
-          <ButtonGivy label="Log In" onClick={handleAuth} />
+          {error && <p className="login-error">{error}</p>}
+          <ButtonGivy label={loading ? 'Logging in...' : 'Log In'} onClick={handleAuth} />
           <p className="login-footer">
             Don't have an account?{" "}
             <span onClick={() => navigate("/SignUp")}>Sign up.</span>
@@ -63,7 +59,7 @@ function Login() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Login;
+export default Login
