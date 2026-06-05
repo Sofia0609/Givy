@@ -30,7 +30,7 @@ function SearchResults() {
 
     const myInterests: string[] = Array.isArray(currentUser?.wantsToLearn)
         ? currentUser.wantsToLearn
-        : (currentUser?.wantsToLearn as string ?? '').split(',').filter(Boolean)
+        : (currentUser?.wantsToLearn as unknown as string ?? '').split(',').filter(Boolean)
 
     const filtered = allVideos.filter((video: Video) => {
         const teaches: string[] = Array.isArray(video.teaches)
