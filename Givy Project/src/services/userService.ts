@@ -52,3 +52,45 @@ export async function loginUser(email: string, password: string) {
 
     return profileData
 }
+
+export async function getVideosByUserId(userId: string) {
+  const { data, error } = await supabase
+    .from('videos')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching videos:', error)
+    return []
+  }
+  return data
+}
+
+export async function updateUser(id: string, changes: Partial<User>): Promise<User> {
+  const { data, error } = await supabase
+    .from('users')
+    .update(changes)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data as User
+}
+
+export async function followUser(followerId: string, targetId: string) {
+  const follower = await getUserById(followerId)
+  const target = await getUserById(targetId)
+
+  await supabase.from('users').update({ following: follower.following + 1 }).eq('id', followerId)
+  await supabase.from('users').update({ followers: target.followers + 1 }).eq('id', targetId)
+}
+
+export async function unfollowUser(followerId: string, targetId: string) {
+  const follower = await getUserById(followerId)
+  const target = await getUserById(targetId)
+
+  await supabase.from('users').update({ following: follower.following - 1 }).eq('id', followerId)
+  await supabase.from('users').update({ followers: target.followers - 1 }).eq('id', targetId)
+}
