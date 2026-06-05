@@ -1,5 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { useSelector, useDispatch } from 'react-redux'
+import type { RootState } from '../../store'
+import { clearUser } from '../../store/userSlice'
+import { logoutUser } from '../../services/authService'
+import { supabase } from '../../lib/supabase'
 import NavBar from '../../components/navBar/navBar'
 import ProfilePicture from '../../components/profile/ProfilePicture/ProfilePicture'
 import ProfileName from '../../components/profile/ProfileName/ProfileName'
@@ -7,122 +12,103 @@ import ProfileButton from '../../components/buttonsGivy/buttonGivy/buttonGivy'
 import UserInfo from '../../components/profile/UserInfo/UserInfo'
 import TagsContainer from '../../components/profile/TagsContainer/TagsContainer'
 import VideosContainer from '../../components/profile/VideosContainer/VideosContainer'
-import './ProfileStyle.css'
-import videosData from '../../data/videos.json'
 import tags from '../../data/tags.json'
-import reputations from '../../data/reputations.json'
+import './ProfileStyle.css'
 
 const getTagNames = (tagIds: string[]) =>
-  tagIds.map(id => tags.find(t => t.id === id)?.name || id)
+    tagIds.map(id => tags.find(t => t.id === id)?.name || id)
 
 function Profile() {
-  const navigate = useNavigate()
-  const [user, setUser] = useState(() => {
-    const stored = JSON.parse(localStorage.getItem('loggeduser') || '{}')
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const currentUser = useSelector((state: RootState) => state.user.currentUser)
+    const [videos, setVideos] = useState<any[]>([])
 
-    const storedReps = localStorage.getItem('reputations')
-    const allReps = storedReps ? JSON.parse(storedReps) : reputations
+    useEffect(() => {
+        if (!currentUser) {
+            navigate('/Login')
+            return
+        }
 
-    const myRatings = allReps
-      .filter((r: typeof reputations[0]) => r.toUserId === stored.id)
-      .map((r: typeof reputations[0]) => r.rating)
+        // Traer videos del usuario desde Supabase
+        supabase
+            .from('videos')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .then(({ data }) => {
+                if (data) {
+                    const mapped = data.map(v => ({
+                        id: v.id,
+                        url: v.URL,
+                        userId: v.user_id,
+                        matchId: v.match_id,
+                        description: v.description,
+                        likes: v.likes,
+                        thumbnail: '',
+                        title: '',
+                        tags: [],
+                        uploadDate: v.created_at,
+                        teaches: [],
+                        wantsToLearnInReturn: []
+                    }))
+                    setVideos(mapped)
+                }
+            })
+    }, [currentUser])
 
-    const average = myRatings.length > 0
-      ? parseFloat((myRatings.reduce((a: number, b: number) => a + b, 0) / myRatings.length).toFixed(1))
-      : 0
+    if (!currentUser) return null
 
-    return { ...stored, reputationAverage: average }
-  })
+    async function handleLogout() {
+        const confirmed = window.confirm('Are you sure you want to log out?')
+        if (!confirmed) return
 
-  const teachingTags = getTagNames(user.wantsToTeach || [])
-  const learningTags = getTagNames(user.wantsToLearn || [])
-
-  const stored = localStorage.getItem('videos')
-  const allVideos = stored ? JSON.parse(stored) : videosData
-  const profileVideos = allVideos.filter((v: any) => v.userId === user.id)
-
-  function handleAddTeaching(tag: string) {
-    const updated = {
-      ...user,
-      wantsToTeach: [...(user.wantsToTeach || []), tag],
+        try {
+            await logoutUser()
+            dispatch(clearUser())
+            navigate('/Login')
+        } catch (error: any) {
+            alert('Error: ' + error.message)
+        }
     }
-    setUser(updated)
-    localStorage.setItem('loggeduser', JSON.stringify(updated))
-  }
 
-  function handleAddLearning(tag: string) {
-    const updated = {
-      ...user,
-      wantsToLearn: [...(user.wantsToLearn || []), tag],
-    }
-    setUser(updated)
-    localStorage.setItem('loggeduser', JSON.stringify(updated))
-  }
+    const teachingTags = getTagNames(currentUser.wantsToTeach || [])
+    const learningTags = getTagNames(currentUser.wantsToLearn || [])
 
-  function handleRemoveTeaching(tag: string) {
-    const updated = {
-      ...user,
-      wantsToTeach: (user.wantsToTeach || []).filter((t: string) => t !== tag),
-    }
-    setUser(updated)
-    localStorage.setItem('loggeduser', JSON.stringify(updated))
-  }
-
-  function handleRemoveLearning(tag: string) {
-    const updated = {
-      ...user,
-      wantsToLearn: (user.wantsToLearn || []).filter((t: string) => t !== tag),
-    }
-    setUser(updated)
-    localStorage.setItem('loggeduser', JSON.stringify(updated))
-  }
-
-  function handleLogout() {
-    localStorage.removeItem('loggeduser')
-    navigate('/Login')
-  }
-
-  return (
-    <div className="profileLayout">
-      <NavBar />
-      <main className="profileMain">
-        {/* BOTÓN LOGOUT ARRIBA A LA DERECHA */}
-        <button className="logoutButton" onClick={handleLogout}>
-          Logout
-        </button>
-
-        <ProfilePicture src="https://placehold.co/150" size="large" />
-        <ProfileName name={user.username} username={user.at} />
-        <div className="profileStats">
-          <UserInfo label="Following" count={user.following} />
-          <UserInfo label="Followers" count={user.followers} />
-          <UserInfo label="Videos" count={user.videoCount} />
-          <UserInfo label="Reputation" count={user.reputationAverage} />
+    return (
+        <div className="profileLayout">
+            <NavBar />
+            <main className="profileMain">
+                <button className="logoutButton" onClick={handleLogout}>
+                    Logout
+                </button>
+                <ProfilePicture src={currentUser.profilePicture || 'https://placehold.co/150'} size="large" />
+                <ProfileName name={currentUser.username} username={currentUser.at} />
+                <div className="profileStats">
+                    <UserInfo label="Following" count={currentUser.following} />
+                    <UserInfo label="Followers" count={currentUser.followers} />
+                    <UserInfo label="Videos" count={videos.length} />
+                    <UserInfo label="Reputation" count={currentUser.reputation} />
+                </div>
+                <p className="profileBio">{currentUser.bio || 'no bio yet.'}</p>
+                <ProfileButton label="Edit profile" onClick={() => navigate('/EditProfile')} />
+                <div className="profileTags">
+                    <TagsContainer
+                        title="TEACHING"
+                        tags={teachingTags}
+                        variant="teaching"
+                        options={tags}
+                    />
+                    <TagsContainer
+                        title="LEARNING"
+                        tags={learningTags}
+                        variant="learning"
+                        options={tags}
+                    />
+                </div>
+                <VideosContainer videos={videos} />
+            </main>
         </div>
-        <p className="profileBio">{user.bio ?? 'no bio yet.'}</p>
-        <ProfileButton label="Edit profile" onClick={() => navigate('/EditProfile')} />
-        <div className="profileTags">
-          <TagsContainer
-            title="TEACHING"
-            tags={teachingTags}
-            variant="teaching"
-            options={tags}
-            onAddTag={handleAddTeaching}
-            onRemoveTag={handleRemoveTeaching}
-          />
-          <TagsContainer
-            title="LEARNING"
-            tags={learningTags}
-            variant="learning"
-            options={tags}
-            onAddTag={handleAddLearning}
-            onRemoveTag={handleRemoveLearning}
-          />
-        </div>
-        <VideosContainer videos={profileVideos} />
-      </main>
-    </div>
-  )
+    )
 }
 
 export default Profile
