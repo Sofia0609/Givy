@@ -42,25 +42,21 @@ function PossibleSwap() {
 
   if (!currentUser) return <Navigate to="/Login" />
 
-async function acceptSwap(swapId: string) {
-    // Quitar de la lista visual
+  async function acceptSwap(swapId: string) {
     setSwapRequest(prev => prev.filter(s => s.id !== swapId))
 
-    // Encontrar el swap para sacar los datos
     const swap = filteredSwap.find(s => s.id === swapId)
     if (!swap) return
 
-    // Actualizar status en Supabase
     await supabase
       .from('swapRequests')
       .update({ status: 'accepted' })
       .eq('id', swapId)
 
-    // Crear el match automáticamente
     await supabase
       .from('matches')
       .insert({
-        userId: swap.fromUserId,
+        user1Id: swap.fromUserId,      
         user2Id: swap.toUserId,
         tagOffered: swap.tagOffered,
         tagRequested: swap.tagRequested,
@@ -70,7 +66,7 @@ async function acceptSwap(swapId: string) {
         videoIdUser2: null
       })
   }
-  
+
   async function rejectSwap(swapId: string) {
     setSwapRequest(prev => prev.filter(s => s.id !== swapId))
     await supabase
