@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from 'react'
+import { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
@@ -25,8 +25,10 @@ import { supabase } from './lib/supabase'
 import { getUserById } from './services/userService'
 import { useAppDispatch } from './store/hooks'
 
+
 function AuthListener({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch()
+  const [checking, setChecking] = useState(true)
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -34,6 +36,7 @@ function AuthListener({ children }: { children: React.ReactNode }) {
         const profile = await getUserById(session.user.id)
         dispatch(setUser(profile))
       }
+      setChecking(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
@@ -45,6 +48,8 @@ function AuthListener({ children }: { children: React.ReactNode }) {
 
     return () => subscription.unsubscribe()
   }, [dispatch])
+
+  if (checking) return <p>Loading...</p>
 
   return <>{children}</>
 }

@@ -1,5 +1,9 @@
+import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../../store'
+import type { User } from '../../types/index'
+import { supabase } from '../../lib/supabase'
 import NavBar from '../../components/navBar/navBar'
 import ProfilePicture from '../../components/profile/ProfilePicture/ProfilePicture'
 import ProfileName from '../../components/profile/ProfileName/ProfileName'
@@ -8,91 +12,99 @@ import TagsContainer from '../../components/profile/TagsContainer/TagsContainer'
 import VideosContainer from '../../components/profile/VideosContainer/VideosContainer'
 import tags from '../../data/tags.json'
 import './ProfileStyle.css'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { fetchProfileThunk, fetchProfileVideosThunk, followThunk, unfollowThunk, clearProfile } from '../../store/profileSlice'
-import LoadingScreen from '../../components/guards/LoadingScreen'
-import ErrorScreen from '../../components/guards/ErrorScreen'
-import type { User } from '../../types/index'
 
 const getTagNames = (tagIds: string[]) =>
-  tagIds.map(id => tags.find(t => t.id === id)?.name || id)
+    tagIds.map(id => tags.find(t => t.id === id)?.name || id)
 
 function ProfileView() {
-  const { userId } = useParams()
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+    const { userId } = useParams()
+    const navigate = useNavigate()
+    const currentUser = useSelector((state: RootState) => state.user.currentUser)
+    const [viewedUser, setViewedUser] = useState<User | null>(null)
+    const [videos, setVideos] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
 
-  const { viewedUser, videos, loading, error } = useAppSelector(state => state.profile)
-  const { currentUser } = useAppSelector(state => state.user)
+    useEffect(() => {
+        if (!userId) return
 
-  useEffect(() => {
-    if (!userId) return
+        // Si es tu propio perfil, redirige
+        if (userId === currentUser?.id) {
+            navigate('/Profile')
+            return
+        }
 
-    if (userId === currentUser?.id) {
-      navigate('/Profile')
-      return
-    }
+        // Traer usuario
+        supabase
+            .from('users')
+            .select('*')
+            .eq('id', userId)
+            .single()
+            .then(({ data }) => {
+                if (data) setViewedUser(data as User)
+                setLoading(false)
+            })
 
-    dispatch(fetchProfileThunk(userId))
-    dispatch(fetchProfileVideosThunk(userId))
+        // Traer sus videos
+        supabase
+            .from('videos')
+            .select('*')
+            .eq('user_id', userId)
+            .then(({ data }) => {
+                if (data) {
+                    const mapped = data.map(v => ({
+                        id: v.id,
+                        url: v.URL,
+                        userId: v.user_id,
+                        matchId: v.match_id,
+                        description: v.description,
+                        likes: v.likes,
+                        thumbnail: '',
+                        title: '',
+                        tags: [],
+                        uploadDate: v.created_at,
+                        teaches: [],
+                        wantsToLearnInReturn: []
+                    }))
+                    setVideos(mapped)
+                }
+            })
+    }, [userId])
 
-    return () => {
-      dispatch(clearProfile())
-    }
-  }, [userId, dispatch])
+    if (loading) return <p>Loading...</p>
 
-  if (loading) return <LoadingScreen />
-  if (error) return <ErrorScreen message={error} />
-  if (!viewedUser) return (
-    <div className="profileLayout">
-      <NavBar />
-      <main className="profileMain">
-        <p>Usuario no encontrado</p>
-      </main>
-    </div>
-  )
-
-  const isFollowing = currentUser?.followingList?.includes(viewedUser.id) ?? false
-
-  function handleFollow() {
-    if (!currentUser || !viewedUser) return
-    if (isFollowing) {
-      dispatch(unfollowThunk({ followerId: currentUser.id, targetId: viewedUser.id }))
-    } else {
-      dispatch(followThunk({ followerId: currentUser.id, targetId: viewedUser.id }))
-    }
-  }
-
-  const teachingTags = getTagNames(viewedUser.wantsToTeach || [])
-  const learningTags = getTagNames(viewedUser.wantsToLearn || [])
-
-  return (
-    <div className="profileLayout">
-      <NavBar />
-      <main className="profileMain">
-        <ProfilePicture src={viewedUser.profilePicture || 'https://placehold.co/150'} size="large" />
-        <ProfileName name={viewedUser.username} username={viewedUser.at} />
-        <div className="profileStats">
-          <UserInfo label="Following" count={viewedUser.following} />
-          <UserInfo label="Followers" count={viewedUser.followers} />
-          <UserInfo label="Videos" count={videos.length} />
-          <UserInfo label="Reputation" count={viewedUser.reputationAverage} />
+    if (!viewedUser) return (
+        <div className="profileLayout">
+            <NavBar />
+            <main className="profileMain">
+                <p>User not found</p>
+            </main>
         </div>
-        <p className="profileBio">{viewedUser.bio ?? 'no bio yet.'}</p>
-        <button
-          className={`profileFollowBtn ${isFollowing ? 'profileFollowBtn--following' : ''}`}
-          onClick={handleFollow}
-        >
-          {isFollowing ? 'Following' : 'Follow'}
-        </button>
-        <div className="profileTags">
-          <TagsContainer title="TEACHING" tags={teachingTags} variant="teaching" options={tags} />
-          <TagsContainer title="LEARNING" tags={learningTags} variant="learning" options={tags} />
+    )
+
+    const teachingTags = getTagNames(viewedUser.wantsToTeach || [])
+    const learningTags = getTagNames(viewedUser.wantsToLearn || [])
+
+    return (
+        <div className="profileLayout">
+            <NavBar />
+            <main className="profileMain">
+                <ProfilePicture src={viewedUser.profilePicture || 'https://placehold.co/150'} size="large" />
+                <ProfileName name={viewedUser.username} username={viewedUser.at} />
+                <div className="profileStats">
+                    <UserInfo label="Following" count={viewedUser.following} />
+                    <UserInfo label="Followers" count={viewedUser.followers} />
+                    <UserInfo label="Videos" count={videos.length} />
+                    <UserInfo label="Reputation" count={viewedUser.reputation} />
+                </div>
+                <p className="profileBio">{viewedUser.bio || 'no bio yet.'}</p>
+                <div className="profileTags">
+                    <TagsContainer title="TEACHING" tags={teachingTags} variant="teaching" options={tags} />
+                    <TagsContainer title="LEARNING" tags={learningTags} variant="learning" options={tags} />
+                </div>
+                <VideosContainer videos={videos} />
+            </main>
         </div>
-        <VideosContainer videos={videos} />
-      </main>
-    </div>
-  )
+    )
 }
 
 export default ProfileView

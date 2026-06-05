@@ -1,76 +1,70 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../../../store'
 import './interactons.css'
-import notificationsData from '../../../data/notifications.json'
-import usersData from '../../../data/users.json'
 import NavBar from '../../../components/navBar/navBar'
 import Header from '../../../components/header/header'
 import EntityCard from '../../../components/notifications/entityCard/entityCard'
-import { Navigate } from 'react-router-dom'
-import type { Notification, User } from '../../../types/index'
-
-interface InteractionWithUser extends Notification {
-  fromUser?: User
-  description: string
-}
+import { supabase } from '../../../lib/supabase'
+import { Navigate } from 'react-router'
 
 function Interactions() {
-
-  const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
-  const userLogged = loggedUserData.id
+  const currentUser = useSelector((state: RootState) => state.user.currentUser)
   const navigate = useNavigate()
-
-  if (!userLogged) {
-    return <Navigate to="/login" />
-  }
-
-  const [myInteractions, setMyInteractions] = useState<InteractionWithUser[]>([])
+  const [myInteractions, setMyInteractions] = useState<any[]>([])
 
   useEffect(() => {
-    function getInteractionsbyUser(user: string) {
-      const stored = localStorage.getItem('notifications')
-      const allInteractions: Notification[] = stored ? JSON.parse(stored) : (notificationsData as Notification[])
+    if (!currentUser) return
 
-      const userInteractions: InteractionWithUser[] = allInteractions
-        .filter((interaction) => interaction.targetUserId === user)
-        .map((interaction) => {
-          // Busca quién generó la notificación
-          const fromUser = (usersData as User[]).find(u => u.id === interaction.fromUserId)
+    async function loadInteractions() {
+      // Traer notificaciones del usuario
+      const { data: notifications } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('targetUserId', currentUser!.id)
+        .order('created_at', { ascending: false })
 
-          // Arma el texto según el tipo
-          let description = ''
-          if (interaction.type === 'like') description = 'Liked your video'
-          if (interaction.type === 'comment') description = 'Commented on your video' 
-          if (interaction.type === 'reply') description = 'Replied to your comment'
+      if (!notifications) return
 
-          return { ...interaction, fromUser, description }
-        })
+      // Traer usuarios para mostrar quién generó la notificación
+      const { data: users } = await supabase.from('users').select('*')
 
-      setMyInteractions(userInteractions)
+      const withDetails = notifications.map(n => {
+        const fromUser = users?.find(u => u.id === n.fromUserId)
+
+        let description = ''
+        if (n.type === 'like') description = 'Liked your video'
+        if (n.type === 'comment') description = 'Commented on your video'
+        if (n.type === 'reply') description = 'Replied to your comment'
+
+        return { ...n, fromUser, description }
+      })
+
+      setMyInteractions(withDetails)
     }
 
-    getInteractionsbyUser(userLogged);
-  }, [userLogged]);
+    loadInteractions()
+  }, [currentUser])
 
-  function handleInteractionClick(interaction: InteractionWithUser) {
-    // Navega al video donde ocurrió la interacción
-    navigate(`/feed/${interaction.videoId}`)
+  if (!currentUser) return <Navigate to="/Login" />
+
+  function handleInteractionClick(interaction: any) {
+    navigate(`/Feed/${interaction.videoId}`)
   }
 
   return (
     <div className='interactionsLayout'>
-      <div>
-        <NavBar />
-      </div>
+      <div><NavBar /></div>
       <div className='interactionsContent'>
-        <Header title='Interactions' />    
+        <Header title='Interactions' />
         <div className='interactionsSectionContainer'>
           {myInteractions.length === 0 ? (
             <h3>You don't have any interactions yet</h3>
           ) : (
-            myInteractions.map((interaction, key) => (
+            myInteractions.map((interaction) => (
               <EntityCard
-                key={key}
+                key={interaction.id}
                 photo={interaction.fromUser?.profilePicture}
                 name={interaction.fromUser?.username}
                 description={interaction.description}
@@ -85,4 +79,4 @@ function Interactions() {
   )
 }
 
-export default Interactions;
+export default Interactions
