@@ -37,7 +37,12 @@ export async function getCommentsByVideoId(videoId: string): Promise<CommentData
 export async function addComment(videoId: string, userId: string, text: string): Promise<CommentData> {
   const { data, error } = await supabase
     .from('comments')
-    .insert({ videoId, userId, text })
+    .insert({ 
+      id: crypto.randomUUID(),  // ← genera un id único
+      videoId, 
+      userId, 
+      text 
+    })
     .select()
     .single()
 
@@ -66,7 +71,12 @@ export async function deleteComment(commentId: string): Promise<void> {
 export async function addReply(commentId: string, userId: string, text: string): Promise<ReplyData> {
   const { data, error } = await supabase
     .from('replies')
-    .insert({ commentId, userId, text })
+    .insert({ 
+      id: crypto.randomUUID(),  // ← genera un id único
+      commentId, 
+      userId, 
+      text 
+    })
     .select()
     .single()
 
