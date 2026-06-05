@@ -10,6 +10,7 @@ export async function createSwapRequest(
   const { data, error } = await supabase
     .from('swapRequests')
     .insert({
+      id: crypto.randomUUID(),  // ← agrega esta línea
       fromUserId,
       toUserId,
       status: 'pending',
