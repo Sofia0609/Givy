@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import NavBar from '../../components/navBar/navBar'
 import ProfilePicture from '../../components/profile/ProfilePicture/ProfilePicture'
@@ -8,113 +8,81 @@ import UserInfo from '../../components/profile/UserInfo/UserInfo'
 import TagsContainer from '../../components/profile/TagsContainer/TagsContainer'
 import VideosContainer from '../../components/profile/VideosContainer/VideosContainer'
 import './ProfileStyle.css'
-import videosData from '../../data/videos.json'
 import tags from '../../data/tags.json'
-import reputations from '../../data/reputations.json'
-
-  import { useEffect } from 'react'
-  import { getAllUsers } from '../../services/userService'
-
-
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { logoutThunk, updateProfileThunk } from '../../store/userSlice'
+import { fetchProfileVideosThunk } from '../../store/slices/profileSlice'
 
 const getTagNames = (tagIds: string[]) =>
   tagIds.map(id => tags.find(t => t.id === id)?.name || id)
 
 function Profile() {
-
-    useEffect(() => {
-    getAllUsers().then(users => {
-      console.log('Usuarios desde Supabase:', users)
-    })
-  }, [])
-
-
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [user, setUser] = useState(() => {
-    const stored = JSON.parse(localStorage.getItem('loggeduser') || '{}')
+  const { currentUser, loading, error } = useAppSelector(state => state.user)
+  const { videos } = useAppSelector(state => state.profile)
 
-    const storedReps = localStorage.getItem('reputations')
-    const allReps = storedReps ? JSON.parse(storedReps) : reputations
+  useEffect(() => {
+    if (currentUser?.id) {
+      dispatch(fetchProfileVideosThunk(currentUser.id))
+    }
+  }, [currentUser?.id, dispatch])
 
-    const myRatings = allReps
-      .filter((r: typeof reputations[0]) => r.toUserId === stored.id)
-      .map((r: typeof reputations[0]) => r.rating)
+  if (loading) return <div>Cargando perfil...</div>
+  if (error) return <div>Error: {error}</div>
+  if (!currentUser) {
+    navigate('/Login')
+    return null
+  }
 
-    const average = myRatings.length > 0
-      ? parseFloat((myRatings.reduce((a: number, b: number) => a + b, 0) / myRatings.length).toFixed(1))
-      : 0
-
-    return { ...stored, reputationAverage: average }
-  })
-
-  const teachingTags = getTagNames(user.wantsToTeach || [])
-  const learningTags = getTagNames(user.wantsToLearn || [])
-
-  const stored = localStorage.getItem('videos')
-  const allVideos = stored ? JSON.parse(stored) : videosData
-  const profileVideos = allVideos.filter((v: any) => v.userId === user.id)
+  const teachingTags = getTagNames(currentUser.wantsToTeach || [])
+  const learningTags = getTagNames(currentUser.wantsToLearn || [])
 
   function handleAddTeaching(tag: string) {
-    const updated = {
-      ...user,
-      wantsToTeach: [...(user.wantsToTeach || []), tag],
-    }
-    setUser(updated)
-    localStorage.setItem('loggeduser', JSON.stringify(updated))
+    if (!currentUser) return
+    const updated = [...(currentUser.wantsToTeach || []), tag]
+    dispatch(updateProfileThunk({ id: currentUser.id, changes: { wantsToTeach: updated as any } }))
   }
 
   function handleAddLearning(tag: string) {
-    const updated = {
-      ...user,
-      wantsToLearn: [...(user.wantsToLearn || []), tag],
-    }
-    setUser(updated)
-    localStorage.setItem('loggeduser', JSON.stringify(updated))
+    if (!currentUser) return
+    const updated = [...(currentUser.wantsToLearn || []), tag]
+    dispatch(updateProfileThunk({ id: currentUser.id, changes: { wantsToLearn: updated as any } }))
   }
 
   function handleRemoveTeaching(tag: string) {
-    const updated = {
-      ...user,
-      wantsToTeach: (user.wantsToTeach || []).filter((t: string) => t !== tag),
-    }
-    setUser(updated)
-    localStorage.setItem('loggeduser', JSON.stringify(updated))
+    if (!currentUser) return
+    const updated = (currentUser.wantsToTeach || []).filter((t: string) => t !== tag)
+    dispatch(updateProfileThunk({ id: currentUser.id, changes: { wantsToTeach: updated as any } }))
   }
 
   function handleRemoveLearning(tag: string) {
-    const updated = {
-      ...user,
-      wantsToLearn: (user.wantsToLearn || []).filter((t: string) => t !== tag),
-    }
-    setUser(updated)
-    localStorage.setItem('loggeduser', JSON.stringify(updated))
+    if (!currentUser) return
+    const updated = (currentUser.wantsToLearn || []).filter((t: string) => t !== tag)
+    dispatch(updateProfileThunk({ id: currentUser.id, changes: { wantsToLearn: updated as any } }))
   }
 
   function handleLogout() {
-    localStorage.removeItem('loggeduser')
+    dispatch(logoutThunk())
     navigate('/Login')
   }
-
-
 
   return (
     <div className="profileLayout">
       <NavBar />
       <main className="profileMain">
-        {/* BOTÓN LOGOUT ARRIBA A LA DERECHA */}
         <button className="logoutButton" onClick={handleLogout}>
           Logout
         </button>
-
-        <ProfilePicture src="https://placehold.co/150" size="large" />
-        <ProfileName name={user.username} username={user.at} />
+        <ProfilePicture src={currentUser.profilePicture || 'https://placehold.co/150'} size="large" />
+        <ProfileName name={currentUser.username} username={currentUser.at} />
         <div className="profileStats">
-          <UserInfo label="Following" count={user.following} />
-          <UserInfo label="Followers" count={user.followers} />
-          <UserInfo label="Videos" count={user.videoCount} />
-          <UserInfo label="Reputation" count={user.reputationAverage} />
+          <UserInfo label="Following" count={currentUser.following} />
+          <UserInfo label="Followers" count={currentUser.followers} />
+          <UserInfo label="Videos" count={videos.length} />
+          <UserInfo label="Reputation" count={currentUser.reputationAverage} />
         </div>
-        <p className="profileBio">{user.bio ?? 'no bio yet.'}</p>
+        <p className="profileBio">{currentUser.bio ?? 'no bio yet.'}</p>
         <ProfileButton label="Edit profile" onClick={() => navigate('/EditProfile')} />
         <div className="profileTags">
           <TagsContainer
@@ -134,7 +102,7 @@ function Profile() {
             onRemoveTag={handleRemoveLearning}
           />
         </div>
-        <VideosContainer videos={profileVideos} />
+        <VideosContainer videos={videos} />
       </main>
     </div>
   )
