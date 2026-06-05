@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import users from '../../../data/users.json'
 import './SignUp.css'
 import logo from '../../../assets/Logotype.png'
 import InputGivy from '../../../components/inputGivy/inputGivy'
 import ButtonGivy from '../../../components/buttonsGivy/buttonGivy/buttonGivy'
-
 
 function SignUp() {
     const navigate = useNavigate()
@@ -19,38 +17,13 @@ function SignUp() {
             return
         }
 
-        const existingUser = users.find(u => u.email === email)
-        if (existingUser) {
-            alert('An account with this email already exists')
+        if (password.length < 6) {
+            alert('Password must be at least 6 characters')
             return
         }
 
-        const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
-        const localUserExists = storedUsers.find(u => u.email === email)
-        if (localUserExists) {
-            alert('An account with this email already exists')
-            return
-        }
-  
-        const newUser = {
-            id: `u${Date.now()}`, 
-            username: name,
-            at: `@${name.toLowerCase().replace(/\s/g, '')}`,
-            email,
-            password,
-            bio: '',
-            profilePicture: '../src/assets/profile_picture.png',
-            followers: 0,
-            following: 0,
-            reputationAverage: 0,
-            videoCount: 0,
-            wantsToLearn: [],
-            wantsToTeach: []
-        }
-
-        storedUsers.push(newUser)
-        localStorage.setItem('signupUsers', JSON.stringify(storedUsers))
-        localStorage.setItem('signupData', JSON.stringify({ name, email, password }))
+        // Guardamos temporalmente para pasarlo a LearnTags/TeachTags
+        sessionStorage.setItem('signupData', JSON.stringify({ name, email, password }))
         
         navigate('/LearnTags')
     }
