@@ -16,7 +16,6 @@ const initialState: VideoState = {
   error: null
 }
 
-// Thunk: bring videos and users set up the FeedItems
 export const fetchFeed = createAsyncThunk(
   'videos/fetchFeed',
   async (loggedUserId: string) => {
@@ -24,10 +23,7 @@ export const fetchFeed = createAsyncThunk(
       getAllVideos(),
       getAllUsers()
     ])
-
-    // Exclude the videos user logged in has uploaded
     const filtered = videos.filter(v => v.userId !== loggedUserId)
-
     const items: FeedItem[] = filtered
       .map(video => {
         const user = users.find(u => u.id === video.userId)
@@ -35,7 +31,6 @@ export const fetchFeed = createAsyncThunk(
         return { video, user }
       })
       .filter((item): item is FeedItem => item !== null)
-
     return items
   }
 )
