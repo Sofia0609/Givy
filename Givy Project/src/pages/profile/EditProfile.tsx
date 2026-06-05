@@ -1,27 +1,31 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import NavBar from '../../components/navBar/navBar'
-import tags from '../../data/tags.json'
 import './EditProfile.css'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { updateProfileThunk } from '../../store/userSlice'
 
 function EditProfile() {
   const navigate = useNavigate()
-  const user = JSON.parse(localStorage.getItem('loggeduser') || '{}')
+  const dispatch = useAppDispatch()
+  const { currentUser, loading } = useAppSelector(state => state.user)
 
-  const [name, setName] = useState(user.username || '')
-  const [username, setUsername] = useState(user.at || '')
-  const [description, setDescription] = useState(user.bio || '')
+  const [name, setName] = useState(currentUser?.username || '')
+  const [username, setUsername] = useState(currentUser?.at || '')
+  const [description, setDescription] = useState(currentUser?.bio || '')
 
-  function handleConfirm() {
-    const updated = {
-      ...user,
-      username: name,
-      at: username,
-      bio: description,
-     wantsToTeach: user.wantsToTeach,
-     wantsToLearn: user.wantsToLearn,
-    }
-    localStorage.setItem('loggeduser', JSON.stringify(updated))
+  async function handleConfirm() {
+    if (!currentUser) return
+
+    await dispatch(updateProfileThunk({
+      id: currentUser.id,
+      changes: {
+        username: name,
+        at: username,
+        bio: description,
+      }
+    }))
+
     navigate('/Profile')
   }
 
@@ -70,11 +74,14 @@ function EditProfile() {
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
-
         </div>
 
-        <button className="editConfirmBtn" onClick={handleConfirm}>
-          Confirm
+        <button
+          className="editConfirmBtn"
+          onClick={handleConfirm}
+          disabled={loading}
+        >
+          {loading ? 'Saving...' : 'Confirm'}
         </button>
 
       </main>
