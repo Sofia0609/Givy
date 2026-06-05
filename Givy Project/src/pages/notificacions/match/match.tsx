@@ -40,15 +40,13 @@ function Match() {
     if (!currentUser) return
 
     async function loadData() {
-      // Traer usuarios
       const { data: usersData } = await supabase.from('users').select('*')
       if (usersData) setUsers(usersData)
 
-      // Traer matches del usuario
       const { data: matchesData } = await supabase
         .from('matches')
         .select('*')
-        .or(`userId.eq.${currentUser!.id},user2Id.eq.${currentUser!.id}`)
+        .or(`user1Id.eq.${currentUser!.id},user2Id.eq.${currentUser!.id}`)
       if (matchesData) setFilteredMatches(matchesData)
     }
 
@@ -58,7 +56,7 @@ function Match() {
   if (!currentUser) return <Navigate to="/Login" />
 
   const currentMatch = filteredMatches.find(m => m.id === selectedMatch)
-  const soyUser1 = currentMatch?.userId === currentUser.id
+  const soyUser1 = currentMatch?.user1Id === currentUser.id
   const iSentVideo = soyUser1 ? currentMatch?.videoSentByUser1 : currentMatch?.videoSentByUser2
   const otherSentVideo = soyUser1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
   const otherVideoUrl = soyUser1 ? currentMatch?.videoIdUser2 : currentMatch?.videoIdUser1
@@ -66,7 +64,6 @@ function Match() {
   async function handleUploadVideo(file: File) {
     if (!selectedMatch || !currentUser) return
 
-    // Subir video a Supabase Storage
     const fileName = `${currentUser.id}_${Date.now()}_${file.name}`
     const { error: uploadError } = await supabase.storage
       .from('videos')
@@ -83,7 +80,6 @@ function Match() {
 
     const videoUrl = urlData.publicUrl
 
-    // Actualizar match en Supabase
     const updateFields = soyUser1
       ? { videoSentByUser1: true, videoIdUser1: videoUrl }
       : { videoSentByUser2: true, videoIdUser2: videoUrl }
@@ -93,7 +89,6 @@ function Match() {
       .update(updateFields)
       .eq('id', selectedMatch)
 
-    // Actualizar estado local
     setFilteredMatches(prev =>
       prev.map(m => m.id === selectedMatch ? { ...m, ...updateFields } : m)
     )
@@ -121,6 +116,12 @@ function Match() {
 
   const showOnlyChat = matchId && isMobile
 
+  // Helper para obtener el nombre del otro usuario
+  function getOtherUsername(match: any) {
+    const otherId = currentUser!.id === match.user1Id ? match.user2Id : match.user1Id
+    return users.find(u => u.id === otherId)?.username || 'User'
+  }
+
   return (
     <div className='matchLayout'>
       <div><NavBar /></div>
@@ -135,12 +136,12 @@ function Match() {
                 <h3>You don't have any matches</h3>
               ) : (
                 filteredMatches.map((match) => {
-                  const otherUserId = currentUser.id === match.userId ? match.user2Id : match.userId
+                  const otherUserId = currentUser.id === match.user1Id ? match.user2Id : match.user1Id
                   const otherUser = users.find(u => u.id === otherUserId)
                   const tagOffered = tagsData.find(tag => tag.id === match.tagOffered)
                   const tagRequested = tagsData.find(tag => tag.id === match.tagRequested)
                   const noStarted = !match.videoSentByUser1 && !match.videoSentByUser2
-                  const isUser1 = currentUser.id === match.userId
+                  const isUser1 = currentUser.id === match.user1Id
                   const otherHasSent = isUser1 ? match.videoSentByUser2 : match.videoSentByUser1
 
                   return (
@@ -201,10 +202,7 @@ function Match() {
 
               ) : (
                 <div className='videoContainer'>
-                  <h2>{users.find(u => {
-                    const otherId = currentUser.id === currentMatch?.userId ? currentMatch?.user2Id : currentMatch?.userId
-                    return u.id === otherId
-                  })?.username} just Dropped a Video!</h2>
+                  <h2>{getOtherUsername(currentMatch)} just Dropped a Video!</h2>
 
                   {otherVideoUrl ? (
                     <video src={otherVideoUrl} controls />
@@ -215,7 +213,7 @@ function Match() {
                   <div className='surveySection'>
                     <p>Did you like the educative Video?</p>
                     <Dropdown label="" options={likeOptions} value={likeVideo} onChange={setLikeVideo} />
-                    <p>Rate (1-10)</p>
+                    <p>Rate {getOtherUsername(currentMatch)} (1-10)</p>
                     <InputGivy label="" type="number" value={rating} placeholder="Type here"
                       onChange={(e) => {
                         const value = e.target.value
