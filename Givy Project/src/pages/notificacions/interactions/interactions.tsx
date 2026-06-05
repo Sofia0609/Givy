@@ -20,10 +20,6 @@ function Interactions() {
   const userLogged = loggedUserData.id
   const navigate = useNavigate()
 
-  if (!userLogged) {
-    return <Navigate to="/login" />
-  }
-
   const [myInteractions, setMyInteractions] = useState<InteractionWithUser[]>([])
 
   useEffect(() => {
@@ -54,7 +50,7 @@ function Interactions() {
 
   function handleInteractionClick(interaction: InteractionWithUser) {
     // Navega al video donde ocurrió la interacción
-    navigate(`/feed/${interaction.videoId}`)
+    navigate(`/Feed/${interaction.videoId}`)
   }
 
   return (

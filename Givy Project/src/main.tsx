@@ -25,6 +25,7 @@ import { supabase } from './lib/supabase'
 import { getUserById } from './services/userService'
 import { useAppDispatch } from './store/hooks'
 
+
 function AuthListener({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch()
 
