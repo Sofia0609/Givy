@@ -47,7 +47,7 @@ export async function getVideosByUserId(userId: string) {
   return data
 }
 
-// Actualiza datos del usuario
+
 export async function updateUser(id: string, changes: Partial<User>): Promise<User> {
   const { data, error } = await supabase
     .from('users')

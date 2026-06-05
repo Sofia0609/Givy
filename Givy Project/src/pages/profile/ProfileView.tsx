@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { fetchProfileThunk, fetchProfileVideosThunk, followThunk, unfollowThunk, clearProfile } from '../../store/profileSlice'
 import LoadingScreen from '../../components/guards/LoadingScreen'
 import ErrorScreen from '../../components/guards/ErrorScreen'
+import type { User } from '../../types/index'
 
 const getTagNames = (tagIds: string[]) =>
   tagIds.map(id => tags.find(t => t.id === id)?.name || id)
