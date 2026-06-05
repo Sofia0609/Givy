@@ -19,6 +19,7 @@ import Login from './pages/login/login'
 import SearchResults from './pages/SearchResults/SearchResults'
 import EditProfile from './pages/profile/EditProfile'
 import ProfileView from './pages/profile/ProfileView'
+import ProtectedRoute from './components/guards/ProtectedRoute'
 
 let routes = createBrowserRouter([
   {
