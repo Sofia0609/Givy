@@ -7,52 +7,31 @@ export async function getUserById(id: string): Promise<User | any> {
     .from('users')
     .select('*')
     .eq('id', id)
-    .single()//data.users[0]
-  
+    .single()
+
   if (error) {
     console.error('Error fetching user:', error)
     return error.message
   }
-  
+
   return data as User
 }
 
-// Trae TODOS los usuarios (útil para listas)
+// Trae TODOS los usuarios
 export async function getAllUsers(): Promise<User[]> {
   const { data, error } = await supabase
     .from('users')
     .select('*')
-  
+
   if (error) {
     console.error('Error fetching users:', error)
     return []
   }
-  
+
   return data as User[]
 }
 
-//Usuario Loogeado
-
-export async function loginUser(email: string, password: string) {
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password
-    })
-
-    if (authError) throw new Error(authError.message)
-    if (!authData.user) throw new Error('Could not log in')
-
-    const { data: profileData, error: profileError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', authData.user.id)
-        .single()
-
-    if (profileError) throw new Error(profileError.message)
-
-    return profileData
-}
-
+// Trae los videos de un usuario
 export async function getVideosByUserId(userId: string) {
   const { data, error } = await supabase
     .from('videos')
@@ -64,8 +43,10 @@ export async function getVideosByUserId(userId: string) {
     console.error('Error fetching videos:', error)
     return []
   }
+
   return data
 }
+
 
 export async function updateUser(id: string, changes: Partial<User>): Promise<User> {
   const { data, error } = await supabase
@@ -79,6 +60,7 @@ export async function updateUser(id: string, changes: Partial<User>): Promise<Us
   return data as User
 }
 
+// Seguir a un usuario
 export async function followUser(followerId: string, targetId: string) {
   const follower = await getUserById(followerId)
   const target = await getUserById(targetId)
@@ -87,10 +69,30 @@ export async function followUser(followerId: string, targetId: string) {
   await supabase.from('users').update({ followers: target.followers + 1 }).eq('id', targetId)
 }
 
+// Dejar de seguir a un usuario
 export async function unfollowUser(followerId: string, targetId: string) {
   const follower = await getUserById(followerId)
   const target = await getUserById(targetId)
 
   await supabase.from('users').update({ following: follower.following - 1 }).eq('id', followerId)
   await supabase.from('users').update({ followers: target.followers - 1 }).eq('id', targetId)
+}
+
+export async function uploadAvatar(userId: string, file: File): Promise<string> {
+  const fileExt = file.name.split('.').pop()
+  const filePath = `${userId}.${fileExt}`
+
+  const { error: uploadError } = await supabase.storage
+    .from('avatars')
+    .upload(filePath, file, { upsert: true })
+
+  if (uploadError) throw uploadError
+
+  const { data } = supabase.storage
+    .from('avatars')
+    .getPublicUrl(filePath)
+
+  await updateUser(userId, { profilePicture: data.publicUrl })
+
+  return data.publicUrl
 }
