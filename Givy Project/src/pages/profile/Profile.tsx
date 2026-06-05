@@ -64,10 +64,12 @@ function Profile() {
     dispatch(updateProfileThunk({ id: currentUser.id, changes: { wantsToLearn: updated as any } }))
   }
 
-  function handleLogout() {
-    dispatch(logoutThunk())
-    navigate('/Login')
-  }
+ function handleLogout() {
+  const confirmed = window.confirm('¿Estás seguro de que quieres cerrar sesión?')
+  if (!confirmed) return
+  dispatch(logoutThunk())
+  navigate('/Login')
+}
 
   return (
     <div className="profileLayout">
