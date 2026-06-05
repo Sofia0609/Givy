@@ -3,7 +3,7 @@ import { Navigate, useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchFeed } from '../../store/videoSlice';
 import type { RootState, AppDispatch } from '../../store/store';
-import type { CommentData} from '../../types/index'
+import type { CommentData } from '../../types/index'
 import Description from '../../components/feed/description/description';
 import VideoSection from '../../components/feed/video/Video';
 import CircularButton from '../../components/feed/circularButton/CircularButton';
@@ -17,9 +17,9 @@ import commentIcon from '../../assets/comment_icon.svg';
 import tagsData from '../../data/tags.json';
 import { updateLike } from '../../services/videoService';
 import { getCommentsByVideoId, addComment as addCommentDB, deleteComment as deleteCommentDB, addReply as addReplyDB, deleteReply as deleteReplyDB } from '../../services/commentService';
+import { createSwapRequest } from '../../services/swapService';
 import './Feed.css';
 import NavBar from '../../components/navBar/navBar';
-import { createSwapRequest } from '../../services/swapService'
 
 // -- Helpers ----------------------------------------------
 const resolveTagName = (tagId: string | string[]): string => {
@@ -39,8 +39,8 @@ function Feed() {
   const { videoId } = useParams<{ videoId?: string }>();
   const dispatch = useDispatch<AppDispatch>();
 
+  // Solo Redux, sin localStorage
   const loggedUser = useSelector((state: RootState) => state.user.currentUser)
-    ?? JSON.parse(localStorage.getItem('loggeduser') || 'null')
 
   const { feedItems, loading, error } = useSelector((state: RootState) => state.videos);
 
@@ -57,6 +57,14 @@ function Feed() {
   const [commentsMap, setCommentsMap] = useState<Record<string, CommentData[]>>({});
   const [swapAnimMap, setSwapAnimMap] = useState<Record<string, boolean>>({});
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+ useEffect(() => {
+  const initial: Record<string, number> = {};
+  feedItems.forEach(({ video }) => {
+    initial[video.id] = video.likes ?? 0;
+  });
+  setLikeCountMap(initial);
+}, [feedItems]);
 
   useEffect(() => {
     const loadComments = async () => {
@@ -107,26 +115,24 @@ function Feed() {
   };
 
   const handleSwap = async (videoId: string) => {
-  const video = feedItems.find(item => item.video.id === videoId)?.video;
-  if (!video) return;
+    const video = feedItems.find(item => item.video.id === videoId)?.video;
+    if (!video) return;
 
-  try {
-    await createSwapRequest(
-      loggedUser.id,
-      video.userId,
-      loggedUser.wantsToTeach?.[0] ?? '',
-      video.teaches[0] ?? ''
-    )
-
-    setSwapAnimMap((prev) => ({ ...prev, [videoId]: true }));
-    setTimeout(() => {
-      setSwapAnimMap((prev) => ({ ...prev, [videoId]: false }));
-    }, 1200);
-
-  } catch (error) {
-    console.error('Error creating swap request:', error)
-  }
-};
+    try {
+      await createSwapRequest(
+        loggedUser.id,
+        video.userId,
+        loggedUser.teaches?.[0] ?? '',
+        video.teaches[0] ?? ''
+      )
+      setSwapAnimMap((prev) => ({ ...prev, [videoId]: true }));
+      setTimeout(() => {
+        setSwapAnimMap((prev) => ({ ...prev, [videoId]: false }));
+      }, 1200);
+    } catch (error) {
+      console.error('Error creating swap request:', error)
+    }
+  };
 
   const addComment = async (id: string, text: string) => {
     try {
