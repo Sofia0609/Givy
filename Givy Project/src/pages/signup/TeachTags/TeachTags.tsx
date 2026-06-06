@@ -53,8 +53,8 @@ function TeachTags() {
             // Limpia el sessionStorage
             sessionStorage.removeItem('signupData')
 
-            // Al feed!
-            navigate('/Feed')
+            // Navegamos nuevamente al login, para la autenticacion
+            navigate('/Login')
 
         } catch (error: any) {
             alert('Error creating account: ' + error.message)

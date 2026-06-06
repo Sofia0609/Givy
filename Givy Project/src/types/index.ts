@@ -1,14 +1,14 @@
 export interface User {
   id: string
+  created_at: string
   username: string
   at: string
   email: string
-  password: string
   bio: string
   profilePicture: string
   followers: number
   following: number
-  reputationAverage: number
+  reputation: number
   videoCount: number
   wantsToLearn: string[]
   wantsToTeach: string[]
@@ -26,7 +26,7 @@ export interface Video {
   likes: number
   uploadDate: string
   teaches: string[]
-  wantsToLearnInReturn: string[]
+ wantsToLearn: string[]
 }
 
 export interface ReplyData {

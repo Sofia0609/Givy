@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router'
 import './SmallTag.css'
 
 interface SmallTagprops{

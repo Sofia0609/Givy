@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './notifications.css'
 import NavBar from '../../components/navBar/navBar'
 import Banner from '../../components/notifications/banner/banner'
