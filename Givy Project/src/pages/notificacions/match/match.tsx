@@ -61,21 +61,58 @@ function Match() {
   const otherSentVideo = soyUser1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
   const otherVideoUrl = soyUser1 ? currentMatch?.videoIdUser2 : currentMatch?.videoIdUser1
 
-async function handleUploadVideo(file: File) {
-  if (!selectedMatch || !currentUser) return
+  async function handleUploadVideo(file: File) {
+      if (!selectedMatch || !currentUser) {
+        console.log('❌ No hay match seleccionado o usuario')
+        return
+      }
 
-  console.log('soyUser1:', soyUser1)
-  console.log('selectedMatch:', selectedMatch)
-  console.log('currentUser.id:', currentUser.id)
+      console.log('1️⃣ Subiendo video...', file.name)
 
-  const fileName = `${currentUser.id}_${Date.now()}_${file.name}`
-  const { error: uploadError } = await supabase.storage
-    .from('videos')
-    .upload(fileName, file)
+      const fileName = `${currentUser.id}_${Date.now()}_${file.name}`
+      const { error: uploadError } = await supabase.storage
+        .from('videos')
+        .upload(fileName, file)
 
-  console.log('uploadError:', uploadError)
-  // ...
-}
+      if (uploadError) {
+        console.error('2️⃣ ❌ Error subiendo:', uploadError)
+        alert('Error uploading video: ' + uploadError.message)
+        return
+      }
+
+      console.log('2️⃣ ✅ Video subido')
+
+      const { data: urlData } = supabase.storage
+        .from('videos')
+        .getPublicUrl(fileName)
+
+      const videoUrl = urlData.publicUrl
+      console.log('3️⃣ URL del video:', videoUrl)
+
+      const updateFields = soyUser1
+        ? { videoSentByUser1: true, videoIdUser1: videoUrl }
+        : { videoSentByUser2: true, videoIdUser2: videoUrl }
+
+      const { error: updateError } = await supabase
+        .from('matches')
+        .update(updateFields)
+        .eq('id', selectedMatch)
+
+      if (updateError) {
+        console.error('4️⃣ ❌ Error actualizando match:', updateError)
+        alert('Error updating match: ' + updateError.message)
+        return
+      }
+
+      console.log('4️⃣ ✅ Match actualizado')
+
+      setFilteredMatches(prev =>
+        prev.map(m => m.id === selectedMatch ? { ...m, ...updateFields } : m)
+      )
+
+      console.log('5️⃣ ✅ Todo listo!')
+      alert('Video uploaded successfully!')
+  }
 
   function handleSubmitRating() {
     if (!likeVideo || !rating) {
