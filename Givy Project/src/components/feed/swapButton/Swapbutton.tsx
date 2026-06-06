@@ -1,4 +1,4 @@
-import "./SwapButton.css";
+import "./Swapbutton.css";
 import swapIcon from "../../../assets/swap_icon.svg";
 
 interface Props {

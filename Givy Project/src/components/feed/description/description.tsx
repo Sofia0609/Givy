@@ -1,4 +1,4 @@
-import "./Description.css";
+import "./description.css";
 import swapIlustration from "../../../assets/swap_ilustration.svg";
 
 interface Props {
