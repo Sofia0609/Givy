@@ -1,6 +1,6 @@
 import BigButton from '../../buttonsGivy/bigButton/bigButton'
 import UploadVideo from '../../create/uploadVideo/uploadVideo'
-import './UploadVideoMatch.css'
+import './uploadVideoMatch.css'
 
 interface UploadVideoMatchprops {
     tittle: string

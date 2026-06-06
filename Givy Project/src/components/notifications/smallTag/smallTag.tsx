@@ -1,4 +1,4 @@
-import './SmallTag.css'
+import './smallTag.css'
 
 interface SmallTagprops{
     content: string

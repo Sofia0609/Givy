@@ -1,4 +1,4 @@
-import "./CircularButton.css";
+import "./circularButton.css";
 
 interface Props {
   icon: string;

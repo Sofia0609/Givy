@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import "./Comments.css";
+import "./comments.css";
 import shareIcon from "../../../assets/share_icon.svg";
 import commentIconAsset from "../../../assets/comment_icon.svg";
 import backCommentIcon from "../../../assets/back_comment.svg";
