@@ -14,6 +14,7 @@ function PossibleSwap() {
   const [filteredSwap, setSwapRequest] = useState<any[]>([])
   const [filteredSwapStatus, setSwapStatusUser] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])
+  const [processingIds, setProcessingIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     if (!currentUser) return
@@ -45,6 +46,9 @@ function PossibleSwap() {
   if (!currentUser) return <Navigate to="/Login" />
 
   async function acceptSwap(swapId: string) {
+    if (processingIds.has(swapId)) return
+    setProcessingIds(prev => new Set(prev).add(swapId))
+
     const swap = filteredSwap.find(s => s.id === swapId)
     if (!swap) return
 
@@ -55,7 +59,7 @@ function PossibleSwap() {
       .update({ status: 'accepted' })
       .eq('id', swapId)
 
-    await supabase
+    const { error } = await supabase
       .from('matches')
       .insert({
         user1Id: swap.fromUserId,
@@ -67,14 +71,33 @@ function PossibleSwap() {
         videoSentByUser2: false,
         videoIdUser2: null
       })
+
+    if (error) {
+      console.error('Error creating match:', error)
+    }
+
+    setProcessingIds(prev => {
+      const next = new Set(prev)
+      next.delete(swapId)
+      return next
+    })
   }
 
   async function rejectSwap(swapId: string) {
+    if (processingIds.has(swapId)) return
+    setProcessingIds(prev => new Set(prev).add(swapId))
+
     setSwapRequest(prev => prev.filter(s => s.id !== swapId))
     await supabase
       .from('swapRequests')
       .update({ status: 'rejected' })
       .eq('id', swapId)
+
+    setProcessingIds(prev => {
+      const next = new Set(prev)
+      next.delete(swapId)
+      return next
+    })
   }
 
   return (

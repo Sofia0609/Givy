@@ -61,38 +61,21 @@ function Match() {
   const otherSentVideo = soyUser1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
   const otherVideoUrl = soyUser1 ? currentMatch?.videoIdUser2 : currentMatch?.videoIdUser1
 
-  async function handleUploadVideo(file: File) {
-    if (!selectedMatch || !currentUser) return
+async function handleUploadVideo(file: File) {
+  if (!selectedMatch || !currentUser) return
 
-    const fileName = `${currentUser.id}_${Date.now()}_${file.name}`
-    const { error: uploadError } = await supabase.storage
-      .from('videos')
-      .upload(fileName, file)
+  console.log('soyUser1:', soyUser1)
+  console.log('selectedMatch:', selectedMatch)
+  console.log('currentUser.id:', currentUser.id)
 
-    if (uploadError) {
-      alert('Error uploading video: ' + uploadError.message)
-      return
-    }
+  const fileName = `${currentUser.id}_${Date.now()}_${file.name}`
+  const { error: uploadError } = await supabase.storage
+    .from('videos')
+    .upload(fileName, file)
 
-    const { data: urlData } = supabase.storage
-      .from('videos')
-      .getPublicUrl(fileName)
-
-    const videoUrl = urlData.publicUrl
-
-    const updateFields = soyUser1
-      ? { videoSentByUser1: true, videoIdUser1: videoUrl }
-      : { videoSentByUser2: true, videoIdUser2: videoUrl }
-
-    await supabase
-      .from('matches')
-      .update(updateFields)
-      .eq('id', selectedMatch)
-
-    setFilteredMatches(prev =>
-      prev.map(m => m.id === selectedMatch ? { ...m, ...updateFields } : m)
-    )
-  }
+  console.log('uploadError:', uploadError)
+  // ...
+}
 
   function handleSubmitRating() {
     if (!likeVideo || !rating) {
