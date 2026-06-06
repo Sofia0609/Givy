@@ -14,7 +14,6 @@ function PossibleSwap() {
   const [filteredSwap, setSwapRequest] = useState<any[]>([])
   const [filteredSwapStatus, setSwapStatusUser] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])
-  const [processingIds, setProcessingIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     if (!currentUser) return
@@ -23,6 +22,7 @@ function PossibleSwap() {
       const { data: usersData } = await supabase.from('users').select('*')
       if (usersData) setUsers(usersData)
 
+      // Swaps que ME llegaron (pendientes) — para aceptar/rechazar
       const { data: received } = await supabase
         .from('swapRequests')
         .select('*')
@@ -30,6 +30,7 @@ function PossibleSwap() {
         .eq('status', 'pending')
       if (received) setSwapRequest(received)
 
+      // Swaps que YO mandé (ya respondidos) — para ver el status
       const { data: sent } = await supabase
         .from('swapRequests')
         .select('*')
@@ -44,58 +45,63 @@ function PossibleSwap() {
   if (!currentUser) return <Navigate to="/Login" />
 
   async function acceptSwap(swapId: string) {
-    if (processingIds.has(swapId)) return
-    setProcessingIds(prev => new Set(prev).add(swapId))
+      const swap = filteredSwap.find(s => s.id === swapId)
+      if (!swap) return
 
-    const swap = filteredSwap.find(s => s.id === swapId)
-    if (!swap) return
+      // 1. Actualizar status
+      const { error: updateError } = await supabase
+        .from('swapRequests')
+        .update({ status: 'accepted' })
+        .eq('id', swapId)
 
-    setSwapRequest(prev => prev.filter(s => s.id !== swapId))
+      if (updateError) {
+        console.error('Error updating swap:', updateError)
+        alert('Error accepting swap: ' + updateError.message)
+        return
+      }
 
-    await supabase
-      .from('swapRequests')
-      .update({ status: 'accepted' })
-      .eq('id', swapId)
+      console.log('Swap actualizado a accepted')
 
-    const { error } = await supabase
-      .from('matches')
-      .insert({
-        user1Id: swap.fromUserId,
-        user2Id: swap.toUserId,
-        tagOffered: swap.tagOffered,
-        tagRequested: swap.tagRequested,
-        videoSentByUser1: false,
-        videoIdUser1: null,
-        videoSentByUser2: false,
-        videoIdUser2: null
-      })
+      // 2. Crear match
+      const { error: matchError } = await supabase
+        .from('matches')
+        .insert({
+          user1Id: swap.fromUserId,
+          user2Id: swap.toUserId,
+          tagOffered: swap.tagOffered,
+          tagRequested: swap.tagRequested,
+          videoSentByUser1: false,
+          videoIdUser1: null,
+          videoSentByUser2: false,
+          videoIdUser2: null
+        })
 
-    if (error) {
-      console.error('Error creating match:', error)
-    }
+      if (matchError) {
+        console.error('Error creating match:', matchError)
+        alert('Error creating match: ' + matchError.message)
+        return
+      }
 
-    setProcessingIds(prev => {
-      const next = new Set(prev)
-      next.delete(swapId)
-      return next
-    })
+      console.log('Match creado')
+
+      // 3. Solo si todo salió bien, quitar de la lista
+      setSwapRequest(prev => prev.filter(s => s.id !== swapId))
   }
 
   async function rejectSwap(swapId: string) {
-    if (processingIds.has(swapId)) return
-    setProcessingIds(prev => new Set(prev).add(swapId))
+      const { error } = await supabase
+        .from('swapRequests')
+        .update({ status: 'rejected' })
+        .eq('id', swapId)
 
-    setSwapRequest(prev => prev.filter(s => s.id !== swapId))
-    await supabase
-      .from('swapRequests')
-      .update({ status: 'rejected' })
-      .eq('id', swapId)
+      if (error) {
+        console.error('Error rejecting swap:', error)
+        alert('Error rejecting swap: ' + error.message)
+        return
+      }
 
-    setProcessingIds(prev => {
-      const next = new Set(prev)
-      next.delete(swapId)
-      return next
-    })
+      console.log('Swap rechazado')
+      setSwapRequest(prev => prev.filter(s => s.id !== swapId))
   }
 
   return (
@@ -135,14 +141,14 @@ function PossibleSwap() {
               <h3>You don't have any swap requests notification</h3>
             ) : (
               filteredSwapStatus.map((swap) => {
-                const fromUser = users.find(u => u.id === swap.fromUserId)
+                const otherUser = users.find(u => u.id === swap.toUserId)
                 const tagOffered = tagsData.find(tag => tag.id === swap.tagOffered)
                 const tagRequested = tagsData.find(tag => tag.id === swap.tagRequested)
                 return (
                   <EntityCard
                     key={swap.id}
-                    photo={fromUser?.profilePicture}
-                    name={`${fromUser?.username} • ${swap.status === 'accepted' ? 'Accepted' : 'Rejected'}`}
+                    photo={otherUser?.profilePicture}
+                    name={`${otherUser?.username} • ${swap.status === 'accepted' ? 'Accepted' : 'Rejected'}`}
                     content={tagOffered?.name}
                     content2={tagRequested?.name}
                   />

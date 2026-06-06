@@ -23,17 +23,17 @@ function ProfileView() {
     const [viewedUser, setViewedUser] = useState<User | null>(null)
     const [videos, setVideos] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
+    const [isFollowing, setIsFollowing] = useState(false)
+    const [followLoading, setFollowLoading] = useState(false)
 
     useEffect(() => {
         if (!userId) return
 
-        // Si es tu propio perfil, redirige
         if (userId === currentUser?.id) {
             navigate('/Profile')
             return
         }
 
-        // Traer usuario
         supabase
             .from('users')
             .select('*')
@@ -44,7 +44,6 @@ function ProfileView() {
                 setLoading(false)
             })
 
-        // Traer sus videos
         supabase
             .from('videos')
             .select('*')
@@ -84,6 +83,52 @@ function ProfileView() {
     const teachingTags = getTagNames(viewedUser.wantsToTeach || [])
     const learningTags = getTagNames(viewedUser.wantsToLearn || [])
 
+    async function handleFollow() {
+        if (!currentUser || !viewedUser || followLoading) return
+
+        setFollowLoading(true)
+
+        if (isFollowing) {
+            await supabase.from('users').update({ following: currentUser.following - 1 }).eq('id', currentUser.id)
+            await supabase.from('users').update({ followers: viewedUser.followers - 1 }).eq('id', viewedUser.id)
+            setViewedUser({ ...viewedUser, followers: viewedUser.followers - 1 })
+            setIsFollowing(false)
+        } else {
+            await supabase.from('users').update({ following: currentUser.following + 1 }).eq('id', currentUser.id)
+            await supabase.from('users').update({ followers: viewedUser.followers + 1 }).eq('id', viewedUser.id)
+            setViewedUser({ ...viewedUser, followers: viewedUser.followers + 1 })
+            setIsFollowing(true)
+        }
+
+        setFollowLoading(false)
+    }
+
+    async function handleSwap() {
+        if (!currentUser || !viewedUser) return
+
+        const { data: existing } = await supabase
+            .from('swapRequests')
+            .select('id')
+            .eq('fromUserId', currentUser.id)
+            .eq('toUserId', viewedUser.id)
+            .eq('status', 'pending')
+
+        if (existing && existing.length > 0) {
+            alert('You already sent a swap request!')
+            return
+        }
+
+        await supabase.from('swapRequests').insert({
+            id: crypto.randomUUID(),
+            fromUserId: currentUser.id,
+            toUserId: viewedUser.id,
+            status: 'pending',
+            tagOffered: currentUser.wantsToTeach?.[0] ?? '',
+            tagRequested: viewedUser.wantsToTeach?.[0] ?? ''
+        })
+        alert('Swap request sent!')
+    }
+
     return (
         <div className="profileLayout">
             <NavBar />
@@ -97,6 +142,23 @@ function ProfileView() {
                     <UserInfo label="Reputation" count={viewedUser.reputation} />
                 </div>
                 <p className="profileBio">{viewedUser.bio || 'no bio yet.'}</p>
+
+                <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                    <button
+                        className={`profileFollowBtn ${isFollowing ? 'profileFollowBtn--following' : ''}`}
+                        onClick={handleFollow}
+                        disabled={followLoading}
+                    >
+                        {isFollowing ? 'Following' : 'Follow'}
+                    </button>
+                    <button
+                        className="profileFollowBtn"
+                        onClick={handleSwap}
+                    >
+                        Swap
+                    </button>
+                </div>
+
                 <div className="profileTags">
                     <TagsContainer title="TEACHING" tags={teachingTags} variant="teaching" options={tags} />
                     <TagsContainer title="LEARNING" tags={learningTags} variant="learning" options={tags} />
