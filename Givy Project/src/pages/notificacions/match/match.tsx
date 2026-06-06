@@ -60,14 +60,12 @@ function Match() {
   const iSentVideo = soyUser1 ? currentMatch?.videoSentByUser1 : currentMatch?.videoSentByUser2
   const otherSentVideo = soyUser1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
   const otherVideoUrl = soyUser1 ? currentMatch?.videoIdUser2 : currentMatch?.videoIdUser1
+  const [ratedMatches, setRatedMatches] = useState<string[]>([])
 
   async function handleUploadVideo(file: File) {
       if (!selectedMatch || !currentUser) {
-        console.log('❌ No hay match seleccionado o usuario')
         return
       }
-
-      console.log('1️⃣ Subiendo video...', file.name)
 
       const fileName = `${currentUser.id}_${Date.now()}_${file.name}`
       const { error: uploadError } = await supabase.storage
@@ -75,19 +73,15 @@ function Match() {
         .upload(fileName, file)
 
       if (uploadError) {
-        console.error('2️⃣ ❌ Error subiendo:', uploadError)
         alert('Error uploading video: ' + uploadError.message)
         return
       }
-
-      console.log('2️⃣ ✅ Video subido')
 
       const { data: urlData } = supabase.storage
         .from('videos')
         .getPublicUrl(fileName)
 
       const videoUrl = urlData.publicUrl
-      console.log('3️⃣ URL del video:', videoUrl)
 
       const updateFields = soyUser1
         ? { videoSentByUser1: true, videoIdUser1: videoUrl }
@@ -99,29 +93,68 @@ function Match() {
         .eq('id', selectedMatch)
 
       if (updateError) {
-        console.error('4️⃣ ❌ Error actualizando match:', updateError)
         alert('Error updating match: ' + updateError.message)
         return
       }
-
-      console.log('4️⃣ ✅ Match actualizado')
 
       setFilteredMatches(prev =>
         prev.map(m => m.id === selectedMatch ? { ...m, ...updateFields } : m)
       )
 
-      console.log('5️⃣ ✅ Todo listo!')
       alert('Video uploaded successfully!')
   }
 
-  function handleSubmitRating() {
-    if (!likeVideo || !rating) {
-      alert('Please complete all fields')
-      return
-    }
-    alert('Rating submitted!')
-    setLikeVideo('')
-    setRating('')
+  async function handleSubmitRating() {
+      if (!likeVideo || !rating) {
+        alert('Please complete all fields')
+        return
+      }
+
+      if (!currentMatch || !selectedMatch) return
+
+      const otherId = currentUser!.id === currentMatch.user1Id 
+        ? currentMatch.user2Id 
+        : currentMatch.user1Id
+
+      const { data: otherUser } = await supabase
+        .from('users')
+        .select('reputation')
+        .eq('id', otherId)
+        .single()
+
+      if (!otherUser) return
+
+      const currentRep = otherUser.reputation || 0
+      const newRating = Number(rating)
+      const newReputation = currentRep === 0 
+        ? newRating 
+        : Math.round(((currentRep + newRating) / 2) * 10) / 10
+
+      const { error } = await supabase
+        .from('users')
+        .update({ reputation: newReputation })
+        .eq('id', otherId)
+
+      if (error) {
+        alert('Error submitting rating: ' + error.message)
+        return
+      }
+
+      // Guardar que ya calificó
+      const ratedField = soyUser1 ? { ratedByUser1: true } : { ratedByUser2: true }
+      await supabase
+        .from('matches')
+        .update(ratedField)
+        .eq('id', selectedMatch)
+
+      // Actualizar estado local
+      setFilteredMatches(prev =>
+        prev.map(m => m.id === selectedMatch ? { ...m, ...ratedField } : m)
+      )
+
+      alert('Rating submitted! New reputation: ' + newReputation)
+      setLikeVideo('')
+      setRating('')
   }
 
   function handleSelectMatch(id: string) {
@@ -231,16 +264,24 @@ function Match() {
                   )}
 
                   <div className='surveySection'>
-                    <p>Did you like the educative Video?</p>
-                    <Dropdown label="" options={likeOptions} value={likeVideo} onChange={setLikeVideo} />
-                    <p>Rate {getOtherUsername(currentMatch)} (1-10)</p>
-                    <InputGivy label="" type="number" value={rating} placeholder="Type here"
-                      onChange={(e) => {
-                        const value = e.target.value
-                        if (value === '' || (Number(value) >= 1 && Number(value) <= 10)) setRating(value)
-                      }}
-                    />
-                    <MediumButton content="SEND" onClick={handleSubmitRating} />
+                    {!(soyUser1 ? currentMatch?.ratedByUser1 : currentMatch?.ratedByUser2) ? (
+                        <div className='surveySection'>
+                          <p>Did you like the educative Video?</p>
+                          <Dropdown label="" options={likeOptions} value={likeVideo} onChange={setLikeVideo} />
+                          <p>Rate {getOtherUsername(currentMatch)} (1-10)</p>
+                          <InputGivy label="" type="number" value={rating} placeholder="Type here"
+                            onChange={(e) => {
+                              const value = e.target.value
+                              if (value === '' || (Number(value) >= 1 && Number(value) <= 10)) setRating(value)
+                            }}
+                          />
+                          <MediumButton content="SEND" onClick={handleSubmitRating} />
+                        </div>
+                    ) : (
+                        <p style={{ textAlign: 'center', marginTop: '20px', color: 'green' }}>
+                          Rating submitted! Thank you.
+                        </p>
+                    )}
                   </div>
                 </div>
               )}
