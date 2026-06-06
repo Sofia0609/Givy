@@ -122,7 +122,7 @@ function Feed() {
       await createSwapRequest(
         loggedUser.id,
         video.userId,
-        loggedUser.teaches?.[0] ?? '',
+        loggedUser.wantsToTeach?.[0] ?? '',
         video.teaches[0] ?? ''
       )
       setSwapAnimMap((prev) => ({ ...prev, [videoId]: true }));
