@@ -9,13 +9,12 @@ interface EntityCard{
     content2? : string
     desicionButtons?: boolean
     button?: string
-    id?:string
     onClick?: () => void
     onAccept?: () => void  
     onReject?: () => void
 }
 
-function EntityCard({name,photo, description, content, content2, desicionButtons, button,id, onClick, onAccept, onReject}:EntityCard){
+function EntityCard({name,photo, description, content, content2, desicionButtons, button, onClick, onAccept, onReject}:EntityCard){
 
     return(
         <>

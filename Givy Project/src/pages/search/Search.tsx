@@ -5,16 +5,16 @@ import SearchBar from '../../components/search/searchBar/SearchBar'
 import CategoryChip from '../../components/search/categoryChip/CategoryChip'
 import HistoryItem from '../../components/search/historyItem/HistoryItem'
 import RecommendedItem from '../../components/search/recommendedItem/RecommendedItem'
-import usersData from '../../data/users.json'
 import tags from '../../data/tags.json'
-import videosData from '../../data/videos.json'
 import './Search.css'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../../store/index'
+import { getAllVideos } from '../../services/videoService'
+import type { Video } from '../../types/index'
 
 function Search() {
     const navigate = useNavigate()
-
-    const loggedData = localStorage.getItem('loggeduser')
-    const userLoggedId = loggedData ? JSON.parse(loggedData).id : null
+    const currentUser = useSelector((state: RootState) => state.user.currentUser)
 
     const [history, setHistory] = useState<string[]>(() => {
         const saved = localStorage.getItem('searchHistory')
@@ -25,43 +25,41 @@ function Search() {
     const [recommended, setRecommended] = useState<{ id: string, title: string }[]>([])
 
     useEffect(() => {
-        // Buscar usuario en JSON primero
-        let user = usersData.find(u => u.id === userLoggedId)
-        
-        // Si no está en JSON, buscar en localStorage
-        if (!user) {
-            const storedUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]')
-            user = storedUsers.find(u => u.id === userLoggedId)
-        }
+        if (!currentUser) return
 
-        // Categorías: primeros 3 tags que el usuario quiere aprender
-        if (user && user.wantsToLearn) {
-            const chips = user.wantsToLearn
+        const wantsToLearn: string[] = Array.isArray(currentUser.wantsToLearn)
+            ? currentUser.wantsToLearn
+            : (currentUser.wantsToLearn as string).split(',').filter(Boolean)
+
+        Promise.resolve().then(() => {
+            const chips = wantsToLearn
                 .slice(0, 3)
                 .map((tagId: string) => tags.find(t => t.id === tagId))
                 .filter(Boolean) as { id: string, name: string }[]
             setUserChips(chips)
-        }
+        })
 
-        if (user && user.wantsToLearn) {
-            const stored = localStorage.getItem('videos')
-            const allVideos = stored ? JSON.parse(stored) : videosData
-            
+        getAllVideos().then((allVideos: Video[]) => {
             const rec = allVideos
-                .filter((v: any) => v.teaches.some((t: string) => user.wantsToLearn.includes(t)))
+                .filter(v => {
+                    const teaches: string[] = Array.isArray(v.teaches)
+                        ? v.teaches
+                        : (v.teaches as string ?? '').split(',').filter(Boolean)
+                    return teaches.some(t => wantsToLearn.includes(t))
+                })
                 .slice(0, 4)
-                .map((v: any) => ({ id: v.id, title: v.title }))  
+                .map(v => ({ id: v.id, title: v.description || 'Untitled' }))
             setRecommended(rec)
-        }
+        })
 
-    }, [userLoggedId])
+    }, [currentUser])
 
     const handleSearch = (query: string) => {
         if (!query.trim()) return
         const newHistory = [query, ...history.filter(h => h !== query)]
         setHistory(newHistory)
         localStorage.setItem('searchHistory', JSON.stringify(newHistory))
-        navigate(`/Search/Results?q=${encodeURIComponent(query)}`)  
+        navigate(`/Search/Results?q=${encodeURIComponent(query)}`)
     }
 
     const handleDelete = (item: string) => {
@@ -71,7 +69,7 @@ function Search() {
     }
 
     const handleChip = (tagId: string) => {
-        navigate(`/Search/Results?tag=${tagId}`)  
+        navigate(`/Search/Results?tag=${tagId}`)
     }
 
     const visibleHistory = showAll ? history : history.slice(0, 3)

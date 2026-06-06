@@ -1,13 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./Comments.css";
 import shareIcon from "../../../assets/share_icon.svg";
 import commentIconAsset from "../../../assets/comment_icon.svg";
 import backCommentIcon from "../../../assets/back_comment.svg";
-import usersData from "../../../data/users.json";
-import type { CommentData, ReplyData } from "../../../pages/feed/Feed";
-
-const resolveUsername = (userId: string): string =>
-  usersData.find((u) => u.id === userId)?.username ?? userId;
+import type { CommentData, ReplyData } from "../../../types/index";
+import { supabase } from "../../../lib/supabase";
 
 interface Props {
   comments: CommentData[];
@@ -28,12 +25,21 @@ function Comments({
   onDeleteReply,
   loggedUserId,
 }: Props) {
+  const [users, setUsers] = useState<any[]>([])
   const [inputText, setInputText] = useState("");
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const [expandedReplies, setExpandedReplies] = useState<Record<string, boolean>>({});
   const [replyingToId, setReplyingToId] = useState<string | null>(null);
-
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    supabase.from('users').select('*').then(({ data }) => {
+      if (data) setUsers(data)
+    })
+  }, [])
+
+  const resolveUsername = (userId: string): string =>
+    users.find((u) => u.id === userId)?.username ?? userId
 
   const handleDoubleClick = (commentId: string) => {
     setReplyingToId(commentId);
@@ -70,14 +76,12 @@ function Comments({
   return (
     <div className="comments-sheet" onClick={() => setMenuOpenId(null)}>
 
-      {/* Header */}
       <div className="comments-header">
         <div className="comments-handle" />
         <span className="comments-title">{comments.length} comentarios</span>
         <button className="comments-close" onClick={onClose} aria-label="Cerrar">✕</button>
       </div>
 
-      {/* Lista */}
       <div className="comments-list">
         {comments.length === 0 ? (
           <div className="comments-empty">
@@ -89,7 +93,6 @@ function Comments({
           comments.map((c) => (
             <div key={c.id} className="comment-block">
 
-              {/* Fila del comentario */}
               <div
                 className={`comment-row ${replyingToId === c.id ? "comment-row--replying" : ""}`}
                 onDoubleClick={() => handleDoubleClick(c.id)}
@@ -115,7 +118,6 @@ function Comments({
                   )}
                 </div>
 
-                {/* Menú 3 puntos — solo comentarios propios */}
                 {isOwnComment(c) && (
                   <div
                     className="comment-menu-wrapper"
@@ -143,7 +145,6 @@ function Comments({
                 )}
               </div>
 
-              {/* Respuestas expandibles */}
               {expandedReplies[c.id] && c.replies.length > 0 && (
                 <div className="replies-list">
                   {c.replies.map((r) => (
@@ -156,7 +157,6 @@ function Comments({
                         <p className="reply-text">{r.text}</p>
                       </div>
 
-                      {/* Menú 3 puntos — solo respuestas propias */}
                       {isOwnReply(r) && (
                         <div
                           className="comment-menu-wrapper"
@@ -192,9 +192,7 @@ function Comments({
         )}
       </div>
 
-      {/* Input único — modo comentario o respuesta */}
       <div className="comments-input-row">
-        {/* Botón back_comment — solo visible en modo respuesta */}
         {replyingToId && (
           <button className="reply-back-btn" onClick={cancelReply} aria-label="Cancelar respuesta">
             <img src={backCommentIcon} alt="cancelar" />

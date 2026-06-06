@@ -1,279 +1,285 @@
 import { useState, useEffect } from 'react'
-import { useParams, Navigate, useNavigate } from 'react-router-dom'
+import { useParams, Navigate, useNavigate } from 'react-router'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../../../store'
 import './match.css'
 import NavBar from '../../../components/navBar/navBar'
 import Header from '../../../components/header/header'
 import EntityCard from '../../../components/notifications/entityCard/entityCard'
-import matchesData from '../../../data/matches.json'
-import usersData from '../../../data/users.json'
-import tagsData from '../../../data/tags.json'
 import UploadVideoMatch from '../../../components/notifications/uploadVideoMatch/uploadVideoMatch'
 import InputGivy from '../../../components/inputGivy/inputGivy'
 import Dropdown from '../../../components/create/dropDown/dropDown'
 import MediumButton from '../../../components/buttonsGivy/mediumButtons/mediumButton'
-import  { type Match as MatchType, type User, type Tag, type MatchVideo } from '../../../types/index'
+import { supabase } from '../../../lib/supabase'
+import tagsData from '../../../data/tags.json'
 
 function Match() {
-
-  const loggedUserData = JSON.parse(localStorage.getItem('loggeduser') || '{}')
-  const userLogged = loggedUserData.id
+  const currentUser = useSelector((state: RootState) => state.user.currentUser)
   const navigate = useNavigate()
   const { matchId } = useParams<{ matchId?: string }>()
 
-  if (!userLogged) {
-    return <Navigate to="/login" />
-  }
-
   const [selectedMatch, setSelectedMatch] = useState<string | null>(matchId || null)
-  const [filteredMatches, setFilteredMatches] = useState<MatchType[]>([])
+  const [filteredMatches, setFilteredMatches] = useState<any[]>([])
+  const [users, setUsers] = useState<any[]>([])
   const [likeVideo, setLikeVideo] = useState('')
   const [rating, setRating] = useState('')
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
 
   const likeOptions = [
     { id: 'yes', name: 'Yes' },
     { id: 'no', name: 'No' }
   ]
 
-  const currentMatch: MatchType | undefined = filteredMatches.find(m => m.id === selectedMatch)
-
-  function getMatchVideo(): MatchVideo | undefined {
-    const stored = localStorage.getItem('matchVideos')
-    const allVideos: MatchVideo[] = stored ? JSON.parse(stored) : []
-    return allVideos.find(v => v.matchId === selectedMatch && v.userId !== userLogged)
-  }
-
-  const otherUserVideo: MatchVideo | undefined = getMatchVideo()
-
-  function handleSubmitRating() {
-    if (!likeVideo || !rating) {
-      alert('Please complete all fields')
-      return
-    }
-    alert('Rating submitted!')
-    setLikeVideo('')
-    setRating('')
-  }  
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
-    function getMatchesbyUser(user: string) {
-      const stored = localStorage.getItem('matches')
-      const allMatches: MatchType[] = stored ? JSON.parse(stored) : (matchesData as MatchType[])
-      const userMatches = allMatches.filter((match) => match.user1Id === user || match.user2Id === user)
-      setFilteredMatches(userMatches)
-    } 
+    if (!currentUser) return
 
-    getMatchesbyUser(userLogged);
-  }, [userLogged]);
+    async function loadData() {
+      const { data: usersData } = await supabase.from('users').select('*')
+      if (usersData) setUsers(usersData)
 
-  const soyUser1 = currentMatch?.user1Id === userLogged
+      const { data: matchesData } = await supabase
+        .from('matches')
+        .select('*')
+        .or(`user1Id.eq.${currentUser!.id},user2Id.eq.${currentUser!.id}`)
+      if (matchesData) setFilteredMatches(matchesData)
+    }
+
+    loadData()
+  }, [currentUser])
+
+  if (!currentUser) return <Navigate to="/Login" />
+
+  const currentMatch = filteredMatches.find(m => m.id === selectedMatch)
+  const soyUser1 = currentMatch?.user1Id === currentUser.id
   const iSentVideo = soyUser1 ? currentMatch?.videoSentByUser1 : currentMatch?.videoSentByUser2
   const otherSentVideo = soyUser1 ? currentMatch?.videoSentByUser2 : currentMatch?.videoSentByUser1
+  const otherVideoUrl = soyUser1 ? currentMatch?.videoIdUser2 : currentMatch?.videoIdUser1
+  const [ratedMatches, setRatedMatches] = useState<string[]>([])
 
-  function handleUploadVideo(file: File) {
-    if (!selectedMatch) return
-
-    const videoUrl = URL.createObjectURL(file)
-
-    const storedVideos = localStorage.getItem('matchVideos')
-    const allVideos: MatchVideo[] = storedVideos ? JSON.parse(storedVideos) : []
-    const newVideo: MatchVideo = {
-      matchId: selectedMatch,
-      userId: userLogged,
-      videoUrl: videoUrl,
-      uploadDate: new Date().toISOString()
-    }
-    localStorage.setItem('matchVideos', JSON.stringify([...allVideos, newVideo]))
-
-    const storedMatches = localStorage.getItem('matches')
-    const allMatches: MatchType[] = storedMatches ? JSON.parse(storedMatches) : (matchesData as MatchType[])
-
-    const updatedMatches: MatchType[] = allMatches.map(m => {
-      if (m.id === selectedMatch) {
-        return {
-          ...m,
-          videoSentByUser1: soyUser1 ? true : m.videoSentByUser1,
-          videoSentByUser2: !soyUser1 ? true : m.videoSentByUser2,
-        }
+  async function handleUploadVideo(file: File) {
+      if (!selectedMatch || !currentUser) {
+        return
       }
-      return m
-    })
-    localStorage.setItem('matches', JSON.stringify(updatedMatches))
-    setFilteredMatches(updatedMatches.filter((m: MatchType) => m.user1Id === userLogged || m.user2Id === userLogged))
+
+      const fileName = `${currentUser.id}_${Date.now()}_${file.name}`
+      const { error: uploadError } = await supabase.storage
+        .from('videos')
+        .upload(fileName, file)
+
+      if (uploadError) {
+        alert('Error uploading video: ' + uploadError.message)
+        return
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('videos')
+        .getPublicUrl(fileName)
+
+      const videoUrl = urlData.publicUrl
+
+      const updateFields = soyUser1
+        ? { videoSentByUser1: true, videoIdUser1: videoUrl }
+        : { videoSentByUser2: true, videoIdUser2: videoUrl }
+
+      const { error: updateError } = await supabase
+        .from('matches')
+        .update(updateFields)
+        .eq('id', selectedMatch)
+
+      if (updateError) {
+        alert('Error updating match: ' + updateError.message)
+        return
+      }
+
+      setFilteredMatches(prev =>
+        prev.map(m => m.id === selectedMatch ? { ...m, ...updateFields } : m)
+      )
+
+      alert('Video uploaded successfully!')
+  }
+
+  async function handleSubmitRating() {
+      if (!likeVideo || !rating) {
+        alert('Please complete all fields')
+        return
+      }
+
+      if (!currentMatch || !selectedMatch) return
+
+      const otherId = currentUser!.id === currentMatch.user1Id 
+        ? currentMatch.user2Id 
+        : currentMatch.user1Id
+
+      const { data: otherUser } = await supabase
+        .from('users')
+        .select('reputation')
+        .eq('id', otherId)
+        .single()
+
+      if (!otherUser) return
+
+      const currentRep = otherUser.reputation || 0
+      const newRating = Number(rating)
+      const newReputation = currentRep === 0 
+        ? newRating 
+        : Math.round(((currentRep + newRating) / 2) * 10) / 10
+
+      const { error } = await supabase
+        .from('users')
+        .update({ reputation: newReputation })
+        .eq('id', otherId)
+
+      if (error) {
+        alert('Error submitting rating: ' + error.message)
+        return
+      }
+
+      alert('Rating submitted! New reputation: ' + newReputation)
+      setRatedMatches(prev => [...prev, selectedMatch])
+      setLikeVideo('')
+      setRating('')
   }
 
   function handleSelectMatch(id: string) {
-    const isMobile = window.innerWidth <= 768
-    if (isMobile) {
-      navigate(`/match/${id}`)
-    }
+    if (isMobile) navigate(`/match/${id}`)
     setSelectedMatch(id)
   }
 
   function handleBackToList() {
-    navigate('/match')
+    navigate('/Match')
     setSelectedMatch(null)
   }
 
-    useEffect(() => {
-      const handleResize = () => setIsMobile(window.innerWidth <= 768)
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
-    }, [])
+  const showOnlyChat = matchId && isMobile
 
-
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
-
-    useEffect(() => {
-      const handleResize = () => setIsMobile(window.innerWidth <= 768)
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
-    }, [])
-
-    const showOnlyChat = matchId && isMobile
+  // Helper para obtener el nombre del otro usuario
+  function getOtherUsername(match: any) {
+    const otherId = currentUser!.id === match.user1Id ? match.user2Id : match.user1Id
+    return users.find(u => u.id === otherId)?.username || 'User'
+  }
 
   return (
-    <>
-      <div className='matchLayout'>
-        <div>
-          <NavBar />
-        </div>
-        <div className='matchContent'>
-          <Header title='Match' />   
-          <div className='matchSectionsContainer'>
-            {/* LISTA DE MATCHES - Se oculta en mobile si hay matchId */}
-            {!showOnlyChat && (
-              <div className='match'>
-                <h2 className='matchTitle'>Active Matches</h2>
+    <div className='matchLayout'>
+      <div><NavBar /></div>
+      <div className='matchContent'>
+        <Header title='Match' />
+        <div className='matchSectionsContainer'>
 
-                {filteredMatches.length === 0 ? (
-                  <h3>You don't have any matches</h3>
-                ) : (
-                  filteredMatches.map((match, key) => {
-                    const otherUserId = userLogged === match.user1Id ? match.user2Id : match.user1Id
-                    const otherUser = (usersData as User[]).find(u => u.id === otherUserId)
-                    const tagOffered = (tagsData as Tag[]).find(tag => tag.id === match.tagOffered)
-                    const tagRequested = (tagsData as Tag[]).find(tag => tag.id === match.tagRequested)
-                    const noStarted = !match.videoSentByUser1 && !match.videoSentByUser2
-                    const otherHasSent = soyUser1 ? match.videoSentByUser2 : match.videoSentByUser1
+          {!showOnlyChat && (
+            <div className='match'>
+              <h2 className='matchTitle'>Active Matches</h2>
+              {filteredMatches.length === 0 ? (
+                <h3>You don't have any matches</h3>
+              ) : (
+                filteredMatches.map((match) => {
+                  const otherUserId = currentUser.id === match.user1Id ? match.user2Id : match.user1Id
+                  const otherUser = users.find(u => u.id === otherUserId)
+                  const tagOffered = tagsData.find(tag => tag.id === match.tagOffered)
+                  const tagRequested = tagsData.find(tag => tag.id === match.tagRequested)
+                  const noStarted = !match.videoSentByUser1 && !match.videoSentByUser2
+                  const isUser1 = currentUser.id === match.user1Id
+                  const otherHasSent = isUser1 ? match.videoSentByUser2 : match.videoSentByUser1
 
-                    return (
-                      <div key={key} style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
-                        <EntityCard
-                          onClick={() => handleSelectMatch(match.id)}
-                          photo={otherUser?.profilePicture}
-                          name={otherUser?.username}
-                          content={tagOffered?.name}
-                          content2={tagRequested?.name}
-                          button={noStarted ? 'Begin' : undefined} 
-                        />
-            
-                        {otherHasSent && !noStarted && (
-                          <div style={{
-                            position: 'absolute',
-                            top: '10px',
-                            right: '20px',
-                            width: '16px',
-                            height: '16px',
-                            backgroundColor: '#ff4444',
-                            borderRadius: '50%'
-                          }} />
-                        )}
-                      </div>
-                    )
-                  })
-                )}
-              </div>
-            )}
-
-            {!showOnlyChat && <div className='divider' />}
-
-            {(selectedMatch !== null || showOnlyChat) && (
-              <div className='chatSection'>
-                {/* Botón volver en mobile */}
-                {showOnlyChat && (
-                  <button 
-                    onClick={handleBackToList}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '1.2rem',
-                      marginBottom: '10px'
-                    }}
-                  >
-                    ← Volver
-                  </button>
-                )}
-
-                {selectedMatch === null ? (
-                  <h2 className='noMatchSelected'>What do you want to learn today?</h2>
-
-                ) : !iSentVideo ? (
- 
-                  <UploadVideoMatch
-                    tittle='Upload your educative video!'
-                    description={otherSentVideo
-                      ? 'Your match already sent their video, send yours to watch it!'
-                      : 'This way you can receive the educate video from your Match!'}
-                    icon='./src/assets/upload_icon.svg'
-                    onVideoSelect={handleUploadVideo}
-                  />
-
-                ) : !otherSentVideo ? (
- 
-                  <UploadVideoMatch
-                    tittle='Congratulations!'
-                    description='Video Uploaded! Wait till your Match sends their Video'
-                    icon='./src/assets/uploaded_icon.svg'
-                    disabled={true}
-                  />
-
-                ) : (
-
-                  <div className='videoContainer'>
-                    <h2>{currentMatch ? (usersData as User[]).find(u => u.id !== userLogged && (u.id === currentMatch.user1Id || u.id === currentMatch.user2Id))?.username : 'User'} just Dropped a Video!</h2>
-                    {otherUserVideo ? (
-                      <video
-                        src={otherUserVideo.videoUrl}
-                        controls
+                  return (
+                    <div key={match.id} style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
+                      <EntityCard
+                        onClick={() => handleSelectMatch(match.id)}
+                        photo={otherUser?.profilePicture}
+                        name={otherUser?.username}
+                        content={tagOffered?.name}
+                        content2={tagRequested?.name}
+                        button={noStarted ? 'Begin' : undefined}
                       />
-                    ) : (
-                      <p>Loading video...</p>
-                    )}
-
-                    <div className='surveySection'>
-                      <p>Did you like the educative Video?</p>
-                      <Dropdown
-                        label=""
-                        options={likeOptions}
-                        value={likeVideo}
-                        onChange={setLikeVideo}
-                      />
-
-                      <p>Rate {currentMatch ? (usersData as User[]).find(u => u.id !== userLogged && (u.id === currentMatch.user1Id || u.id === currentMatch.user2Id))?.username : 'User'} (1-10)</p>
-                      <InputGivy
-                        label=""
-                        type="number"
-                        value={rating}
-                        placeholder="Type here"
-                        onChange={(e) => {
-                          const value = e.target.value
-                          if (value === '' || (Number(value) >= 1 && Number(value) <= 10)) {
-                            setRating(value)
-                          }
-                        }}
-                      />
-                      <MediumButton content="SEND" onClick={handleSubmitRating} />
+                      {otherHasSent && !noStarted && (
+                        <div style={{
+                          position: 'absolute', top: '10px', right: '20px',
+                          width: '16px', height: '16px',
+                          backgroundColor: '#ff4444', borderRadius: '50%'
+                        }} />
+                      )}
                     </div>
+                  )
+                })
+              )}
+            </div>
+          )}
+
+          {!showOnlyChat && <div className='divider' />}
+
+          {(selectedMatch !== null || showOnlyChat) && (
+            <div className='chatSection'>
+              {showOnlyChat && (
+                <button onClick={handleBackToList}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', marginBottom: '10px' }}>
+                  ← Volver
+                </button>
+              )}
+
+              {selectedMatch === null ? (
+                <h2 className='noMatchSelected'>What do you want to learn today?</h2>
+
+              ) : !iSentVideo ? (
+                <UploadVideoMatch
+                  tittle='Upload your educative video!'
+                  description={otherSentVideo
+                    ? 'Your match already sent their video, send yours to watch it!'
+                    : 'This way you can receive the educate video from your Match!'}
+                  icon='./src/assets/upload_icon.svg'
+                  onVideoSelect={handleUploadVideo}
+                />
+
+              ) : !otherSentVideo ? (
+                <UploadVideoMatch
+                  tittle='Congratulations!'
+                  description='Video Uploaded! Wait till your Match sends their Video'
+                  icon='./src/assets/uploaded_icon.svg'
+                  disabled={true}
+                />
+
+              ) : (
+                <div className='videoContainer'>
+                  <h2>{getOtherUsername(currentMatch)} just Dropped a Video!</h2>
+
+                  {otherVideoUrl ? (
+                    <video src={otherVideoUrl} controls />
+                  ) : (
+                    <p>Loading video...</p>
+                  )}
+
+                  <div className='surveySection'>
+                      {!ratedMatches.includes(selectedMatch!) ? (
+                          <div className='surveySection'>
+                            <p>Did you like the educative Video?</p>
+                            <Dropdown label="" options={likeOptions} value={likeVideo} onChange={setLikeVideo} />
+                            <p>Rate {getOtherUsername(currentMatch)} (1-10)</p>
+                            <InputGivy label="" type="number" value={rating} placeholder="Type here"
+                              onChange={(e) => {
+                                const value = e.target.value
+                                if (value === '' || (Number(value) >= 1 && Number(value) <= 10)) setRating(value)
+                              }}
+                            />
+                            <MediumButton content="SEND" onClick={handleSubmitRating} />
+                          </div>
+                      ) : (
+                          <p style={{ textAlign: 'center', marginTop: '20px', color: 'green' }}>
+                           Rating submitted! Thank you.
+                          </p>
+                      )}
                   </div>
-                )}
-              </div>
-            )}
-          </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export default Match;
+export default Match
