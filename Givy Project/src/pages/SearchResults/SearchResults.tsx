@@ -30,12 +30,12 @@ function SearchResults() {
 
     const myInterests: string[] = Array.isArray(currentUser?.wantsToLearn)
         ? currentUser.wantsToLearn
-        : (currentUser?.wantsToLearn as string ?? '').split(',').filter(Boolean)
+        : (currentUser?.wantsToLearn as unknown as string ?? '').split(',').filter(Boolean)
 
     const filtered = allVideos.filter((video: Video) => {
         const teaches: string[] = Array.isArray(video.teaches)
             ? video.teaches
-            : (video.teaches as string).split(',').filter(Boolean)
+            : (video.teaches as string ?? '').split(',').filter(Boolean)
 
         const teachesWhatIWant = teaches.some((tId: string) => myInterests.includes(tId))
         if (!teachesWhatIWant) return false
@@ -50,7 +50,7 @@ function SearchResults() {
             const videoOwner = allUsers.find(u => u.id === video.userId)
 
             const normalize = (str: string) =>
-                str.toLowerCase()
+                (str || '').toLowerCase()
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
 
@@ -63,7 +63,6 @@ function SearchResults() {
             )
 
             return (
-                normalize(video.title).includes(q) ||
                 normalize(video.description).includes(q) ||
                 normalize(videoOwner?.username || '').includes(q) ||
                 normalize(videoOwner?.at || '').includes(q) ||

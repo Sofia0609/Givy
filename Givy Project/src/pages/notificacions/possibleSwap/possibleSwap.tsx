@@ -14,7 +14,6 @@ function PossibleSwap() {
   const [filteredSwap, setSwapRequest] = useState<any[]>([])
   const [filteredSwapStatus, setSwapStatusUser] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])
-  const [processingIds, setProcessingIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     if (!currentUser) return

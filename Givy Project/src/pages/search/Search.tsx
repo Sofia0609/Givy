@@ -44,11 +44,11 @@ function Search() {
                 .filter(v => {
                     const teaches: string[] = Array.isArray(v.teaches)
                         ? v.teaches
-                        : (v.teaches as string).split(',').filter(Boolean)
+                        : (v.teaches as string ?? '').split(',').filter(Boolean)
                     return teaches.some(t => wantsToLearn.includes(t))
                 })
                 .slice(0, 4)
-                .map(v => ({ id: v.id, title: v.title }))
+                .map(v => ({ id: v.id, title: v.description || 'Untitled' }))
             setRecommended(rec)
         })
 

@@ -140,19 +140,8 @@ function Match() {
         return
       }
 
-      // Guardar que ya calificó
-      const ratedField = soyUser1 ? { ratedByUser1: true } : { ratedByUser2: true }
-      await supabase
-        .from('matches')
-        .update(ratedField)
-        .eq('id', selectedMatch)
-
-      // Actualizar estado local
-      setFilteredMatches(prev =>
-        prev.map(m => m.id === selectedMatch ? { ...m, ...ratedField } : m)
-      )
-
       alert('Rating submitted! New reputation: ' + newReputation)
+      setRatedMatches(prev => [...prev, selectedMatch])
       setLikeVideo('')
       setRating('')
   }
@@ -264,24 +253,24 @@ function Match() {
                   )}
 
                   <div className='surveySection'>
-                    {!(soyUser1 ? currentMatch?.ratedByUser1 : currentMatch?.ratedByUser2) ? (
-                        <div className='surveySection'>
-                          <p>Did you like the educative Video?</p>
-                          <Dropdown label="" options={likeOptions} value={likeVideo} onChange={setLikeVideo} />
-                          <p>Rate {getOtherUsername(currentMatch)} (1-10)</p>
-                          <InputGivy label="" type="number" value={rating} placeholder="Type here"
-                            onChange={(e) => {
-                              const value = e.target.value
-                              if (value === '' || (Number(value) >= 1 && Number(value) <= 10)) setRating(value)
-                            }}
-                          />
-                          <MediumButton content="SEND" onClick={handleSubmitRating} />
-                        </div>
-                    ) : (
-                        <p style={{ textAlign: 'center', marginTop: '20px', color: 'green' }}>
-                          Rating submitted! Thank you.
-                        </p>
-                    )}
+                      {!ratedMatches.includes(selectedMatch!) ? (
+                          <div className='surveySection'>
+                            <p>Did you like the educative Video?</p>
+                            <Dropdown label="" options={likeOptions} value={likeVideo} onChange={setLikeVideo} />
+                            <p>Rate {getOtherUsername(currentMatch)} (1-10)</p>
+                            <InputGivy label="" type="number" value={rating} placeholder="Type here"
+                              onChange={(e) => {
+                                const value = e.target.value
+                                if (value === '' || (Number(value) >= 1 && Number(value) <= 10)) setRating(value)
+                              }}
+                            />
+                            <MediumButton content="SEND" onClick={handleSubmitRating} />
+                          </div>
+                      ) : (
+                          <p style={{ textAlign: 'center', marginTop: '20px', color: 'green' }}>
+                           Rating submitted! Thank you.
+                          </p>
+                      )}
                   </div>
                 </div>
               )}
