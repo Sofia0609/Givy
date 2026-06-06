@@ -9,7 +9,7 @@ import VideoSection from '../../components/feed/video/Video';
 import CircularButton from '../../components/feed/circularButton/CircularButton';
 import Comments from '../../components/feed/comments/comments';
 import ProfileButton from '../../components/feed/profileButton/ProfileButton';
-import ShareButton from '../../components/feed/shareButton/Sharebutton';
+import ShareButton from '../../components/feed/shareButton/ShareButton';
 import SwapButton from '../../components/feed/swapButton/Swapbutton';
 import SwapOverlay from '../../components/feed/swapOverlay/Swapoverlay';
 import likeIcon from '../../assets/like_icon.svg';
