@@ -1,4 +1,4 @@
-import "./SwapOverlay.css";
+import "./Swapoverlay.css";
 import swapAnimation from "../../../assets/swap_animation.png";
 
 interface Props {

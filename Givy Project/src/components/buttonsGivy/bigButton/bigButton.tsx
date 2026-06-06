@@ -1,4 +1,4 @@
-import './BigButton.css'
+import './bigButton.css'
 
 interface BigButtonprops{
     content : string
