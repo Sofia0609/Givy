@@ -1,8 +1,8 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import { Provider } from 'react-redux'
+import { store } from './store/store'
 import './index.css'
-import { Provider } from 'react-redux'        
-import { store } from './store/store'  
 import Feed from './pages/feed/Feed'
 import Notifications from './pages/notificacions/Notifications'
 import Search from './pages/search/Search'
@@ -19,13 +19,45 @@ import Login from './pages/login/login'
 import SearchResults from './pages/SearchResults/SearchResults'
 import EditProfile from './pages/profile/EditProfile'
 import ProfileView from './pages/profile/ProfileView'
+import ProtectedRoute from './components/guards/ProtectedRoute'
+import { setUser } from './store/userSlice'
+import { supabase } from './lib/supabase'
+import { getUserById } from './services/userService'
+import { useAppDispatch } from './store/hooks'
 
 
+function AuthListener({ children }: { children: React.ReactNode }) {
+  const dispatch = useAppDispatch()
+  const [checking, setChecking] = useState(true)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) {
+        const profile = await getUserById(session.user.id)
+        dispatch(setUser(profile))
+      }
+      setChecking(false)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        const profile = await getUserById(session.user.id)
+        dispatch(setUser(profile))
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [dispatch])
+
+  if (checking) return <p>Loading...</p>
+
+  return <>{children}</>
+}
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/Login" />  
+    element: <Navigate to="/Login" />
   },
   {
     path: "/Login",
@@ -33,43 +65,43 @@ const routes = createBrowserRouter([
   },
   {
     path: "/Feed",
-    element: <Feed />
+    element: <ProtectedRoute><Feed /></ProtectedRoute>
   },
   {
     path: "/Feed/:videoId",
-    element: <Feed />
+    element: <ProtectedRoute><Feed /></ProtectedRoute>
   },
   {
     path: "/Search",
-    element: <Search />
+    element: <ProtectedRoute><Search /></ProtectedRoute>
   },
   {
     path: "/Notifications",
-    element: <Notifications />
+    element: <ProtectedRoute><Notifications /></ProtectedRoute>
   },
   {
     path: "/Profile",
-    element: <Profile />
+    element: <ProtectedRoute><Profile /></ProtectedRoute>
   },
   {
     path: "/Create",
-    element: <Create />
+    element: <ProtectedRoute><Create /></ProtectedRoute>
   },
   {
     path: '/PossibleSwap',
-    element: <PossibleSwap />
+    element: <ProtectedRoute><PossibleSwap /></ProtectedRoute>
   },
   {
     path: '/Match',
-    element: <Match />
+    element: <ProtectedRoute><Match /></ProtectedRoute>
   },
   {
     path: "/match/:matchId",
-    element: <Match />
+    element: <ProtectedRoute><Match /></ProtectedRoute>
   },
   {
     path: '/Interactions',
-    element: <Interactions />
+    element: <ProtectedRoute><Interactions /></ProtectedRoute>
   },
   {
     path: '/SignUp',
@@ -85,22 +117,24 @@ const routes = createBrowserRouter([
   },
   {
     path: '/Search/Results',
-    element: <SearchResults />
+    element: <ProtectedRoute><SearchResults /></ProtectedRoute>
   },
   {
     path: "/Profile/:userId",
-    element: <ProfileView />
+    element: <ProtectedRoute><ProfileView /></ProtectedRoute>
   },
   {
     path: "/EditProfile",
-    element: <EditProfile />
+    element: <ProtectedRoute><EditProfile /></ProtectedRoute>
   }
 ])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={routes} />
+      <AuthListener>
+        <RouterProvider router={routes} />
+      </AuthListener>
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 )
