@@ -97,6 +97,50 @@ function ProfileView() {
                     <UserInfo label="Reputation" count={viewedUser.reputation} />
                 </div>
                 <p className="profileBio">{viewedUser.bio || 'no bio yet.'}</p>
+                
+                <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                    <button
+                        className="profileFollowBtn"
+                        onClick={async () => {
+                            if (!currentUser || !viewedUser) return
+                            await supabase.from('users').update({ following: currentUser.following + 1 }).eq('id', currentUser.id)
+                            await supabase.from('users').update({ followers: viewedUser.followers + 1 }).eq('id', viewedUser.id)
+                            setViewedUser({ ...viewedUser, followers: viewedUser.followers + 1 })
+                        }}
+                    >
+                        Follow
+                    </button>
+                    <button
+                        className="profileFollowBtn"
+                        onClick={async () => {
+                            if (!currentUser || !viewedUser) return
+                            const { data: existing } = await supabase
+                                .from('swapRequests')
+                                .select('id')
+                                .eq('fromUserId', currentUser.id)
+                                .eq('toUserId', viewedUser.id)
+                                .eq('status', 'pending')
+                            
+                            if (existing && existing.length > 0) {
+                                alert('You already sent a swap request!')
+                                return
+                            }
+
+                            await supabase.from('swapRequests').insert({
+                                id: crypto.randomUUID(),
+                                fromUserId: currentUser.id,
+                                toUserId: viewedUser.id,
+                                status: 'pending',
+                                tagOffered: currentUser.wantsToTeach?.[0] ?? '',
+                                tagRequested: viewedUser.wantsToTeach?.[0] ?? ''
+                            })
+                            alert('Swap request sent!')
+                        }}
+                    >
+                        Swap
+                    </button>
+                </div>
+
                 <div className="profileTags">
                     <TagsContainer title="TEACHING" tags={teachingTags} variant="teaching" options={tags} />
                     <TagsContainer title="LEARNING" tags={learningTags} variant="learning" options={tags} />

@@ -20,6 +20,7 @@ import { getCommentsByVideoId, addComment as addCommentDB, deleteComment as dele
 import { createSwapRequest } from '../../services/swapService';
 import './Feed.css';
 import NavBar from '../../components/navBar/navBar';
+import { supabase } from '../../lib/supabase';
 
 // -- Helpers ----------------------------------------------
 const resolveTagName = (tagId: string | string[]): string => {
@@ -120,6 +121,19 @@ function Feed() {
     if (!video) return;
 
     try {
+      // Verificar si ya existe un swap pendiente entre estos usuarios
+      const { data: existing } = await supabase
+        .from('swapRequests')
+        .select('id')
+        .eq('fromUserId', loggedUser.id)
+        .eq('toUserId', video.userId)
+        .eq('status', 'pending')
+
+      if (existing && existing.length > 0) {
+        alert('You already sent a swap request to this user!')
+        return
+      }
+
       await createSwapRequest(
         loggedUser.id,
         video.userId,

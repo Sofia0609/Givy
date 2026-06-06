@@ -23,6 +23,7 @@ function PossibleSwap() {
       const { data: usersData } = await supabase.from('users').select('*')
       if (usersData) setUsers(usersData)
 
+      // Swaps que ME llegaron (pendientes) — para aceptar/rechazar
       const { data: received } = await supabase
         .from('swapRequests')
         .select('*')
@@ -30,6 +31,7 @@ function PossibleSwap() {
         .eq('status', 'pending')
       if (received) setSwapRequest(received)
 
+      // Swaps que YO mandé (ya respondidos) — para ver el status
       const { data: sent } = await supabase
         .from('swapRequests')
         .select('*')
@@ -135,14 +137,14 @@ function PossibleSwap() {
               <h3>You don't have any swap requests notification</h3>
             ) : (
               filteredSwapStatus.map((swap) => {
-                const fromUser = users.find(u => u.id === swap.fromUserId)
+                const otherUser = users.find(u => u.id === swap.toUserId)
                 const tagOffered = tagsData.find(tag => tag.id === swap.tagOffered)
                 const tagRequested = tagsData.find(tag => tag.id === swap.tagRequested)
                 return (
                   <EntityCard
                     key={swap.id}
-                    photo={fromUser?.profilePicture}
-                    name={`${fromUser?.username} • ${swap.status === 'accepted' ? 'Accepted' : 'Rejected'}`}
+                    photo={otherUser?.profilePicture}
+                    name={`${otherUser?.username} • ${swap.status === 'accepted' ? 'Accepted' : 'Rejected'}`}
                     content={tagOffered?.name}
                     content2={tagRequested?.name}
                   />
